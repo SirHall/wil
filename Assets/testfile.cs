@@ -8,6 +8,7 @@ public class testfile : MonoBehaviour
     void Start()
     {
         print("testing print");
+        print("This is a new test print");
     }
 
     // Update is called once per frame
