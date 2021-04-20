@@ -43,11 +43,18 @@ public class Wave : MonoBehaviour
     void Start()
     {
         for (int i = 0; i < wavePartCount; i++)
-            waveParts.Add(Instantiate(wavePartPrefab));
+            waveParts.Add(Instantiate(
+                wavePartPrefab,
+                unusedPartLocation.transform.position,
+                Quaternion.identity,
+                transform)
+            );
+        waveParts.ForEach(n => n.name = "WavePart");
     }
 
     void Update()
     {
+
         //Need some way to figure out where to place each panel to create a barrel wave
         // float maxAngle = Utils.nSin(waveMaxRad + Time.time * sineTimeMult);
         float arcAngle = (ArcMaxAngle - ArcMinAngle) * Utils.nSin(Time.time * sineTimeMult);
@@ -56,6 +63,9 @@ public class Wave : MonoBehaviour
         float barrelCircumference = (barrelRadius * Utils.Tau) / Utils.Tau * arcAngle;
         int piecesPerArc = Mathf.CeilToInt(barrelCircumference / wavePartWidth);
         float anglePerPart = arcAngle / piecesPerArc;
+
+        float piecesPerCircle = Mathf.CeilToInt((barrelRadius * Utils.Tau) / wavePartWidth);
+        float fullAnglePerPart = Utils.Tau / piecesPerCircle;
 
         Vector3 barrelCenter = transform.position + Vector3.up * barrelRadius;
 
@@ -79,7 +89,7 @@ public class Wave : MonoBehaviour
                 .RotateAround(
                     barrelCenter,
                     Quaternion.AngleAxis(
-                        (ArcMinAngle + anglePerPart * (i % piecesPerArc)).ToDeg(),
+                        (ArcMinAngle + fullAnglePerPart * (i % piecesPerArc)).ToDeg(),
                         Vector3.forward
                     )
                 ) +
