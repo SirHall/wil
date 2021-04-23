@@ -45,6 +45,11 @@ public class Wave : MonoBehaviour
 
     void Start()
     {
+        wavePartLength = barrelLength;
+        Vector3 wavePartScale = wavePartPrefab.transform.localScale;
+        wavePartScale.z = wavePartLength;
+        wavePartPrefab.transform.localScale = wavePartScale;
+
         for (int i = 0; i < wavePartCount; i++)
             waveParts.Add(Instantiate(
                 wavePartPrefab,
@@ -102,7 +107,7 @@ public class Wave : MonoBehaviour
                 .RotateAround(
                     barrelCenter,
                     Quaternion.AngleAxis(
-                        (waveStartAngle.ToRad() + (fullAnglePerPart * y)).ToDeg(),
+                        (waveStartAngle.ToRad() + (((y == piecesPerArc) ? anglePerPart : fullAnglePerPart) * y)).ToDeg(),
                         Vector3.forward
                     )
                 ) +
@@ -113,6 +118,8 @@ public class Wave : MonoBehaviour
                         Vector3.up,
                         (barrelCenter.WithZ(n.transform.position.z) - n.transform.position).normalized
                     );
+                // A little over rotation so the board
+                // n.transform.RotateAround(n.transform.position, Vector3.forward, );
             });
     }
 }
