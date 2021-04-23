@@ -40,6 +40,9 @@ public class Wave : MonoBehaviour
 
     [SerializeField] float wavePieceZOffset = 0.2f;
 
+    [Tooltip("The starting angle of the wave in degrees")]
+    [SerializeField] float waveStartAngle = -90.0f;
+
     void Start()
     {
         for (int i = 0; i < wavePartCount; i++)
@@ -50,24 +53,32 @@ public class Wave : MonoBehaviour
                 transform)
             );
         waveParts.ForEach(n => n.name = "WavePart");
+
+        Color[] colors = new Color[] { Color.blue, Color.red, Color.green, Color.yellow };
+
+        waveParts.For((n, i) =>
+            n.GetComponent<MeshRenderer>().material.color = colors[i % colors.Length]);
     }
 
-    void Update()
+    void FixedUpdate()
     {
-
         //Need some way to figure out where to place each panel to create a barrel wave
         // float maxAngle = Utils.nSin(waveMaxRad + Time.time * sineTimeMult);
-        float arcAngle = (ArcMaxAngle - ArcMinAngle) * Utils.nSin(Time.time * sineTimeMult);
+        float arcAngle = ArcMinAngle + Mathf.Abs(ArcMaxAngle - ArcMinAngle) * Utils.nSin(Time.time * sineTimeMult);
         // This is recalculated each frame in the event we change the radius mid-simulation.
         // This is the length of the wave arc (circle segment)
-        float barrelCircumference = (barrelRadius * Utils.Tau) / Utils.Tau * arcAngle;
-        int piecesPerArc = Mathf.CeilToInt(barrelCircumference / wavePartWidth);
+        float circleCircumference = barrelRadius * Utils.Tau;
+        float arcCircumference = (circleCircumference / Utils.Tau) * arcAngle;
+        int piecesPerArc = Mathf.FloorToInt(arcCircumference / wavePartWidth);
         float anglePerPart = arcAngle / piecesPerArc;
 
-        float piecesPerCircle = Mathf.CeilToInt((barrelRadius * Utils.Tau) / wavePartWidth);
+        float piecesPerCircle = Mathf.FloorToInt(circleCircumference / wavePartWidth);
+        // The angle between each piece to form the full circle
         float fullAnglePerPart = Utils.Tau / piecesPerCircle;
 
         Vector3 barrelCenter = transform.position + Vector3.up * barrelRadius;
+
+        int piecesPerLength = Mathf.FloorToInt(barrelLength / wavePartLength);
 
         if (piecesPerArc == 0)
         {
@@ -77,23 +88,25 @@ public class Wave : MonoBehaviour
 
         waveParts.For((n, i) =>
             {
-                int row = Mathf.FloorToInt(i / piecesPerArc);
-                if (row * wavePartLength > barrelLength)
+                int x = Mathf.FloorToInt(i % piecesPerLength);
+                int y = Mathf.FloorToInt(i / piecesPerLength);
+
+                if (y > piecesPerArc)//|| y * fullAnglePerPart > arcAngle)
                 {
                     n.transform.position = unusedPartLocation.transform.position;
                     return;
                 }
 
                 n.transform.position =
-                (barrelCenter + Vector3.right * barrelRadius)
+                (barrelCenter + Vector3.right * barrelRadius) // Place right
                 .RotateAround(
                     barrelCenter,
                     Quaternion.AngleAxis(
-                        (ArcMinAngle + fullAnglePerPart * (i % piecesPerArc)).ToDeg(),
+                        (waveStartAngle.ToRad() + (fullAnglePerPart * y)).ToDeg(),
                         Vector3.forward
                     )
                 ) +
-                (Vector3.forward * ((row * wavePartLength) + (wavePieceZOffset * (i % piecesPerArc))));
+                (Vector3.forward * ((wavePartLength * x) + (wavePieceZOffset * y))); // Move forward
 
                 n.transform.rotation =
                     Quaternion.FromToRotation(
