@@ -43,20 +43,31 @@ public class Wave : MonoBehaviour
     [Tooltip("The starting angle of the wave in degrees")]
     [SerializeField] float waveStartAngle = -90.0f;
 
+    [SerializeField] WaveAnim anim;
+
+    Vector3 originalPos;
+    float animTime = 0.0f;
+
     void Start()
     {
+        originalPos = transform.localPosition;
         wavePartLength = barrelLength;
-        Vector3 wavePartScale = wavePartPrefab.transform.localScale;
-        wavePartScale.z = wavePartLength;
-        wavePartPrefab.transform.localScale = wavePartScale;
 
         for (int i = 0; i < wavePartCount; i++)
-            waveParts.Add(Instantiate(
-                wavePartPrefab,
-                unusedPartLocation.transform.position,
-                Quaternion.identity,
-                transform)
-            );
+        {
+            GameObject newPart = Instantiate(
+               wavePartPrefab,
+               unusedPartLocation.transform.position,
+               Quaternion.identity,
+               transform);
+
+            waveParts.Add(newPart);
+
+            Vector3 wavePartScale = newPart.transform.localScale;
+            wavePartScale.x = wavePartLength;
+            newPart.transform.localScale = wavePartScale;
+        }
+
         waveParts.ForEach(n => n.name = "WavePart");
 
         Color[] colors = new Color[] { Color.blue, Color.red, Color.green, Color.yellow };
@@ -67,9 +78,17 @@ public class Wave : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (anim == null)
+            return;
+        transform.localPosition = originalPos + (transform.forward * anim.forwardPosition.Evaluate(animTime));
+        barrelRadius = anim.barrelRadius.Evaluate(animTime);
+        float arcAngle = anim.barrelArcAngle.Evaluate(animTime) * Utils.Tau;
+
+        animTime += Time.fixedDeltaTime;
+
         //Need some way to figure out where to place each panel to create a barrel wave
         // float maxAngle = Utils.nSin(waveMaxRad + Time.time * sineTimeMult);
-        float arcAngle = ArcMinAngle + Mathf.Abs(ArcMaxAngle - ArcMinAngle) * Utils.nSin(Time.time * sineTimeMult);
+        // float arcAngle = ArcMinAngle + Mathf.Abs(ArcMaxAngle - ArcMinAngle) * Utils.nSin(Time.time * sineTimeMult);
         // This is recalculated each frame in the event we change the radius mid-simulation.
         // This is the length of the wave arc (circle segment)
         float circleCircumference = barrelRadius * Utils.Tau;
@@ -81,7 +100,7 @@ public class Wave : MonoBehaviour
         // The angle between each piece to form the full circle
         float fullAnglePerPart = Utils.Tau / piecesPerCircle;
 
-        Vector3 barrelCenter = transform.position + Vector3.up * barrelRadius;
+        Vector3 barrelCenter = transform.localPosition + transform.up * barrelRadius;
 
         int piecesPerLength = Mathf.FloorToInt(barrelLength / wavePartLength);
 
@@ -102,21 +121,21 @@ public class Wave : MonoBehaviour
                     return;
                 }
 
-                n.transform.position =
-                (barrelCenter + Vector3.right * barrelRadius) // Place right
+                n.transform.localPosition =
+                (barrelCenter + -transform.forward * barrelRadius) // Place forward
                 .RotateAround(
                     barrelCenter,
                     Quaternion.AngleAxis(
                         (waveStartAngle.ToRad() + (((y == piecesPerArc) ? anglePerPart : fullAnglePerPart) * y)).ToDeg(),
-                        Vector3.forward
+                        transform.right
                     )
                 ) +
-                (Vector3.forward * ((wavePartLength * x) + (wavePieceZOffset * y))); // Move forward
+                (transform.right * ((wavePartLength * x) + (wavePieceZOffset * y))); // Move right
 
-                n.transform.rotation =
+                n.transform.localRotation =
                     Quaternion.FromToRotation(
-                        Vector3.up,
-                        (barrelCenter.WithZ(n.transform.position.z) - n.transform.position).normalized
+                        transform.up,
+                        (barrelCenter.WithX(n.transform.localPosition.x) - n.transform.localPosition).normalized
                     );
                 // A little over rotation so the board
                 // n.transform.RotateAround(n.transform.position, Vector3.forward, );
