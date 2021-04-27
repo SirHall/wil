@@ -926,7 +926,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &567513248
 Transform:
   m_ObjectHideFlags: 0
@@ -2015,7 +2015,6 @@ GameObject:
   - component: {fileID: 1439869113}
   - component: {fileID: 1439869115}
   - component: {fileID: 1439869114}
-  - component: {fileID: 1439869116}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -2068,6 +2067,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e4eb4293992e5d419be498985d9eecc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  headMovement: {fileID: 1696194137}
   rb: {fileID: 1439869114}
   thrust: 80
   rotThrust: 15
@@ -2120,30 +2120,6 @@ MonoBehaviour:
       m_Action: Cardinal Input
       m_Flags: 8
   waveForce: 7
---- !u!114 &1439869116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1439869112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0841598c8120094429946223b96f156c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vr_CameraGameObject: {fileID: 546823772}
-  startCooridnate: {x: 0, y: 0, z: 0}
-  currentCoordinate: {x: 0, y: 0, z: 0}
-  left: 0
-  right: 0
-  forward: 0
-  back: 0
-  maxForward: 0.8
-  maxBack: 0.5
-  maxLeft: 0.3
-  maxRight: 0.3
-  movementState: 0
 --- !u!1 &1472303862
 GameObject:
   m_ObjectHideFlags: 0
@@ -2744,7 +2720,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0cd7ed8843517f04e972a7b16356efad, type: 2}
+  - {fileID: 2100000, guid: 7cfbf21efa2cc2b4d8de098ee6cf1306, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2799,13 +2775,14 @@ GameObject:
   - component: {fileID: 1696194136}
   - component: {fileID: 1696194135}
   - component: {fileID: 1696194134}
+  - component: {fileID: 1696194137}
   m_Layer: 0
   m_Name: XR Rig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1696194134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2853,6 +2830,30 @@ Transform:
   m_Father: {fileID: 1439869113}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1696194137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1696194133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0841598c8120094429946223b96f156c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vr_CameraGameObject: {fileID: 546823772}
+  startCooridnate: {x: 0, y: 0, z: 0}
+  currentCoordinate: {x: 0, y: 0, z: 0}
+  left: 0
+  right: 0
+  forward: 0
+  back: 0
+  maxForward: 0.8
+  maxBack: 0.5
+  maxLeft: 0.3
+  maxRight: 0.3
+  movementState: 0
 --- !u!1 &1724096743
 GameObject:
   m_ObjectHideFlags: 0
@@ -2981,7 +2982,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0cd7ed8843517f04e972a7b16356efad, type: 2}
+  - {fileID: 2100000, guid: 7cfbf21efa2cc2b4d8de098ee6cf1306, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VRMovement : MonoBehaviour
+public class HeadMovement : MonoBehaviour
 {
     [SerializeField]
     [Tooltip("The GameObject that contains the VR camera")]
@@ -18,7 +18,7 @@ public class VRMovement : MonoBehaviour
 
     [SerializeField]
     [Tooltip("Direction of the player")]
-    private float left, right, forward, back;
+    public float left, right, forward, back;
 
     [SerializeField]
     [Tooltip("The max unit values the player can move in specified direction")]
