@@ -24,10 +24,9 @@ public class HandManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!devices[0].isValid)
+        if (devices.Count > 0 && !devices[0].isValid)
             InitialiseHands();
         visibleHandModel.SetActive(false);
-
 
         visibleHandModel.SetActive(true);
         
