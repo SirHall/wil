@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3379499606036186405}
   - component: {fileID: 5171044613718438448}
   m_Layer: 0
-  m_Name: HandManager
+  m_Name: Right_HandManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,4 +44,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handPrefab: {fileID: 5686134208185362930, guid: 1fd3a7c43c8190f4d8c167ebde694364, type: 3}
+  visibleHandModel: {fileID: 0}
   deviceCharacteristics: 576
