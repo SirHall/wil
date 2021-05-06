@@ -32,7 +32,7 @@ public class HandManager : MonoBehaviour
     private void InitialiseHands() 
     {
         InputDevices.GetDevicesWithCharacteristics(deviceCharacteristics, devices);
-
+        visibleHandModel = new GameObject();
         if (devices.Count > 0) 
         {
             currentDevice = devices[0];
