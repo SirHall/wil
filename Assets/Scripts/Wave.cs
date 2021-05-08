@@ -5,6 +5,7 @@ using Excessives;
 using Excessives.LinqE;
 using Excessives.Unity;
 using Sirenix.OdinInspector;
+using KinematicCharacterController;
 
 //         ______________________________________
 //        |                 NOTE                 |
@@ -12,8 +13,10 @@ using Sirenix.OdinInspector;
 //        |    Except where otherwise stated     |
 //         ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-public class Wave : MonoBehaviour
+public class Wave : MonoBehaviour, IMoverController
 {
+
+    [SerializeField] PhysicsMover mover;
 
     [SerializeField] GameObject wavePartPrefab;
     [SerializeField] int wavePartCount = 100;
@@ -45,13 +48,22 @@ public class Wave : MonoBehaviour
 
     [SerializeField] WaveAnim anim;
 
-    Vector3 originalPos;
-    float animTime = 0.0f;
+    [SerializeField] Rigidbody rb;
+
+    Vector3 initPos;
+    float waveTime = 0.0f;
+
+    void Awake() { mover.MoverController = this; }
 
     void Start()
     {
-        originalPos = transform.localPosition;
+        initPos = transform.localPosition;
         wavePartLength = barrelLength;
+
+        //Optimizes the number of pieces we instantiate to only be the amount required
+        int piecesPerLength = Mathf.FloorToInt(barrelLength / wavePartLength);
+        float circleCircumference = barrelRadius * Utils.Tau;
+        wavePartCount = Mathf.CeilToInt(circleCircumference / wavePartWidth) * piecesPerLength;
 
         for (int i = 0; i < wavePartCount; i++)
         {
@@ -74,17 +86,26 @@ public class Wave : MonoBehaviour
 
         waveParts.For((n, i) =>
             n.GetComponent<MeshRenderer>().material.color = colors[i % colors.Length]);
+        waveParts.ForEach(n => n.transform.position = unusedPartLocation.position);
     }
 
-    void FixedUpdate()
+
+    // Update wave movement
+    void IMoverController.UpdateMovement(out Vector3 goalPosition, out Quaternion goalRotation, float deltaTime)
     {
+        goalPosition = initPos + (transform.forward * anim.forwardPosition.Evaluate(waveTime));
+        goalRotation = Quaternion.identity;
+    }
+
+    void Update()
+    {
+        waveTime += Time.deltaTime;
         if (anim == null)
             return;
-        transform.localPosition = originalPos + (transform.forward * anim.forwardPosition.Evaluate(animTime));
-        barrelRadius = anim.barrelRadius.Evaluate(animTime);
-        float arcAngle = anim.barrelArcAngle.Evaluate(animTime) * Utils.Tau;
-
-        animTime += Time.fixedDeltaTime;
+        // rb.MovePosition(originalPos + (transform.forward * anim.forwardPosition.Evaluate(animTime)));
+        // transform.localPosition = originalPos + (transform.forward * anim.forwardPosition.Evaluate(animTime));
+        barrelRadius = anim.barrelRadius.Evaluate(waveTime);
+        float arcAngle = anim.barrelArcAngle.Evaluate(waveTime) * Utils.Tau;
 
         //Need some way to figure out where to place each panel to create a barrel wave
         // float maxAngle = Utils.nSin(waveMaxRad + Time.time * sineTimeMult);
@@ -110,18 +131,25 @@ public class Wave : MonoBehaviour
             return;
         }
 
-        waveParts.For((n, i) =>
+        for (int i = 0; i < waveParts.Count; i++)
+        {
+            GameObject n = waveParts[i];
+            int x = Mathf.FloorToInt(i % piecesPerLength);
+            int y = Mathf.FloorToInt(i / piecesPerLength);
+
+            if (y > piecesPerArc)//|| y * fullAnglePerPart > arcAngle)
             {
-                int x = Mathf.FloorToInt(i % piecesPerLength);
-                int y = Mathf.FloorToInt(i / piecesPerLength);
+                n.transform.position = unusedPartLocation.transform.position;
+                continue;
+            }
 
-                if (y > piecesPerArc)//|| y * fullAnglePerPart > arcAngle)
-                {
-                    n.transform.position = unusedPartLocation.transform.position;
-                    return;
-                }
+            // if (y < piecesPerArc - 1)
+            //     continue;
 
-                n.transform.localPosition =
+            // if (y < piecesPerArc - 1) continue;
+
+            // rb.position =
+            n.transform.localPosition =
                 (barrelCenter + -transform.forward * barrelRadius) // Place forward
                 .RotateAround(
                     barrelCenter,
@@ -132,13 +160,14 @@ public class Wave : MonoBehaviour
                 ) +
                 (transform.right * ((wavePartLength * x) + (wavePieceZOffset * y))); // Move right
 
-                n.transform.localRotation =
-                    Quaternion.FromToRotation(
-                        transform.up,
-                        (barrelCenter.WithX(n.transform.localPosition.x) - n.transform.localPosition).normalized
-                    );
-                // A little over rotation so the board
-                // n.transform.RotateAround(n.transform.position, Vector3.forward, );
-            });
+            // rb.rotation =
+            n.transform.localRotation =
+            Quaternion.FromToRotation(
+                transform.up,
+                (barrelCenter.WithX(n.transform.localPosition.x) - n.transform.localPosition).normalized
+            );
+            // A little over rotation so the board
+            // n.transform.RotateAround(n.transform.position, Vector3.forward, );
+        }
     }
 }
