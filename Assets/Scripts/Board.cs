@@ -4,6 +4,7 @@ using UnityEngine;
 using Excessives.Unity;
 using UnityEngine.InputSystem;
 
+[System.Obsolete]
 public class Board : MonoBehaviour
 {
     [SerializeField]

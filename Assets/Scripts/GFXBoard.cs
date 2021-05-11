@@ -7,7 +7,7 @@ public class GFXBoard : MonoBehaviour
 {
 
 
-    [TitleGroup("References")] [SerializeField] Board board;
+    [TitleGroup("References")] [SerializeField] BoardController board;
     [TitleGroup("References")] [SerializeField] Rigidbody rb;
 
     // [Title("Animation")]
@@ -36,27 +36,31 @@ public class GFXBoard : MonoBehaviour
     Quaternion animRot = Quaternion.identity;
     Vector3 animPos = Vector3.zero;
 
-    void LateUpdate()
+    void FixedUpdate()
     {
         //Temporarily undo the last tick's animation offsets so it doesn't affect our base lerp
         transform.localRotation *= Quaternion.Inverse(animRot);
         transform.localPosition -= animPos;
 
-        transform.position = Vector3.Lerp(transform.position, board.transform.position, Time.deltaTime * positionLerpSpeed);
-        transform.rotation = Quaternion.Lerp(
-            transform.rotation,
-            board.transform.rotation,
-            Time.deltaTime * rotateLerpSpeed);
+        transform.position = board.Motor.TransientPosition;
+        transform.rotation = board.Motor.TransientRotation;
+
+        // transform.position = Vector3.Lerp(transform.position, board.transform.position, Time.deltaTime * positionLerpSpeed);
+        // transform.rotation = Quaternion.Lerp(
+        //     transform.rotation,
+        //     board.transform.rotation,
+        //     // board.Motor.GetDirectionTangentToSurface(board.transform.forward, Vector3.up),
+        //     Time.deltaTime * rotateLerpSpeed);
 
         // Reduce the scale of the animation as we go faster
         float animScale = Mathf.Clamp01(1.0f /
-            Mathf.Clamp(board.RB.velocity.magnitude / animUpperStopVel, 1.0f, float.MaxValue));
+            Mathf.Clamp(board.Motor.Velocity.magnitude / animUpperStopVel, 1.0f, float.MaxValue));
 
         animRot = Quaternion.Euler(
-                    Mathf.Sin(Time.time * bobRotTimeScale.x) * bobRotMaxDegreeOffset.x * animScale,
-                    Mathf.Sin(Time.time * bobRotTimeScale.y) * bobRotMaxDegreeOffset.y * animScale,
-                    Mathf.Sin(Time.time * bobRotTimeScale.z) * bobRotMaxDegreeOffset.z * animScale
-            );
+            Mathf.Sin(Time.time * bobRotTimeScale.x) * bobRotMaxDegreeOffset.x * animScale,
+            Mathf.Sin(Time.time * bobRotTimeScale.y) * bobRotMaxDegreeOffset.y * animScale,
+            Mathf.Sin(Time.time * bobRotTimeScale.z) * bobRotMaxDegreeOffset.z * animScale
+        );
 
         animPos = new Vector3(
             Mathf.Sin(Time.time * bobPosTimeScale.x) * bobPosMaxOffset.x * animScale,
