@@ -97,9 +97,10 @@ public class Wave : MonoBehaviour, IMoverController
         goalRotation = Quaternion.identity;
     }
 
-    void Update()
+    void Update() { waveTime += Time.deltaTime; }
+
+    void FixedUpdate()
     {
-        waveTime += Time.deltaTime;
         if (anim == null)
             return;
         // rb.MovePosition(originalPos + (transform.forward * anim.forwardPosition.Evaluate(animTime)));
