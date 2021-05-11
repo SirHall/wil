@@ -28,11 +28,6 @@ public class GFXBoard : MonoBehaviour
     [TitleGroup("Follow")] [SerializeField] float positionLerpSpeed = 10.0f;
 
 
-    void Start()
-    {
-
-    }
-
     Quaternion animRot = Quaternion.identity;
     Vector3 animPos = Vector3.zero;
 
@@ -42,15 +37,19 @@ public class GFXBoard : MonoBehaviour
         transform.localRotation *= Quaternion.Inverse(animRot);
         transform.localPosition -= animPos;
 
-        transform.position = board.Motor.TransientPosition;
-        transform.rotation = board.Motor.TransientRotation;
+        // transform.position = board.Motor.TransientPosition;
+        // transform.rotation = board.Motor.TransientRotation;
 
-        // transform.position = Vector3.Lerp(transform.position, board.transform.position, Time.deltaTime * positionLerpSpeed);
-        // transform.rotation = Quaternion.Lerp(
-        //     transform.rotation,
-        //     board.transform.rotation,
-        //     // board.Motor.GetDirectionTangentToSurface(board.transform.forward, Vector3.up),
-        //     Time.deltaTime * rotateLerpSpeed);
+        transform.position = Vector3.Lerp(transform.position, board.transform.position, Time.deltaTime * positionLerpSpeed);
+
+        transform.rotation = Quaternion.Lerp(
+            transform.rotation,
+            board.transform.rotation,
+            // Quaternion.FromToRotation(
+            //     board.transform.forward,
+            //     board.Motor.GetDirectionTangentToSurface(board.transform.forward, Vector3.up)
+            // ),
+            Time.deltaTime * rotateLerpSpeed);
 
         // Reduce the scale of the animation as we go faster
         float animScale = Mathf.Clamp01(1.0f /
