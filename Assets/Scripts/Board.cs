@@ -7,9 +7,6 @@ using UnityEngine.InputSystem;
 [System.Obsolete]
 public class Board : MonoBehaviour
 {
-    [SerializeField]
-    [Tooltip("Script to detect VR head movement")]
-    private HeadMovement headMovement;
 
     [SerializeField] Rigidbody rb;
     public Rigidbody RB { get => rb; }
@@ -69,22 +66,7 @@ public class Board : MonoBehaviour
         // );
 
         // Move board with VR head movement
-        VRBoardMovement(headMovement);
-    }
-
-    private void VRBoardMovement(HeadMovement movement) 
-    {
-        // Apply forward movement if the player leans 40% or greater based on the max forward value.
-        if (movement.forward >= 0.4)
-            rb.AddForce(transform.forward * thrust * movement.forward, ForceMode.Force);
-
-        // Apply left rotation if the player leans 30% or greater based on the max left value.
-        if (movement.left >= 0.3)
-            rb.AddRelativeTorque(Vector3.up * rotThrust * -movement.left, ForceMode.Force);
-
-        // Apply right rotation if the player leans 30% or greater based on the max right value.
-        if (movement.right >= 0.3)
-            rb.AddRelativeTorque(Vector3.up * rotThrust * movement.right, ForceMode.Force);
+        // VRBoardMovement(headMovement);
     }
 
     void OnDisable() { cardinalInput.Disable(); }
