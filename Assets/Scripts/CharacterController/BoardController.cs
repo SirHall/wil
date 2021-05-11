@@ -106,7 +106,6 @@ public class BoardController : MonoBehaviour, ICharacterController
             Debug.DrawRay(transform.position, Vector3.up, Color.blue, 0.1f, false);
             Debug.DrawRay(transform.position, motor.GroundingStatus.GroundNormal, Color.green, 0.1f, false);
             Debug.DrawRay(transform.position, wallGravity, Color.red, 0.1f, false);
-
         }
     }
 
