@@ -19,29 +19,30 @@ public class povchange : MonoBehaviour
         InitialiseHeadset();
     }
 
-    private void InitialiseHeadset() 
+    private void InitialiseHeadset()
     {
         InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.HeadMounted, headsetDevices);
 
         if (headsetDevices.Count > 0) activeHeadset = headsetDevices[0];
 
-        if (activeHeadset.isValid) {
+        if (activeHeadset.isValid)
+        {
             Debug.Log("Detected VR");
             gameObj1.SetActive(false);
             gameObj2.SetActive(true);
 
         }
-        else {
+        else
+        {
             Debug.Log("Not detected VR");
             gameObj1.SetActive(true);
             gameObj2.SetActive(false);
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (!activeHeadset.isValid && timePassed < 3) 
+        if (!activeHeadset.isValid && timePassed < 3)
         {
             InitialiseHeadset();
             timePassed += Time.deltaTime;
