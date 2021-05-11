@@ -36,7 +36,7 @@ public class GFXBoard : MonoBehaviour
     Quaternion animRot = Quaternion.identity;
     Vector3 animPos = Vector3.zero;
 
-    void LateUpdate()
+    void FixedUpdate()
     {
         //Temporarily undo the last tick's animation offsets so it doesn't affect our base lerp
         transform.localRotation *= Quaternion.Inverse(animRot);
@@ -57,10 +57,10 @@ public class GFXBoard : MonoBehaviour
             Mathf.Clamp(board.Motor.Velocity.magnitude / animUpperStopVel, 1.0f, float.MaxValue));
 
         animRot = Quaternion.Euler(
-                    Mathf.Sin(Time.time * bobRotTimeScale.x) * bobRotMaxDegreeOffset.x * animScale,
-                    Mathf.Sin(Time.time * bobRotTimeScale.y) * bobRotMaxDegreeOffset.y * animScale,
-                    Mathf.Sin(Time.time * bobRotTimeScale.z) * bobRotMaxDegreeOffset.z * animScale
-            );
+            Mathf.Sin(Time.time * bobRotTimeScale.x) * bobRotMaxDegreeOffset.x * animScale,
+            Mathf.Sin(Time.time * bobRotTimeScale.y) * bobRotMaxDegreeOffset.y * animScale,
+            Mathf.Sin(Time.time * bobRotTimeScale.z) * bobRotMaxDegreeOffset.z * animScale
+        );
 
         animPos = new Vector3(
             Mathf.Sin(Time.time * bobPosTimeScale.x) * bobPosMaxOffset.x * animScale,
