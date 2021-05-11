@@ -11,11 +11,8 @@ public class BoardController : MonoBehaviour, ICharacterController
     public KinematicCharacterMotor Motor { get => motor; }
     [SerializeField] float sensitivity = 1.0f;
 
-    CharacterInput input = new CharacterInput();
+    BoardInput input = new BoardInput();
     Vector2 cameraRot = Vector2.zero;
-
-    [SerializeField] InputAction cardinalInput;
-    Vector2 Cardinal { get => cardinalInput.ReadValue<Vector2>(); }
 
     [SerializeField] float waveAccel = 20.0f;
 
@@ -31,21 +28,22 @@ public class BoardController : MonoBehaviour, ICharacterController
         motor.CharacterController = this;
     }
 
-    void OnEnable()
-    {
-        cardinalInput.Enable();
-    }
-
     void Start() { }
 
-    void Update()
+    void OnEnable()
     {
-        input.dir = Cardinal;
+        BoardControlEvent.RegisterListener(OnBoardControlEvent);
     }
 
     void OnDisable()
     {
-        cardinalInput.Disable();
+        BoardControlEvent.UnregisterListener(OnBoardControlEvent);
+    }
+
+    // A controller has announced new data
+    void OnBoardControlEvent(BoardControlEvent e)
+    {
+        input = e.input;
     }
 
     #region ICharacterController
@@ -110,10 +108,4 @@ public class BoardController : MonoBehaviour, ICharacterController
     }
 
     #endregion
-}
-
-struct CharacterInput
-{
-    public Vector2 dir;
-    // public bool jump;
 }
