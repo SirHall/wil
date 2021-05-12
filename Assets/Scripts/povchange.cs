@@ -27,14 +27,14 @@ public class povchange : MonoBehaviour
 
         if (activeHeadset.isValid)
         {
-            Debug.Log("Detected VR");
+           // Debug.Log("Detected VR");
             gameObj1.SetActive(false);
             gameObj2.SetActive(true);
 
         }
         else
         {
-            Debug.Log("Not detected VR");
+           // Debug.Log("Not detected VR");
             gameObj1.SetActive(true);
             gameObj2.SetActive(false);
         }
