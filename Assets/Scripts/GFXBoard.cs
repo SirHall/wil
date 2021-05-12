@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using Excessives.Unity;
 
 public class GFXBoard : MonoBehaviour
 {
@@ -27,9 +28,12 @@ public class GFXBoard : MonoBehaviour
     [TitleGroup("Follow")] [SerializeField] float rotateLerpSpeed = 10.0f;
     [TitleGroup("Follow")] [SerializeField] float positionLerpSpeed = 10.0f;
 
-
     Quaternion animRot = Quaternion.identity;
     Vector3 animPos = Vector3.zero;
+
+    [SerializeField] [FoldoutGroup("WaterBobPoints")] Transform waterBobForwardPoint;
+    [SerializeField] [FoldoutGroup("WaterBobPoints")] Transform waterBobRearRightPoint;
+    [SerializeField] [FoldoutGroup("WaterBobPoints")] Transform waterBobRearLeftPoint;
 
     void FixedUpdate()
     {
@@ -51,21 +55,12 @@ public class GFXBoard : MonoBehaviour
             // ),
             Time.deltaTime * rotateLerpSpeed);
 
-        // Reduce the scale of the animation as we go faster
-        float animScale = Mathf.Clamp01(1.0f /
-            Mathf.Clamp(board.Motor.Velocity.magnitude / animUpperStopVel, 1.0f, float.MaxValue));
+        Vector3 bobNormal = -UnityExcessives.FindNormal(waterBobForwardPoint.position, waterBobRearLeftPoint.position, waterBobRearRightPoint.position);
+        Vector3 bobPos = UnityExcessives.MeanPos(waterBobForwardPoint.position, waterBobRearLeftPoint.position, waterBobRearRightPoint.position);
 
-        animRot = Quaternion.Euler(
-            Mathf.Sin(Time.time * bobRotTimeScale.x) * bobRotMaxDegreeOffset.x * animScale,
-            Mathf.Sin(Time.time * bobRotTimeScale.y) * bobRotMaxDegreeOffset.y * animScale,
-            Mathf.Sin(Time.time * bobRotTimeScale.z) * bobRotMaxDegreeOffset.z * animScale
-        );
+        animPos = Vector3.Lerp(animPos, Vector3.up * WaterData.Instance.EvalAtWorldPos(bobPos), 1.0f);
 
-        animPos = new Vector3(
-            Mathf.Sin(Time.time * bobPosTimeScale.x) * bobPosMaxOffset.x * animScale,
-            Mathf.Sin(Time.time * bobPosTimeScale.y) * bobPosMaxOffset.y * animScale,
-            Mathf.Sin(Time.time * bobPosTimeScale.z) * bobPosMaxOffset.z * animScale
-        );
+        animRot = Quaternion.FromToRotation(Vector3.up, bobNormal);
 
         transform.localRotation *= animRot;
         transform.localPosition += animPos;
