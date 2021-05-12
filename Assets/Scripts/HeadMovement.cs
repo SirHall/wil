@@ -34,7 +34,7 @@ public class HeadMovement : MonoBehaviour
     /// <summary>
     /// The player's head position relative to the starting head position
     /// </summary>
-    Vector2 headPosRel = Vector2.zero;
+    Vector3 headPosRel = Vector3.zero;
 
     #endregion
 
@@ -55,6 +55,8 @@ public class HeadMovement : MonoBehaviour
     void Update()
     {
         currentCoordinate = cameraGameObject.transform.localPosition;
+
+        CheckPlayerStability();
 
         using (var e = BoardControlEvent.Get())
             e.input.dir = HeadPosToBoardInput(headPosRel);
@@ -83,36 +85,48 @@ public class HeadMovement : MonoBehaviour
     }
 
 
-    private Vector2 HeadPosToBoardInput(Vector2 headPos)
+    private Vector3 HeadPosToBoardInput(Vector3 headPos)
     {
-        Vector2 dir = Vector2.zero;
+        Vector3 dir = Vector3.zero;
 
         // Apply forward movement if the player leans 40% or greater based on the max forward value.
         // and use 30% on the sides
-        if (headPos.y >= 0.4) dir.y = 1.0f;
-        if (headPos.x >= 0.3) dir.x = 1.0f;
-        if (headPos.x <= 0.3) dir.x = -1.0f;
+
+        // headPos X axis == dir Y axis (Forward)
+        // headPos Z axis == dir X Axis (Side)
+
+        // Leaning
+        if (headPos.x >= 0.4) { dir.y = 1.0f; } // Forward
+        if (headPos.z >= 0.3) { dir.x = -1.0f; } //Left
+        if (headPos.z <= -0.3) { dir.x = 1.0f; } //Right
+
+        // Stationary
+        if (headPos.x < 0.4) { dir.y = 0; } // Forward
+        if (headPos.z < 0.3 && headPos.z > -0.3) { dir.x = 0; } // Side
 
         return dir;
     }
 
+
     void CheckPlayerStability()
     {
-        Vector2 diff = cameraGameObject.transform.localPosition - startCooridnate;
+        // Diff X axis = Forward
+        // Diff Z Axis = Side
+        Vector3 diff = cameraGameObject.transform.localPosition - startCooridnate;
 
         // Assign variable values based on the direction the player is leaning / standing
         if (diff.x > 0)
-            headPosRel.y = DirectionScale(diff.x, maxForward); // Positive
+            headPosRel.x = DirectionScale(diff.x, maxForward); // Positive
         else
-            headPosRel.y = -DirectionScale(diff.x, maxBack); // Negative
+            headPosRel.x = -DirectionScale(diff.x, maxBack); // Negative
 
-        if (diff.y > 0)
-            headPosRel.x = -DirectionScale(diff.y, maxLeft); // Positive
+        if (diff.z > 0)
+            headPosRel.z = DirectionScale(diff.z, maxLeft); // Positive
         else
-            headPosRel.x = DirectionScale(diff.y, maxRight); // Negative
+            headPosRel.z = -DirectionScale(diff.z, maxRight); // Negative
 
         // The scalar euclidean distance the head has moved from its original position 
-        float headPosDist = Mathf.Max(Mathf.Abs(headPosRel.x), Mathf.Abs(headPosRel.y));
+        float headPosDist = Mathf.Max(Mathf.Abs(headPosRel.z), Mathf.Abs(headPosRel.x));
 
         if (headPosDist >= 1.0f) // Fallen criteria
             movementState = MovementState.Fallen;
