@@ -17,7 +17,7 @@ public class HandBubble : MonoBehaviour
 
     void OnTriggerStay(Collider c)
     {
-
-        activate = 3;
+        if (c.name == "WavePart" || c.name == "Water")
+            activate = 3;
     }
 }
