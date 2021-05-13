@@ -14,9 +14,13 @@ public class soundmanager : MonoBehaviour
     public AudioClip inwave;
     public AudioClip underwater;
 
-    GameObject board = GameObject.Find("BoardNew");
-    // Start is called before the first frame update
-    void Start() {
+    GameObject board;
+    Rigidbody rb;
+
+    void Start()
+    {
+        board = GameObject.Find("BoardNew");
+        rb = GameObject.Find("Boardnew").GetComponent<Rigidbody>();
 
         audioSource = gameObject.AddComponent<AudioSource>();
         audioEffects = gameObject.AddComponent<AudioSource>();
@@ -28,9 +32,8 @@ public class soundmanager : MonoBehaviour
     }
 
 
-    // Update is called once per frame
-    Rigidbody rb = GameObject.Find("Boardnew").GetComponent<Rigidbody>();
-    // = board.GetComponent<Rigidbody>();
+
+
     void Update()
     {
         if (!audioSource.isPlaying)
@@ -50,21 +53,22 @@ public class soundmanager : MonoBehaviour
                     audioSource.clip = underwater;
                     break;
 
-            }            
-            
+            }
+
             audioSource.Play();
 
 
 
 
         }
-        else {
+        else
+        {
             //check if we should add
-            
-            
+
+
 
         }
-       
-        
+
+
     }
 }
