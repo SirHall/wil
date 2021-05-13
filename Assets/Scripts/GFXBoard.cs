@@ -44,7 +44,7 @@ public class GFXBoard : MonoBehaviour
         // transform.position = board.Motor.TransientPosition;
         // transform.rotation = board.Motor.TransientRotation;
 
-        transform.position = Vector3.Lerp(transform.position, board.transform.position, Time.deltaTime * positionLerpSpeed);
+        transform.position = Vector3.Lerp(transform.position, board.transform.position, 1.0f/* Time.deltaTime * positionLerpSpeed*/);
 
         transform.rotation = Quaternion.Lerp(
             transform.rotation,
@@ -53,7 +53,9 @@ public class GFXBoard : MonoBehaviour
             //     board.transform.forward,
             //     board.Motor.GetDirectionTangentToSurface(board.transform.forward, Vector3.up)
             // ),
-            Time.deltaTime * rotateLerpSpeed);
+            // Time.deltaTime * rotateLerpSpeed
+            1.0f
+            );
 
         Vector3 bobNormal = -UnityExcessives.FindNormal(waterBobForwardPoint.position, waterBobRearLeftPoint.position, waterBobRearRightPoint.position);
         Vector3 bobPos = UnityExcessives.MeanPos(waterBobForwardPoint.position, waterBobRearLeftPoint.position, waterBobRearRightPoint.position);
