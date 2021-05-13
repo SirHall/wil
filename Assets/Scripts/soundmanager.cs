@@ -25,8 +25,8 @@ public class SoundManager : MonoBehaviour
     void Start()
     {
         // Should probably swap out direct references to use the GlobalEvent system
-        board = GameObject.Find("BoardNew");
-        rb = GameObject.Find("Boardnew").GetComponent<Rigidbody>();
+       // board = GameObject.Find("BoardNew");
+        //rb = GameObject.Find("Boardnew").GetComponent<Rigidbody>();
 
         audioSource = gameObject.AddComponent<AudioSource>();
         audioEffects = gameObject.AddComponent<AudioSource>();
