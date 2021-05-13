@@ -12,10 +12,16 @@ public class KeyboardInput : MonoBehaviour
 
     void OnDisable() => cardinalInput.Disable();
 
+    Vector2 prev;
+
+    void Start() { prev = Cardinal; }
+
     void Update()
     {
-        if (Cardinal.sqrMagnitude > 0.01f)
+        if ((Cardinal - prev).sqrMagnitude > 0.01f)
             using (var e = BoardControlEvent.Get())
                 e.input.dir = Cardinal;
+
+        prev = Cardinal;
     }
 }
