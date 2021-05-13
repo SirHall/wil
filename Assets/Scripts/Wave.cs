@@ -82,10 +82,10 @@ public class Wave : MonoBehaviour, IMoverController
 
         waveParts.ForEach(n => n.name = "WavePart");
 
-        Color[] colors = new Color[] { Color.blue, Color.red, Color.green, Color.yellow };
+        // Color[] colors = new Color[] { Color.blue, Color.red, Color.green, Color.yellow };
 
-        waveParts.For((n, i) =>
-            n.GetComponent<MeshRenderer>().material.color = colors[i % colors.Length]);
+        // waveParts.For((n, i) =>
+        //     n.GetComponent<MeshRenderer>().material.color = colors[i % colors.Length]);
         waveParts.ForEach(n => n.transform.position = unusedPartLocation.position);
     }
 
