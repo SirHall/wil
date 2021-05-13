@@ -15,7 +15,6 @@ using KinematicCharacterController;
 
 public class Wave : MonoBehaviour, IMoverController
 {
-
     [SerializeField] PhysicsMover mover;
 
     [SerializeField] GameObject wavePartPrefab;
@@ -34,12 +33,9 @@ public class Wave : MonoBehaviour, IMoverController
 
     [SerializeField] float sineTimeMult = 0.5f;
 
-    [SerializeField] float barrelRadius = 2.0f;
-
     [Tooltip("Where will unused waveparts be teleported to until needed?")]
     [SerializeField] Transform unusedPartLocation;
 
-    [SerializeField] float barrelLength = 10.0f;
 
     [SerializeField] float wavePieceZOffset = 0.2f;
 
@@ -50,12 +46,43 @@ public class Wave : MonoBehaviour, IMoverController
 
     [SerializeField] Rigidbody rb;
 
+    [SerializeField] float barrelRadius = 2.0f;
+    public float BarrelRadius
+    {
+        get => barrelRadius; set
+        {
+            barrelRadius = value;
+            dirty = true;
+        }
+    }
+
+    [SerializeField] float barrelLength = 10.0f;
+    public float BarrelLength
+    {
+        get => barrelLength; set
+        {
+            barrelLength = value;
+            dirty = true;
+        }
+    }
+
+    [SerializeField] float arc = 1.0f;
+    public float BarrelArc { get => arc; set => arc = value; }
+
+    // This is set to true if some field that affects whether or not cached bookkeeping values need to be recalculated
+    bool dirty = true;
+
     Vector3 initPos;
     float waveTime = 0.0f;
 
     void Awake() { mover.MoverController = this; }
 
     void Start()
+    {
+        CalculateCache();
+    }
+
+    void CalculateCache()
     {
         initPos = transform.localPosition;
         wavePartLength = barrelLength;
@@ -65,7 +92,7 @@ public class Wave : MonoBehaviour, IMoverController
         float circleCircumference = barrelRadius * Utils.Tau;
         wavePartCount = Mathf.CeilToInt(circleCircumference / wavePartWidth) * piecesPerLength;
 
-        for (int i = 0; i < wavePartCount; i++)
+        for (int i = waveParts.Count; i < wavePartCount; i++)
         {
             GameObject newPart = Instantiate(
                wavePartPrefab,
@@ -74,46 +101,49 @@ public class Wave : MonoBehaviour, IMoverController
                transform);
 
             waveParts.Add(newPart);
-
-            Vector3 wavePartScale = newPart.transform.localScale;
-            wavePartScale.x = wavePartLength;
-            newPart.transform.localScale = wavePartScale;
         }
 
         waveParts.ForEach(n => n.name = "WavePart");
 
-        // Color[] colors = new Color[] { Color.blue, Color.red, Color.green, Color.yellow };
-
-        // waveParts.For((n, i) =>
-        //     n.GetComponent<MeshRenderer>().material.color = colors[i % colors.Length]);
         waveParts.ForEach(n => n.transform.position = unusedPartLocation.position);
-    }
 
+        waveParts.ForEach(n =>
+        {
+            Vector3 wavePartScale = n.transform.localScale;
+            wavePartScale.x = wavePartLength;
+            n.transform.localScale = wavePartScale;
+        });
+
+        dirty = false;
+    }
 
     // Update wave movement
     void IMoverController.UpdateMovement(out Vector3 goalPosition, out Quaternion goalRotation, float deltaTime)
     {
-        goalPosition = initPos + (transform.forward * anim.forwardPosition.Evaluate(waveTime));
+        goalPosition = initPos + (transform.forward * ForwardPos);
         goalRotation = Quaternion.identity;
     }
 
-    void Update() { waveTime += Time.deltaTime; }
+    void Update()
+    {
+        waveTime += Time.deltaTime;
+        if (dirty)
+            CalculateCache();
+    }
 
     void FixedUpdate()
     {
-        if (anim == null)
-            return;
         // rb.MovePosition(originalPos + (transform.forward * anim.forwardPosition.Evaluate(animTime)));
         // transform.localPosition = originalPos + (transform.forward * anim.forwardPosition.Evaluate(animTime));
-        barrelRadius = anim.barrelRadius.Evaluate(waveTime);
-        float arcAngle = anim.barrelArcAngle.Evaluate(waveTime) * Utils.Tau;
+
+        float arcAngle = Arc * Utils.Tau;
 
         //Need some way to figure out where to place each panel to create a barrel wave
         // float maxAngle = Utils.nSin(waveMaxRad + Time.time * sineTimeMult);
         // float arcAngle = ArcMinAngle + Mathf.Abs(ArcMaxAngle - ArcMinAngle) * Utils.nSin(Time.time * sineTimeMult);
         // This is recalculated each frame in the event we change the radius mid-simulation.
         // This is the length of the wave arc (circle segment)
-        float circleCircumference = barrelRadius * Utils.Tau;
+        float circleCircumference = Radius * Utils.Tau;
         float arcCircumference = (circleCircumference / Utils.Tau) * arcAngle;
         int piecesPerArc = Mathf.FloorToInt(arcCircumference / wavePartWidth);
         float anglePerPart = arcAngle / piecesPerArc;
@@ -122,7 +152,7 @@ public class Wave : MonoBehaviour, IMoverController
         // The angle between each piece to form the full circle
         float fullAnglePerPart = Utils.Tau / piecesPerCircle;
 
-        Vector3 barrelCenter = transform.localPosition + transform.up * barrelRadius;
+        Vector3 barrelCenter = transform.localPosition + transform.up * Radius;
 
         int piecesPerLength = Mathf.FloorToInt(barrelLength / wavePartLength);
 
@@ -151,7 +181,7 @@ public class Wave : MonoBehaviour, IMoverController
 
             // rb.position =
             n.transform.localPosition =
-                (barrelCenter + -transform.forward * barrelRadius) // Place forward
+                (barrelCenter + -transform.forward * Radius) // Place forward
                 .RotateAround(
                     barrelCenter,
                     Quaternion.AngleAxis(
@@ -171,4 +201,10 @@ public class Wave : MonoBehaviour, IMoverController
             // n.transform.RotateAround(n.transform.position, Vector3.forward, );
         }
     }
+
+    bool UseAnim { get => anim != null; }
+
+    float Radius { get => UseAnim ? anim.barrelRadius.Evaluate(waveTime) : barrelRadius; }
+    float ForwardPos { get => UseAnim ? anim.forwardPosition.Evaluate(waveTime) : transform.position.z; }
+    float Arc { get => UseAnim ? anim.barrelArcAngle.Evaluate(waveTime) : arc; }
 }
