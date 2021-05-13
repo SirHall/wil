@@ -2,23 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class soundmanager : MonoBehaviour
+public class SoundManager : MonoBehaviour
 {
-    bool ran = false;
-    int current = 1;
-    public AudioSource audioSource;
-    public AudioSource audioEffects;
-    public AudioClip splash;
-    public AudioClip idle;
-    public AudioClip moving;
-    public AudioClip inwave;
-    public AudioClip underwater;
+    [SerializeField] AudioClip splash;
+    [SerializeField] AudioClip idle;
+    [SerializeField] AudioClip moving;
+    [SerializeField] AudioClip inwave;
+    [SerializeField] AudioClip underwater;
 
+    AudioSource audioSource;
+    AudioSource audioEffects;
     GameObject board;
     Rigidbody rb;
 
+    #region Bookkeeping
+
+    bool ran = false;
+    int current = 1;
+
+    #endregion
+
     void Start()
     {
+        // Should probably swap out direct references to use the GlobalEvent system
         board = GameObject.Find("BoardNew");
         rb = GameObject.Find("Boardnew").GetComponent<Rigidbody>();
 
@@ -26,9 +32,7 @@ public class soundmanager : MonoBehaviour
         audioEffects = gameObject.AddComponent<AudioSource>();
 
         //only splash on start
-
-        audioEffects.clip = splash;
-        audioEffects.Play();
+        audioEffects.PlayOneShot(splash);
     }
 
 
@@ -52,21 +56,13 @@ public class soundmanager : MonoBehaviour
                 case 4:
                     audioSource.clip = underwater;
                     break;
-
             }
 
             audioSource.Play();
-
-
-
-
         }
         else
         {
             //check if we should add
-
-
-
         }
 
 
