@@ -24,8 +24,8 @@ public class HeadMovement : MonoBehaviour
     private float maxForward, maxBack, maxLeft, maxRight;
 
     [SerializeField]
-    [Tooltip("The max unit values the player can move in specified direction")]
-    private GameObject forwardBoundry, backBoundry, leftBoundry, rightBoundry;
+    [Tooltip("Gameobjects which define the coordinates for the max boundary values")]
+    private GameObject forwardBoundary, backBoundary, leftBoundary, rightBoundary;
 
     private enum MovementState { Stationary, Leaning, Warning, Fallen };
 
@@ -53,10 +53,10 @@ public class HeadMovement : MonoBehaviour
     private void Awake() 
     {
         // Assign MaxValues based on boundry gameobjects coordinates
-        maxForward = Mathf.Abs(Mathf.Round(forwardBoundry.transform.position.z * 100f) / 100f);
-        maxBack = Mathf.Abs(Mathf.Round(backBoundry.transform.position.z * 100f) / 100f);
-        maxLeft = Mathf.Abs(Mathf.Round(leftBoundry.transform.position.x * 100f) / 100f);
-        maxRight = Mathf.Abs(Mathf.Round(rightBoundry.transform.position.x * 100f) / 100f);
+        maxForward = Mathf.Abs(Mathf.Round(forwardBoundary.transform.position.z * 100f) / 100f);
+        maxBack = Mathf.Abs(Mathf.Round(backBoundary.transform.position.z * 100f) / 100f);
+        maxLeft = Mathf.Abs(Mathf.Round(leftBoundary.transform.position.x * 100f) / 100f);
+        maxRight = Mathf.Abs(Mathf.Round(rightBoundary.transform.position.x * 100f) / 100f);
     }
     void Start()
     {
