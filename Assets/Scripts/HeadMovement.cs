@@ -23,6 +23,10 @@ public class HeadMovement : MonoBehaviour
     [Tooltip("The max unit values the player can move in specified direction")]
     private float maxForward, maxBack, maxLeft, maxRight;
 
+    [SerializeField]
+    [Tooltip("The max unit values the player can move in specified direction")]
+    private GameObject forwardBoundry, backBoundry, leftBoundry, rightBoundry;
+
     private enum MovementState { Stationary, Leaning, Warning, Fallen };
 
     [SerializeField]
@@ -46,7 +50,14 @@ public class HeadMovement : MonoBehaviour
         get => vr_CameraGameObject;
         set => vr_CameraGameObject = value;
     }
-
+    private void Awake() 
+    {
+        // Assign MaxValues based on boundry gameobjects coordinates
+        maxForward = Mathf.Abs(Mathf.Round(forwardBoundry.transform.position.z * 100f) / 100f);
+        maxBack = Mathf.Abs(Mathf.Round(backBoundry.transform.position.z * 100f) / 100f);
+        maxLeft = Mathf.Abs(Mathf.Round(leftBoundry.transform.position.x * 100f) / 100f);
+        maxRight = Mathf.Abs(Mathf.Round(rightBoundry.transform.position.x * 100f) / 100f);
+    }
     void Start()
     {
         startCooridnate = cameraGameObject.transform.localPosition;
@@ -61,6 +72,8 @@ public class HeadMovement : MonoBehaviour
         using (var e = BoardControlEvent.Get())
             e.input.dir = HeadPosToBoardInput(headPosRel);
     }
+
+    
 
     /// <summary>
     /// Return true if a number is between a min and max value
