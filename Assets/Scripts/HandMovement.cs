@@ -38,8 +38,8 @@ public class HandMovement : MonoBehaviour
     private InputDevice leftHand;
     private InputDevice rightHand;
 
-    private bool leftGrip;
-    private bool rightGrip;
+    private bool isLeftGrip;
+    private bool isRightGrip;
     // Start is called before the first frame update
     void Start() {
         InitialiseHands();
@@ -81,10 +81,10 @@ public class HandMovement : MonoBehaviour
             InitialiseHands();
             return;
         }
-        leftGrip = LeftHandGripping();
-        rightGrip = RightHandGripping();
+        isLeftGrip = LeftHandGripping();
+        isRightGrip = RightHandGripping();
 
-        print("Left Grip: " + leftGrip);
-        print("Right Grip: " + rightGrip);
+        print("Left Grip: " + isLeftGrip);
+        print("Right Grip: " + isRightGrip);
     }
 }
