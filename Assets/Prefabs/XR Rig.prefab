@@ -181,10 +181,10 @@ MonoBehaviour:
   maxBack: 0.5
   maxLeft: 0.3
   maxRight: 0.3
-  forwardBoundary: {fileID: 0}
-  backBoundary: {fileID: 0}
-  leftBoundary: {fileID: 0}
-  rightBoundary: {fileID: 0}
+  forwardBoundary: {fileID: 2148807534933573407}
+  backBoundary: {fileID: 2148807533042656209}
+  leftBoundary: {fileID: 2148807533577459552}
+  rightBoundary: {fileID: 2148807534762468872}
   movementState: 0
 --- !u!1 &2148807533148191331
 GameObject:
