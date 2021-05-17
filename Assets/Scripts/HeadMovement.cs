@@ -71,6 +71,9 @@ public class HeadMovement : MonoBehaviour
 
         using (var e = BoardControlEvent.Get())
             e.input.dir = HeadPosToBoardInput(headPosRel);
+
+        using (var e = VisualControlEvent.Get())
+            e.input.dir = headPosRel;
     }
 
     
