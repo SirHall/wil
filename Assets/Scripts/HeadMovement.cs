@@ -112,9 +112,9 @@ public class HeadMovement : MonoBehaviour
         // headPos Z axis == dir X Axis (Side)
 
         // Leaning
-        if (headPos.x >= 0.4) { dir.y = 1.0f; } // Forward
-        if (headPos.z >= 0.3) { dir.x = -1.0f; } //Left
-        if (headPos.z <= -0.3) { dir.x = 1.0f; } //Right
+        if (headPos.x >= 0.4) { dir.y = headPos.x; } // Forward
+        if (headPos.z >= 0.3) { dir.x = -headPos.z; } //Left
+        if (headPos.z <= -0.3) { dir.x = Mathf.Abs(headPos.z); } //Right
 
         // Stationary
         if (headPos.x < 0.4) { dir.y = 0; } // Forward
