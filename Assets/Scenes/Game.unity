@@ -525,6 +525,7 @@ MonoBehaviour:
   m_ThrowAngularVelocityScale: 1
   m_ForceGravityOnDetach: 0
   m_RetainTransformParent: 1
+  m_AttachPointCompatibilityMode: 0
 --- !u!54 &101107763
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1859,7 +1860,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1711709027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1872,6 +1873,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f00cb908929b154fa158c15731a9c25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  splash: {fileID: 8300000, guid: 2f9a6b82f628427489f2431743b474cf, type: 3}
+  idle: {fileID: 8300000, guid: a4e1582b75f69744fa8d2bc4cb6aa45f, type: 3}
+  moving: {fileID: 8300000, guid: a3d0b83a54d8aa940b775aab24c4c44d, type: 3}
+  inwave: {fileID: 8300000, guid: db084e7be4cbcf54ebe0baa505e06647, type: 3}
+  underwater: {fileID: 8300000, guid: 732606f1124f92f458f0527c4c6b0fda, type: 3}
 --- !u!4 &1711709028
 Transform:
   m_ObjectHideFlags: 0
