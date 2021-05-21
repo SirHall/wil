@@ -20,34 +20,69 @@ public class HandManager : MonoBehaviour
 
     private Animator handAnimator;
 
+    Interaction interaction = new Interaction();
+
+    void OnEnable() {
+        InteractionControlEvent.RegisterListener(OnGripControlEvent);
+    }
+
+    void OnDisable() {
+        InteractionControlEvent.UnregisterListener(OnGripControlEvent);
+    }
+    // A controller has announced new data
+    void OnGripControlEvent(InteractionControlEvent e) {
+        interaction = e.input;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         InitialiseHands();
     }
 
+    
+    // Update is called once per frame
+    void Update()
+    {
+        if (!currentDevice.isValid) 
+        {
+            // Continue to initialise hand if not yet found
+            InitialiseHands();
+            return;
+        }
+
+        // Controller hand has been found
+
+        // Toggle Active
+        if (!visibleHandModel.activeSelf) 
+        {
+            visibleHandModel.SetActive(true);
+        }
+
+        // Run Animations
+        HandAnimation();
+        HandGripping();
+    }
+
     /// <summary>
     /// Set up the hands to contain a model an get animation if device exists
     /// </summary>
-    private void InitialiseHands() 
-    {
+    private void InitialiseHands() {
         InputDevices.GetDevicesWithCharacteristics(deviceCharacteristics, devices);
-        visibleHandModel = new GameObject();
-        if (devices.Count > 0) 
-        {
+        if (devices.Count > 0) {
+            visibleHandModel = new GameObject();
             currentDevice = devices[0];
             visibleHandModel = Instantiate(handPrefab, transform);
             handAnimator = visibleHandModel.GetComponent<Animator>();
         }
-        
+
     }
 
     /// <summary>
     /// Set animation based on controller button value. 
     /// Example: If grip is completely pressed in, animate the hand to be full grip based on trigger value.
     /// </summary>
-    private void HandAnimation() 
-    {
+    private void HandAnimation() {
         // Trigger Animation
         // Animate hand based on trigger value
         if (devices[0].TryGetFeatureValue(CommonUsages.trigger, out float triggervalue))
@@ -62,20 +97,17 @@ public class HandManager : MonoBehaviour
         else
             handAnimator.SetFloat("Grip", 0);
     }
-
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// Conditions to check if player is gripping while in contact with an interactable object. 
+    /// </summary>
+    private void HandGripping() 
     {
-        if (!currentDevice.isValid) 
+        if (devices[0].TryGetFeatureValue(CommonUsages.grip, out float gripvalue)) 
         {
-            // Continue to initialise hand if not yet found
-            InitialiseHands();
-            visibleHandModel.SetActive(false);
-            return;
+            if (gripvalue == 1 && interaction.isInteracting) 
+            {
+                print("Player is gripping side of board");
+            }
         }
-
-        // Controller hand has been found
-        visibleHandModel.SetActive(true);
-        HandAnimation();
     }
 }
