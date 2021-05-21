@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Obsolete]
 public class WaterCollider : MonoBehaviour
 {
     [SerializeField] Collider sourceCollider;
