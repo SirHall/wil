@@ -1054,6 +1054,7 @@ MonoBehaviour:
   barrelRadiusSlider: {fileID: 1902166782}
   barrelArcSlider: {fileID: 2138927661}
   barrelLengthSlider: {fileID: 1862531360}
+  barrelSquashSlider: {fileID: 0}
 --- !u!4 &706147662
 Transform:
   m_ObjectHideFlags: 0
@@ -1656,6 +1657,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camTransform: {fileID: 1959827439}
   targetTransformsParent: {fileID: 1618219908}
+  camNext:
+    m_Name: Cam Next
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 43fb2e52-2f7f-45f4-9f7c-5d7ca67c6590
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 6693a4e0-dbcb-4b67-be53-1a9146176578
+      m_Path: <Keyboard>/rightArrow
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Cam Next
+      m_Flags: 0
+  camPrev:
+    m_Name: Cam Prev
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: f00d0727-c021-4635-b121-d61fa38ab9ef
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 780fd131-ea74-4a79-8dec-c59e9b2c6179
+      m_Path: <Keyboard>/leftArrow
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Cam Prev
+      m_Flags: 0
 --- !u!1 &1659063810
 GameObject:
   m_ObjectHideFlags: 0
