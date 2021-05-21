@@ -77,6 +77,10 @@ public class Wave : MonoBehaviour, IMoverController
 
     void Awake() { mover.MoverController = this; }
 
+    void OnEnable() { WaveSettingEvent.RegisterListener(OnWaveSettingsEvent); }
+
+    void OnDisable() { WaveSettingEvent.UnregisterListener(OnWaveSettingsEvent); }
+
     void Start()
     {
         CalculateCache();
@@ -101,18 +105,20 @@ public class Wave : MonoBehaviour, IMoverController
                transform);
 
             waveParts.Add(newPart);
+            newPart.name = "WavePart";
+            newPart.transform.position = unusedPartLocation.position;
         }
 
-        waveParts.ForEach(n => n.name = "WavePart");
-
-        waveParts.ForEach(n => n.transform.position = unusedPartLocation.position);
-
-        waveParts.ForEach(n =>
+        // Only rescale if we have to, this part takes a long time
+        if (waveParts.Count > 0 && Mathf.Abs(waveParts[0].transform.localScale.x - wavePartLength) > 0.01f)
         {
-            Vector3 wavePartScale = n.transform.localScale;
-            wavePartScale.x = wavePartLength;
-            n.transform.localScale = wavePartScale;
-        });
+            waveParts.ForEach(n =>
+           {
+               Vector3 wavePartScale = n.transform.localScale;
+               wavePartScale.x = wavePartLength;
+               n.transform.localScale = wavePartScale;
+           });
+        }
 
         dirty = false;
     }
@@ -127,12 +133,12 @@ public class Wave : MonoBehaviour, IMoverController
     void Update()
     {
         waveTime += Time.deltaTime;
-        if (dirty)
-            CalculateCache();
     }
 
     void FixedUpdate()
     {
+        if (dirty)
+            CalculateCache();
         // rb.MovePosition(originalPos + (transform.forward * anim.forwardPosition.Evaluate(animTime)));
         // transform.localPosition = originalPos + (transform.forward * anim.forwardPosition.Evaluate(animTime));
 
@@ -168,18 +174,12 @@ public class Wave : MonoBehaviour, IMoverController
             int x = Mathf.FloorToInt(i % piecesPerLength);
             int y = Mathf.FloorToInt(i / piecesPerLength);
 
-            if (y > piecesPerArc)//|| y * fullAnglePerPart > arcAngle)
+            if (y > piecesPerArc)
             {
                 n.transform.position = unusedPartLocation.transform.position;
                 continue;
             }
 
-            // if (y < piecesPerArc - 1)
-            //     continue;
-
-            // if (y < piecesPerArc - 1) continue;
-
-            // rb.position =
             n.transform.localPosition =
                 (barrelCenter + -transform.forward * Radius) // Place forward
                 .RotateAround(
@@ -191,20 +191,24 @@ public class Wave : MonoBehaviour, IMoverController
                 ) +
                 (transform.right * ((wavePartLength * x) + (wavePieceZOffset * y))); // Move right
 
-            // rb.rotation =
             n.transform.localRotation =
             Quaternion.FromToRotation(
                 transform.up,
                 (barrelCenter.WithX(n.transform.localPosition.x) - n.transform.localPosition).normalized
             );
-            // A little over rotation so the board
-            // n.transform.RotateAround(n.transform.position, Vector3.forward, );
         }
+    }
+
+    void OnWaveSettingsEvent(WaveSettingEvent e)
+    {
+        BarrelRadius = e.settings.radius;
+        BarrelLength = e.settings.length;
+        BarrelArc = e.settings.arc;
     }
 
     bool UseAnim { get => anim != null; }
 
-    float Radius { get => UseAnim ? anim.barrelRadius.Evaluate(waveTime) : barrelRadius; }
+    float Radius { get => UseAnim ? anim.barrelRadius.Evaluate(waveTime) * barrelRadius : barrelRadius; }
     float ForwardPos { get => UseAnim ? anim.forwardPosition.Evaluate(waveTime) : transform.position.z; }
     float Arc { get => UseAnim ? anim.barrelArcAngle.Evaluate(waveTime) : arc; }
 }
