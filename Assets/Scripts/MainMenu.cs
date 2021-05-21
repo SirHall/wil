@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Excessives;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -18,7 +19,40 @@ public class MainMenu : MonoBehaviour
     [SerializeField] AudioSource audioSource;
     [SerializeField] Camera menuCam;
 
+    [SerializeField] TextMeshProUGUI title;
+    [SerializeField] float titleFadeInTime = 3.0f;
+
+    [SerializeField] TextMeshProUGUI teamLabel;
+    [SerializeField] float teamLabelFadeinTime = 3.0f;
+
     bool clickedLoad = false;
+
+    void Awake()
+    {
+        StartCoroutine(Menu());
+    }
+
+    IEnumerator Menu()
+    {
+        title.alpha = 0.0f;
+        teamLabel.alpha = 0.0f;
+        yield return FadeInLabel(title, titleFadeInTime);
+        yield return FadeInLabel(teamLabel, teamLabelFadeinTime);
+    }
+
+    IEnumerator FadeInLabel(TextMeshProUGUI label, float fadeInTime)
+    {
+        float clock = 0.0f;
+        label.alpha = 0.0f;
+
+        while (clock <= titleFadeInTime)
+        {
+            clock += Time.deltaTime;
+            label.alpha = clock / fadeInTime;
+            yield return null;
+        }
+    }
+
 
     public void OnPlayButtonClicked()
     {
@@ -50,7 +84,8 @@ public class MainMenu : MonoBehaviour
             float t = MathE.UnLerp(start, start + fadeTime, Time.time);
             video.targetCameraAlpha = 1.0f - t;
             audioSource.volume = 1.0f - t;
-            // menuCam.farClipPlane = Mathf.Lerp(initCamFarPlane, 0.0f, t);
+            title.alpha = 1.0f - t;
+            teamLabel.alpha = 1.0f - t;
             yield return null;
         }
 
