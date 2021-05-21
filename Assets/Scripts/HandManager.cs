@@ -32,9 +32,9 @@ public class HandManager : MonoBehaviour
     private void InitialiseHands() 
     {
         InputDevices.GetDevicesWithCharacteristics(deviceCharacteristics, devices);
-        visibleHandModel = new GameObject();
         if (devices.Count > 0) 
         {
+            visibleHandModel = new GameObject();
             currentDevice = devices[0];
             visibleHandModel = Instantiate(handPrefab, transform);
             handAnimator = visibleHandModel.GetComponent<Animator>();
@@ -70,12 +70,18 @@ public class HandManager : MonoBehaviour
         {
             // Continue to initialise hand if not yet found
             InitialiseHands();
-            visibleHandModel.SetActive(false);
             return;
         }
 
         // Controller hand has been found
-        visibleHandModel.SetActive(true);
+
+        // Toggle Active
+        if (!visibleHandModel.activeSelf) 
+        {
+            visibleHandModel.SetActive(true);
+        }
+
+        // Run Animations
         HandAnimation();
     }
 }

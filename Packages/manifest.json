@@ -15,7 +15,6 @@
     "com.unity.xr.interaction.toolkit": "1.0.0-pre.3",
     "com.unity.xr.oculus": "1.9.0",
     "com.unity.xr.openxr": "1.1.1",
-    "com.valvesoftware.unity.openvr": "file:../Assets/SteamVR/OpenVRUnityXRPackage/Editor/com.valvesoftware.unity.openvr-1.1.4.tgz",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
