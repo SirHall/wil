@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Excessives;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine.InputSystem;
 
 public class CameraPositions : MonoBehaviour
 {
@@ -13,9 +14,29 @@ public class CameraPositions : MonoBehaviour
 
     IEnumerable<Transform> TransformPositions { get => targetTransformsParent.GetComponentsInChildren<Transform>().Where(n => n != transform); }
 
+    [SerializeField] InputAction camNext;
+    [SerializeField] InputAction camPrev;
+
     int currentI = 0;
 
-    void Start() => SetCamera();
+    void OnEnable()
+    {
+        camNext.Enable();
+        camPrev.Enable();
+    }
+
+    void OnDisable()
+    {
+        camNext.Disable();
+        camPrev.Disable();
+    }
+
+    void Start()
+    {
+        SetCamera();
+        camNext.performed += e => Increase();
+        camPrev.performed += e => Decrease();
+    }
 
     public int CurrentIndex
     {
