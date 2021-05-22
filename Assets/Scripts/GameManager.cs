@@ -8,6 +8,11 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] InputAction resetInput;
 
+    void Start()
+    {
+        BarrelSettings.EmitBarrelSettings();
+    }
+
     void OnEnable()
     {
         resetInput.Enable();
