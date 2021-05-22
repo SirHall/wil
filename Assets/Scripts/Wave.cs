@@ -75,7 +75,11 @@ public class Wave : MonoBehaviour, IMoverController
     Vector3 initPos;
     float waveTime = 0.0f;
 
-    void Awake() { mover.MoverController = this; }
+    void Awake()
+    {
+        initPos = transform.localPosition;
+        mover.MoverController = this;
+    }
 
     void OnEnable() { WaveSettingEvent.RegisterListener(OnWaveSettingsEvent); }
 
@@ -88,7 +92,6 @@ public class Wave : MonoBehaviour, IMoverController
 
     void CalculateCache()
     {
-        initPos = transform.localPosition;
         wavePartLength = barrelLength;
 
         //Optimizes the number of pieces we instantiate to only be the amount required
@@ -109,16 +112,19 @@ public class Wave : MonoBehaviour, IMoverController
             newPart.transform.position = unusedPartLocation.position;
         }
 
-        // Only rescale if we have to, this part takes a long time
-        if (waveParts.Count > 0 && Mathf.Abs(waveParts[0].transform.localScale.x - wavePartLength) > 0.01f)
+        // Only rescale if we have to, this part takes a long time.
+        // We check the last element rather than the first becuase more elements will be added when the barrel radius
+        // is increased, this allows us to avoid checking each and every piece.
+        if (waveParts.Count > 0 && Mathf.Abs(waveParts[waveParts.Count - 1].transform.localScale.x - wavePartLength) > 0.001f)
         {
-            waveParts.ForEach(n =>
-           {
-               Vector3 wavePartScale = n.transform.localScale;
-               wavePartScale.x = wavePartLength;
-               n.transform.localScale = wavePartScale;
-           });
+            Vector3 wavePartScale = waveParts[0].transform.localScale;
+            wavePartScale.x = wavePartLength;
+            waveParts.ForEach(n => n.transform.localScale = wavePartScale);
         }
+
+        // TODO: This may be removed, just positions the wave so it's end is always at 0,0.
+        // This allows the board's start surf position to be very predictable.
+        // transform.position = transform.position.WithX(wavePartLength * 0.5f);
 
         dirty = false;
     }
@@ -139,14 +145,9 @@ public class Wave : MonoBehaviour, IMoverController
     {
         if (dirty)
             CalculateCache();
-        // rb.MovePosition(originalPos + (transform.forward * anim.forwardPosition.Evaluate(animTime)));
-        // transform.localPosition = originalPos + (transform.forward * anim.forwardPosition.Evaluate(animTime));
 
         float arcAngle = Arc * Utils.Tau;
 
-        //Need some way to figure out where to place each panel to create a barrel wave
-        // float maxAngle = Utils.nSin(waveMaxRad + Time.time * sineTimeMult);
-        // float arcAngle = ArcMinAngle + Mathf.Abs(ArcMaxAngle - ArcMinAngle) * Utils.nSin(Time.time * sineTimeMult);
         // This is recalculated each frame in the event we change the radius mid-simulation.
         // This is the length of the wave arc (circle segment)
         float circleCircumference = Radius * Utils.Tau;
@@ -189,7 +190,7 @@ public class Wave : MonoBehaviour, IMoverController
                         transform.right
                     )
                 ) +
-                (transform.right * ((wavePartLength * x) + (wavePieceZOffset * y))); // Move right
+                (transform.right * ((wavePartLength * x) + (wavePieceZOffset * y) + (n.transform.localScale.x * 0.5f))); // Move right
 
             n.transform.localRotation =
             Quaternion.FromToRotation(
