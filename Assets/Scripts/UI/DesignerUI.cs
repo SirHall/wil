@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class DesignerUI : MonoBehaviour
@@ -12,12 +13,48 @@ public class DesignerUI : MonoBehaviour
     [SerializeField] Slider barrelLengthSlider;
     [SerializeField] Slider barrelSquashSlider;
 
+    [SerializeField] Button surfButton;
+
+    #region Bookkeeping
+
+    bool clickedSurf = false;
+
+    #endregion
+
     void Start()
     {
-        barrelRadiusSlider.onValueChanged.AddListener(v => wave.BarrelRadius = v);
-        barrelArcSlider.onValueChanged.AddListener(v => wave.BarrelArc = v);
-        barrelLengthSlider.onValueChanged.AddListener(v => wave.BarrelLength = v);
+        barrelRadiusSlider.onValueChanged.AddListener(UpdateBarrelRadius);
+        barrelArcSlider.onValueChanged.AddListener(UpdateBarrelArc);
+        barrelLengthSlider.onValueChanged.AddListener(UpdateBarrelLength);
         // barrelSquashSlider.onValueChanged.AddListener(v => wave.BarrelLength = v);
+
+        UpdateBarrelRadius(barrelRadiusSlider.value);
+        UpdateBarrelArc(barrelArcSlider.value);
+        UpdateBarrelLength(barrelLengthSlider.value);
+    }
+
+    void UpdateBarrelRadius(float v) { wave.BarrelRadius = v; BarrelSettings.Instance.Radius = v; }
+    void UpdateBarrelArc(float v) { wave.BarrelArc = v; BarrelSettings.Instance.Arc = v; }
+    void UpdateBarrelLength(float v) { wave.BarrelLength = v; BarrelSettings.Instance.Length = v; }
+
+
+
+    public void OnSurfButtonClicked()
+    {
+        if (!clickedSurf)
+        {
+            clickedSurf = true;
+            StartCoroutine(LoadSim());
+        }
+    }
+
+    IEnumerator LoadSim()
+    {
+        AsyncOperation load = SceneManager.LoadSceneAsync("Game", LoadSceneMode.Additive);
+        load.allowSceneActivation = true;
+        while (!load.isDone)
+            yield return null;
+        SceneManager.UnloadSceneAsync("BarrelDesigner");
     }
 
 }
