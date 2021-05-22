@@ -1,4 +1,5 @@
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 /// <summary>
 /// This object carries the wave setting data from this scene to the next one
@@ -7,14 +8,25 @@ public class BarrelSettings : MonoBehaviour
 {
     public static BarrelSettings Instance { get; private set; }
 
-    public float Radius { get; set; }
-    public float Length { get; set; }
-    public float Arc { get; set; }
+    [ShowInInspector] public float Radius { get; set; }
+    [ShowInInspector] public float Length { get; set; }
+    [ShowInInspector] public float Arc { get; set; }
 
     void Awake() => DontDestroyOnLoad(gameObject);
 
-    void OnEnable() { Instance = this; }
-    void OnDisable() { Instance = null; }
+    void OnEnable()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+    }
+
+    void OnDisable()
+    {
+        if (Instance == this)
+            Instance = null;
+    }
 
     public static void EmitBarrelSettings()
     {
