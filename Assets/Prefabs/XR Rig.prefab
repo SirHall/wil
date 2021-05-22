@@ -145,9 +145,10 @@ MonoBehaviour:
   m_RigBaseGameObject: {fileID: 2148807533120144821}
   m_CameraFloorOffsetObject: {fileID: 2148807535045047702}
   m_CameraGameObject: {fileID: 2148807534887753444}
-  m_TrackingOriginMode: 2
-  m_TrackingSpace: 3
+  m_RequestedTrackingOriginMode: 2
   m_CameraYOffset: 1.36144
+  m_TrackingSpace: 3
+  m_TrackingOriginMode: -2147483648
 --- !u!114 &2148807533120144822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,6 +199,7 @@ GameObject:
   - component: {fileID: 2148807533148191335}
   - component: {fileID: 2148807533148191332}
   - component: {fileID: 2148807533148191333}
+  - component: {fileID: 2970195696605731872}
   m_Layer: 0
   m_Name: RightHand Controller
   m_TagString: Untagged
@@ -235,7 +237,8 @@ MonoBehaviour:
   m_EnableInputTracking: 1
   m_EnableInputActions: 1
   m_ModelPrefab: {fileID: 3379499606036186405, guid: 400a149caceeca849a7fc93a4f7940b5, type: 3}
-  m_ModelTransform: {fileID: 0}
+  m_ModelParent: {fileID: 0}
+  m_Model: {fileID: 0}
   m_AnimateModel: 0
   m_ModelSelectTransition: 
   m_ModelDeSelectTransition: 
@@ -336,6 +339,18 @@ MonoBehaviour:
   m_PlayHapticsOnHoverCanceled: 0
   m_HapticHoverCancelIntensity: 0
   m_HapticHoverCancelDuration: 0
+--- !u!114 &2970195696605731872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2148807533148191331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 748ca81b82358c645a5a89e42d09e3f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2148807533577459552
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,6 +587,7 @@ GameObject:
   - component: {fileID: 2148807534830899973}
   - component: {fileID: 2148807534830899970}
   - component: {fileID: 2148807534830899971}
+  - component: {fileID: 4003067208431982564}
   m_Layer: 0
   m_Name: LeftHand Controller
   m_TagString: Untagged
@@ -609,7 +625,8 @@ MonoBehaviour:
   m_EnableInputTracking: 1
   m_EnableInputActions: 1
   m_ModelPrefab: {fileID: 3379499606036186405, guid: 14948062168d25445ae932435da6223d, type: 3}
-  m_ModelTransform: {fileID: 0}
+  m_ModelParent: {fileID: 0}
+  m_Model: {fileID: 0}
   m_AnimateModel: 0
   m_ModelSelectTransition: 
   m_ModelDeSelectTransition: 
@@ -710,6 +727,18 @@ MonoBehaviour:
   m_PlayHapticsOnHoverCanceled: 0
   m_HapticHoverCancelIntensity: 0
   m_HapticHoverCancelDuration: 0
+--- !u!114 &4003067208431982564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2148807534830899969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 748ca81b82358c645a5a89e42d09e3f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2148807534887753444
 GameObject:
   m_ObjectHideFlags: 0
@@ -769,8 +798,8 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 1000
-  field of view: 60
+  far clip plane: 6000
+  field of view: 80
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -855,7 +884,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
+  m_RequiresDepthTextureOption: 1
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []

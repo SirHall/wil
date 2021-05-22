@@ -5,13 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Main Menu.unity
     guid: 63d431908745a2d4097df8a14cf2df1d
   - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: 912075cb286d4ac42928b125b6bb15eb
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/BarrelDesigner.unity
     guid: c817e69a8cc593d438168200fb346b6d
   m_configObjects:

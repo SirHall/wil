@@ -33,6 +33,18 @@ public class HeadMovement : MonoBehaviour
     [Tooltip("Debug | Current movement state")]
     private MovementState movementState;
 
+    [SerializeField]
+    [Tooltip("Check if the player has been scored on current state")]
+    private bool isScored;
+
+    [SerializeField]
+    [Tooltip("Total number of times the player has entered the warning state")]
+    private int totalWarnings;
+
+    [SerializeField]
+    [Tooltip("Time in seconds the player has remained in warning state")]
+    private float timeInWarning;
+
     #region Bookkeeping
 
     /// <summary>
@@ -68,15 +80,22 @@ public class HeadMovement : MonoBehaviour
         currentCoordinate = cameraGameObject.transform.localPosition;
 
         CheckPlayerStability();
-
+        SetState();
+        HeadScoring();
+        print("Total: " + totalWarnings);
         using (var e = BoardControlEvent.Get())
             e.input.dir = HeadPosToBoardInput(headPosRel);
 
         using (var e = VisualControlEvent.Get())
             e.input.dir = headPosRel;
-    }
 
-    
+        using (var e = ScoreControlEvent.Get()) 
+        {
+            e.input.warningAmt = totalWarnings;
+            e.input.warningTime = timeInWarning;
+        }
+
+    }
 
     /// <summary>
     /// Return true if a number is between a min and max value
@@ -123,7 +142,9 @@ public class HeadMovement : MonoBehaviour
         return dir;
     }
 
-
+    /// <summary>
+    /// Manages head position values based on current coordinates from start coordinates
+    /// </summary>
     void CheckPlayerStability()
     {
         // Diff X axis = Forward
@@ -140,9 +161,15 @@ public class HeadMovement : MonoBehaviour
             headPosRel.z = DirectionScale(diff.z, maxLeft); // Positive
         else
             headPosRel.z = -DirectionScale(diff.z, maxRight); // Negative
-
+    }
+    /// <summary>
+    /// Sets the movement state of the player based on the heads distance from the center of the board
+    /// </summary>
+    void SetState() 
+    {
         // The scalar euclidean distance the head has moved from its original position 
         float headPosDist = Mathf.Max(Mathf.Abs(headPosRel.z), Mathf.Abs(headPosRel.x));
+        MovementState previousState = movementState;
 
         if (headPosDist >= 1.0f) // Fallen criteria
             movementState = MovementState.Fallen;
@@ -152,5 +179,27 @@ public class HeadMovement : MonoBehaviour
             movementState = MovementState.Leaning;
         else // Stationary criteria
             movementState = MovementState.Stationary;
+
+        // Reset isScored if movement state has changed
+        if (previousState != movementState) 
+            isScored = false;
+    }
+    /// <summary>
+    /// Sets scoring values based on head movement conditions
+    /// </summary>
+    void HeadScoring() 
+    {
+        switch (movementState) 
+        {
+            case MovementState.Warning:
+                // Check if warning state has already been scored
+                if (!isScored) 
+                {
+                    totalWarnings += 1;
+                    isScored = true;
+                }
+                timeInWarning += Time.deltaTime;
+                break;
+        }
     }
 }
