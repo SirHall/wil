@@ -25,7 +25,11 @@ public class MainMenu : MonoBehaviour
     [SerializeField] TextMeshProUGUI teamLabel;
     [SerializeField] float teamLabelFadeinTime = 3.0f;
 
+    #region Bookkeeping
+
     bool clickedLoad = false;
+
+    #endregion
 
     void Awake()
     {
@@ -58,14 +62,14 @@ public class MainMenu : MonoBehaviour
     {
         if (!clickedLoad)
         {
-            StartCoroutine(LoadGame());
             clickedLoad = true;
+            StartCoroutine(LoadGame());
         }
     }
 
     IEnumerator LoadGame()
     {
-        AsyncOperation load = SceneManager.LoadSceneAsync("Game", LoadSceneMode.Additive);
+        AsyncOperation load = SceneManager.LoadSceneAsync("BarrelDesigner", LoadSceneMode.Additive);
         load.allowSceneActivation = true;
         while (!load.isDone)
             yield return null;
