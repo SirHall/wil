@@ -52,13 +52,14 @@ MonoBehaviour:
   wavePartWidth: 0.5
   waveArcRange: {x: 0, y: 320}
   sineTimeMult: 0.1
-  barrelRadius: 8
   unusedPartLocation: {fileID: 0}
-  barrelLength: 140
   wavePieceZOffset: 0.15
   waveStartAngle: -90
-  anim: {fileID: 11400000, guid: dae9ff46287c5a5439ff93dbd9c82f41, type: 2}
+  anim: {fileID: 0}
   rb: {fileID: 4043323280774310637}
+  barrelRadius: 8
+  barrelLength: 140
+  arc: 1
 --- !u!54 &4043323280774310637
 Rigidbody:
   m_ObjectHideFlags: 0
