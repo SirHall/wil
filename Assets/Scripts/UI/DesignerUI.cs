@@ -24,6 +24,14 @@ public class DesignerUI : MonoBehaviour
     void Start()
     {
         Time.timeScale = 1.0f;
+
+        //  Firstly get the values from the settings, this allows us to use the
+        // settings used from previous designer scene instances and allows for
+        // apreviously run barrel to be slightly tweaked.
+        barrelRadiusSlider.value = BarrelSettings.Instance.Radius;
+        barrelArcSlider.value = BarrelSettings.Instance.Arc;
+        barrelLengthSlider.value = BarrelSettings.Instance.Length;
+
         barrelRadiusSlider.onValueChanged.AddListener(UpdateBarrelRadius);
         barrelArcSlider.onValueChanged.AddListener(UpdateBarrelArc);
         barrelLengthSlider.onValueChanged.AddListener(UpdateBarrelLength);
