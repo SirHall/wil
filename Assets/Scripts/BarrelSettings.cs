@@ -8,11 +8,9 @@ public class BarrelSettings : MonoBehaviour
 {
     public static BarrelSettings Instance { get; private set; }
 
-    [ShowInInspector] public float Radius { get; set; }
-    [ShowInInspector] public float Length { get; set; }
-    [ShowInInspector] public float Arc { get; set; }
-
-    void Awake() => DontDestroyOnLoad(gameObject);
+    [ShowInInspector] public float Radius { get; set; } = 4.0f;
+    [ShowInInspector] public float Length { get; set; } = 50.0f;
+    [ShowInInspector] public float Arc { get; set; } = 0.8f;
 
     void OnEnable()
     {
