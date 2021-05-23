@@ -27,8 +27,6 @@ public class HeadMovement : MonoBehaviour
     [Tooltip("Gameobjects which define the coordinates for the max boundary values")]
     private GameObject forwardBoundary, backBoundary, leftBoundary, rightBoundary;
 
-    private enum MovementState { Stationary, Leaning, Warning, Fallen };
-
     [SerializeField]
     [Tooltip("Debug | Current movement state")]
     private MovementState movementState;
@@ -62,7 +60,7 @@ public class HeadMovement : MonoBehaviour
         get => vr_CameraGameObject;
         set => vr_CameraGameObject = value;
     }
-    private void Awake() 
+    private void Awake()
     {
         // Assign MaxValues based on boundry gameobjects coordinates
         maxForward = Mathf.Abs(Mathf.Round(forwardBoundary.transform.position.z * 100f) / 100f);
@@ -87,12 +85,12 @@ public class HeadMovement : MonoBehaviour
             e.input.dir = HeadPosToBoardInput(headPosRel);
 
         using (var e = VisualControlEvent.Get())
-            e.input.dir = headPosRel;
+            e.dir = headPosRel;
 
-        using (var e = ScoreControlEvent.Get()) 
+        using (var e = ScoreControlEvent.Get())
         {
-            e.input.warningAmt = totalWarnings;
-            e.input.warningTime = timeInWarning;
+            e.warningAmt = totalWarnings;
+            e.warningTime = timeInWarning;
         }
 
     }
@@ -162,38 +160,48 @@ public class HeadMovement : MonoBehaviour
         else
             headPosRel.z = -DirectionScale(diff.z, maxRight); // Negative
     }
+
+    // This function takes in the head tilt and transforms it into a movement
+    // state, this allows code anywhere to check the board's stability
+    public static MovementState HeadTiltToState(Vector3 headTilt)
+    {
+        // The scalar euclidean distance the head has moved from its original position 
+        float headPosDist = Mathf.Max(Mathf.Abs(headTilt.z), Mathf.Abs(headTilt.x));
+
+        if (headPosDist >= 1.0f) // Fallen criteria
+            return MovementState.Fallen;
+        else if (headPosDist >= 0.7) // Warning criteria
+            return MovementState.Warning;
+        else if (headPosDist >= 0.3f) // Leaning criteria
+            return MovementState.Leaning;
+        else // Stationary criteria
+            return MovementState.Stationary;
+
+    }
+
     /// <summary>
     /// Sets the movement state of the player based on the heads distance from the center of the board
     /// </summary>
-    void SetState() 
+    void SetState()
     {
-        // The scalar euclidean distance the head has moved from its original position 
-        float headPosDist = Mathf.Max(Mathf.Abs(headPosRel.z), Mathf.Abs(headPosRel.x));
         MovementState previousState = movementState;
 
-        if (headPosDist >= 1.0f) // Fallen criteria
-            movementState = MovementState.Fallen;
-        else if (headPosDist >= 0.7) // Warning criteria
-            movementState = MovementState.Warning;
-        else if (headPosDist >= 0.3f) // Leaning criteria
-            movementState = MovementState.Leaning;
-        else // Stationary criteria
-            movementState = MovementState.Stationary;
+        movementState = HeadTiltToState(headPosRel);
 
         // Reset isScored if movement state has changed
-        if (previousState != movementState) 
+        if (previousState != movementState)
             isScored = false;
     }
     /// <summary>
     /// Sets scoring values based on head movement conditions
     /// </summary>
-    void HeadScoring() 
+    void HeadScoring()
     {
-        switch (movementState) 
+        switch (movementState)
         {
             case MovementState.Warning:
                 // Check if warning state has already been scored
-                if (!isScored) 
+                if (!isScored)
                 {
                     totalWarnings += 1;
                     isScored = true;
@@ -202,4 +210,12 @@ public class HeadMovement : MonoBehaviour
                 break;
         }
     }
+}
+
+public enum MovementState
+{
+    Stationary,
+    Leaning,
+    Warning,
+    Fallen
 }
