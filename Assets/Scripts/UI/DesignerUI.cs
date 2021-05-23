@@ -23,6 +23,7 @@ public class DesignerUI : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 1.0f;
         barrelRadiusSlider.onValueChanged.AddListener(UpdateBarrelRadius);
         barrelArcSlider.onValueChanged.AddListener(UpdateBarrelArc);
         barrelLengthSlider.onValueChanged.AddListener(UpdateBarrelLength);
