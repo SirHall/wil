@@ -4,6 +4,7 @@ using Excessives.Unity;
 using KinematicCharacterController;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Sirenix.OdinInspector;
 
 public class BoardController : MonoBehaviour, ICharacterController
 {
@@ -23,12 +24,27 @@ public class BoardController : MonoBehaviour, ICharacterController
     [SerializeField] float wavePullUpAccel = 8.0f;
     [SerializeField] float waveForwardAccel = 20f;
 
+
+    [SerializeField] bool introEnabled = true;
+    [SerializeField] [ShowIfGroup("introEnabled")] [FoldoutGroup("introEnabled/Intro")] Transform introStartPos;
+    [SerializeField] [ShowIfGroup("introEnabled")] [FoldoutGroup("introEnabled/Intro")] Transform introEndPos;
+    [SerializeField] [ShowIfGroup("introEnabled")] [FoldoutGroup("introEnabled/Intro")] float introTime;
+
+    /// <summary>
+    /// Is this board accepting user input?
+    /// </summary>
+    public bool InputAccepted { get; private set; }
+
     void Awake()
     {
         motor.CharacterController = this;
     }
 
-    void Start() { }
+    void Start()
+    {
+        if (introEnabled)
+            StartCoroutine(Intro());
+    }
 
     void OnEnable()
     {
@@ -44,6 +60,27 @@ public class BoardController : MonoBehaviour, ICharacterController
     void OnBoardControlEvent(BoardControlEvent e)
     {
         input = e.input;
+    }
+
+    IEnumerator Intro()
+    {
+        InputAccepted = false;
+        Vector3 dir = introEndPos.position - introStartPos.position;
+        float introVel = dir.magnitude / introTime;
+        motor.SetPositionAndRotation(introStartPos.position, Quaternion.LookRotation(dir, Vector3.up));
+
+        // Allow one frame to pass so the above SetPositionAndRotation takes effect
+        yield return null;
+
+        while (dir.magnitude > 0.01f)
+        {
+            float dist = Mathf.Min(dir.magnitude, introVel * Time.deltaTime);
+            motor.SetPosition(motor.TransientPosition + dir.normalized * dist);
+            dir = introEndPos.position - motor.TransientPosition;
+            yield return null;
+        }
+
+        InputAccepted = true;
     }
 
     #region ICharacterController
@@ -66,11 +103,15 @@ public class BoardController : MonoBehaviour, ICharacterController
 
     void ICharacterController.UpdateRotation(ref Quaternion currentRotation, float deltaTime)
     {
+        if (!InputAccepted)
+            return;
         currentRotation *= Quaternion.AngleAxis(input.dir.x * rotateAccel * deltaTime, transform.up);
     }
 
     void ICharacterController.UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
     {
+        if (!InputAccepted)
+            return;
         // Drag is only applied to horizontal components
         currentVelocity = (currentVelocity * (1f / (1f + (drag * deltaTime)))).WithY(currentVelocity.y);
 
@@ -101,9 +142,9 @@ public class BoardController : MonoBehaviour, ICharacterController
             // This allows us to slide down any inclination
             Vector3 wallGravity = Vector3.ProjectOnPlane(motor.GroundingStatus.GroundNormal, Vector3.up) * 15f * deltaTime;
             currentVelocity += wallGravity;
-            Debug.DrawRay(transform.position, Vector3.up, Color.blue, 0.1f, false);
-            Debug.DrawRay(transform.position, motor.GroundingStatus.GroundNormal, Color.green, 0.1f, false);
-            Debug.DrawRay(transform.position, wallGravity, Color.red, 0.1f, false);
+            // Debug.DrawRay(transform.position, Vector3.up, Color.blue, 0.1f, false);
+            // Debug.DrawRay(transform.position, motor.GroundingStatus.GroundNormal, Color.green, 0.1f, false);
+            // Debug.DrawRay(transform.position, wallGravity, Color.red, 0.1f, false);
         }
     }
 
