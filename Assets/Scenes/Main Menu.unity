@@ -952,6 +952,7 @@ MonoBehaviour:
   titleFadeInTime: 3
   teamLabel: {fileID: 926624781}
   teamLabelFadeinTime: 3
+  uiEventSystem: {fileID: 399948609}
 --- !u!222 &1377780261
 CanvasRenderer:
   m_ObjectHideFlags: 0
