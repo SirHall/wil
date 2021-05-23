@@ -30,10 +30,11 @@ public class BoardController : MonoBehaviour, ICharacterController
     [SerializeField] [ShowIfGroup("introEnabled")] [FoldoutGroup("introEnabled/Intro")] Transform introEndPos;
     [SerializeField] [ShowIfGroup("introEnabled")] [FoldoutGroup("introEnabled/Intro")] float introTime;
 
+    bool inputAccepted = true;
     /// <summary>
     /// Is this board accepting user input?
     /// </summary>
-    public bool InputAccepted { get; private set; }
+    public bool InputAccepted { get => inputAccepted; }
 
     void Awake()
     {
@@ -56,15 +57,22 @@ public class BoardController : MonoBehaviour, ICharacterController
         BoardControlEvent.UnregisterListener(OnBoardControlEvent);
     }
 
+    void Update()
+    {
+        if (!WaveScore.IsPlaying)
+            input.dir = Vector2.zero;
+    }
+
     // A controller has announced new data
     void OnBoardControlEvent(BoardControlEvent e)
     {
-        input = e.input;
+        if (WaveScore.IsPlaying)
+            input = e.input;
     }
 
     IEnumerator Intro()
     {
-        InputAccepted = false;
+        inputAccepted = false;
         Vector3 dir = introEndPos.position - introStartPos.position;
         float introVel = dir.magnitude / introTime;
         motor.SetPositionAndRotation(introStartPos.position, Quaternion.LookRotation(dir, Vector3.up));
@@ -80,7 +88,7 @@ public class BoardController : MonoBehaviour, ICharacterController
             yield return null;
         }
 
-        InputAccepted = true;
+        inputAccepted = true;
     }
 
     #region ICharacterController
