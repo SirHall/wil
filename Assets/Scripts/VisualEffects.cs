@@ -12,19 +12,22 @@ public class VisualEffects : MonoBehaviour
 
     private Volume postProcessingVolume;
 
-    MovementInput input = new MovementInput();
+    Vector3 dir = new Vector3();
 
-    void OnEnable() {
+    void OnEnable()
+    {
         VisualControlEvent.RegisterListener(OnMoveControlEvent);
     }
 
-    void OnDisable() {
+    void OnDisable()
+    {
         VisualControlEvent.UnregisterListener(OnMoveControlEvent);
     }
 
     // A controller has announced new data
-    void OnMoveControlEvent(VisualControlEvent e) {
-        input = e.input;
+    void OnMoveControlEvent(VisualControlEvent e)
+    {
+        dir = e.dir;
     }
 
     // Start is called before the first frame update
@@ -36,9 +39,9 @@ public class VisualEffects : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (postProcessingVolume.profile.TryGet<Vignette>(out var vignette)) 
+        if (postProcessingVolume.profile.TryGet<Vignette>(out var vignette))
         {
-            float headPosDist = Mathf.Max(Mathf.Abs(input.dir.z), Mathf.Abs(input.dir.x));
+            float headPosDist = Mathf.Max(Mathf.Abs(dir.z), Mathf.Abs(dir.x));
 
             vignette.intensity.overrideState = true;
             vignette.intensity.value = headPosDist;
