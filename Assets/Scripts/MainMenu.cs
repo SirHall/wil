@@ -25,6 +25,9 @@ public class MainMenu : MonoBehaviour
     [SerializeField] TextMeshProUGUI teamLabel;
     [SerializeField] float teamLabelFadeinTime = 3.0f;
 
+    [Tooltip("The Main Menu's UI Event System is deleted before the scene change so as to allow the second menu's EventSystem to take over")]
+    [SerializeField] EventSystem uiEventSystem;
+
     #region Bookkeeping
 
     bool clickedLoad = false;
@@ -69,6 +72,11 @@ public class MainMenu : MonoBehaviour
 
     IEnumerator LoadGame()
     {
+        // TODO: This should probably be replaced with the UI event
+        // system instead being made a don't destroy on load object
+        Destroy(uiEventSystem.gameObject);
+        yield return null;
+
         AsyncOperation load = SceneManager.LoadSceneAsync("BarrelDesigner", LoadSceneMode.Additive);
         load.allowSceneActivation = true;
         while (!load.isDone)
@@ -93,6 +101,8 @@ public class MainMenu : MonoBehaviour
             yield return null;
         }
 
+        Scene barrelScene = SceneManager.GetSceneByName("BarrelDesigner");
+        SceneManager.SetActiveScene(barrelScene);
         SceneManager.UnloadSceneAsync("Main Menu");
     }
 }
