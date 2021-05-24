@@ -30,11 +30,10 @@ public class BoardController : MonoBehaviour, ICharacterController
     [SerializeField] [ShowIfGroup("introEnabled")] [FoldoutGroup("introEnabled/Intro")] Transform introEndPos;
     [SerializeField] [ShowIfGroup("introEnabled")] [FoldoutGroup("introEnabled/Intro")] float introTime;
 
-    bool inputAccepted = true;
     /// <summary>
     /// Is this board accepting user input?
     /// </summary>
-    public bool InputAccepted { get => inputAccepted; }
+    bool inputAccepted = true;
 
     void Awake()
     {
@@ -111,14 +110,14 @@ public class BoardController : MonoBehaviour, ICharacterController
 
     void ICharacterController.UpdateRotation(ref Quaternion currentRotation, float deltaTime)
     {
-        if (!InputAccepted)
+        if (!inputAccepted)
             return;
         currentRotation *= Quaternion.AngleAxis(input.dir.x * rotateAccel * deltaTime, transform.up);
     }
 
     void ICharacterController.UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
     {
-        if (!InputAccepted)
+        if (!inputAccepted)
             return;
         // Drag is only applied to horizontal components
         currentVelocity = (currentVelocity * (1f / (1f + (drag * deltaTime)))).WithY(currentVelocity.y);
