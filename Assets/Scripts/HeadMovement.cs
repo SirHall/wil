@@ -63,10 +63,10 @@ public class HeadMovement : MonoBehaviour
     private void Awake()
     {
         // Assign MaxValues based on boundry gameobjects coordinates
-        maxForward = Mathf.Abs(Mathf.Round(forwardBoundary.transform.position.z * 100f) / 100f);
-        maxBack = Mathf.Abs(Mathf.Round(backBoundary.transform.position.z * 100f) / 100f);
-        maxLeft = Mathf.Abs(Mathf.Round(leftBoundary.transform.position.x * 100f) / 100f);
-        maxRight = Mathf.Abs(Mathf.Round(rightBoundary.transform.position.x * 100f) / 100f);
+        maxForward = Mathf.Abs(Mathf.Round(forwardBoundary.transform.localPosition.z * 100f) / 100f);
+        maxBack = Mathf.Abs(Mathf.Round(backBoundary.transform.localPosition.z * 100f) / 100f);
+        maxLeft = Mathf.Abs(Mathf.Round(leftBoundary.transform.localPosition.x * 100f) / 100f);
+        maxRight = Mathf.Abs(Mathf.Round(rightBoundary.transform.localPosition.x * 100f) / 100f);
     }
     void Start()
     {
@@ -76,11 +76,9 @@ public class HeadMovement : MonoBehaviour
     void Update()
     {
         currentCoordinate = cameraGameObject.transform.localPosition;
-
         CheckPlayerStability();
         SetState();
         HeadScoring();
-        print("Total: " + totalWarnings);
         using (var e = BoardControlEvent.Get())
             e.input.dir = HeadPosToBoardInput(headPosRel);
 
