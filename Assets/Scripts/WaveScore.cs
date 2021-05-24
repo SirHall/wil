@@ -40,7 +40,7 @@ public class WaveScore : MonoBehaviour
     void Update()
     {
         MovementState moveState = HeadMovement.HeadTiltToState(headTilt);
-        if (moveState == MovementState.Fallen)
+        if (moveState == MovementState.Fallen && IsPlaying)
         {
             State = GameState.Lost;
 
@@ -66,6 +66,8 @@ public class WaveScore : MonoBehaviour
     void OnWaveEndEvent(WaveEndEvent e)
     {
         // We have won
+        if (!IsPlaying)
+            return;
 
         State = GameState.Won;
         StartCoroutine(RunInEndEndScene(() =>
