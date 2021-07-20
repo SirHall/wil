@@ -70,9 +70,22 @@ public class HandManager : MonoBehaviour
     private void InitialiseHands() {
         InputDevices.GetDevicesWithCharacteristics(deviceCharacteristics, devices);
         if (devices.Count > 0) {
+            Vector3 pos;
+            Quaternion rot;
             visibleHandModel = new GameObject();
             currentDevice = devices[0];
+
+            //if (currentDevice.TryGetFeatureValue(CommonUsages.devicePosition, out pos)) {
+            //    this.transform.position = pos;
+            //}
+            //if (currentDevice.TryGetFeatureValue(CommonUsages.deviceRotation, out rot)) {
+            //    this.transform.rotation = rot;
+            //}
+
             visibleHandModel = Instantiate(handPrefab, transform);
+            
+            //print("1: " + pos);
+            //print("2: " + visibleHandModel.transform.position);
             handAnimator = visibleHandModel.GetComponent<Animator>();
         }
 
