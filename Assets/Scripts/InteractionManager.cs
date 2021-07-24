@@ -26,6 +26,7 @@ public class InteractionManager : MonoBehaviour
     {
         if(collision.gameObject.layer == 6) 
         {
+            print("I'm interacting");
             isInteractable = true;
         }
     }
