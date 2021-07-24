@@ -5,7 +5,7 @@ using UnityEngine;
 public class VRButton : MonoBehaviour
 {
     [Tooltip("The distance the button must be moved from its starting position by the hand to be considered 'pressed'")]
-    [SerializeField] float depressDist = 0.5f;
+    [SerializeField] float depressDist = 0.01f;
 
     [Tooltip("If enabled, the button will move back to its original position after being depressed")]
     [SerializeField] bool momentarySwitch = true;
@@ -14,6 +14,9 @@ public class VRButton : MonoBehaviour
 
     [Tooltip("How quickly the button returns to it's original position after being fully depressed")]
     [SerializeField] float buttonRiseLerpSpeed = 1.0f;
+
+    [Tooltip("When pressed by a non-physical source (user clicks on this button using their mouse), how far does the butto depress")]
+    [SerializeField] float clickDist = 1.0f;
 
     #region Bookkeeping
 
@@ -53,5 +56,11 @@ public class VRButton : MonoBehaviour
 
         using (var e = VRButtonEvent.Get())
             e.button = button;
+    }
+
+    public void Press()
+    {
+        ButtonPressed();
+        transform.position = initPos - (transform.forward * Mathf.Max(depressDist, clickDist));
     }
 }
