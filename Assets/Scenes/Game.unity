@@ -261,6 +261,7 @@ GameObject:
   - component: {fileID: 14079237}
   - component: {fileID: 14079236}
   - component: {fileID: 14079242}
+  - component: {fileID: 14079241}
   m_Layer: 0
   m_Name: BoardNew
   m_TagString: Player
@@ -381,6 +382,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &14079241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 14079235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 559979924dcfdc84da7ce03778695034, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  applyToBaseObject: 1
 --- !u!114 &14079242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3847,7 +3861,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1093242288}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -1.07, y: 1.579, z: 0.768}
+  m_LocalPosition: {x: 0, y: 1.479, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 791436354}
@@ -3871,6 +3885,7 @@ MonoBehaviour:
   momentarySwitch: 1
   button: 1
   buttonRiseLerpSpeed: 5
+  clickDist: 1
 --- !u!4 &1157579038 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d48b8a4453a1ec946bfdf3d11ba02767, type: 3}
@@ -6926,6 +6941,7 @@ GameObject:
   - component: {fileID: 2023971913}
   - component: {fileID: 2023971912}
   - component: {fileID: 2023971915}
+  - component: {fileID: 2023971916}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -7090,6 +7106,35 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Cardinal Input
       m_Flags: 8
+--- !u!114 &2023971916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023971910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1293e114047db914eb06790b36f96068, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonClick:
+    m_Name: Button Click
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 1e30285a-e843-49f7-ae01-6d400f42dc10
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 922ca570-6117-465d-b4b5-64f5e7d6b957
+      m_Path: <Mouse>/leftButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Button Click
+      m_Flags: 0
+  maxDist: 2
 --- !u!1 &2031475571 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4784911009452962499, guid: d1277bb803ddcf34b960e1cd1efe9e97, type: 3}
@@ -7341,6 +7386,10 @@ PrefabInstance:
     - target: {fileID: 4784911010243417142, guid: d1277bb803ddcf34b960e1cd1efe9e97, type: 3}
       propertyPath: m_Name
       value: XR Rig
+      objectReference: {fileID: 0}
+    - target: {fileID: 4784911010243417142, guid: d1277bb803ddcf34b960e1cd1efe9e97, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4784911010243417143, guid: d1277bb803ddcf34b960e1cd1efe9e97, type: 3}
       propertyPath: m_RootOrder
