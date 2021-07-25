@@ -8,6 +8,12 @@ public class WaveScore : MonoBehaviour
 {
     [SerializeField] Collider winCollider;
 
+    public Animator transition;
+
+    [SerializeField]
+    [Tooltip("Time in seconds it takes for the transition to occur")]
+    public GameObject sceneTransition;
+
     int warningAmt;
     float warningTime;
     Vector3 headTilt;
@@ -19,6 +25,7 @@ public class WaveScore : MonoBehaviour
     void Awake()
     {
         State = GameState.Playing;
+        sceneTransition.SetActive(false);
     }
 
     void OnEnable()
@@ -44,11 +51,11 @@ public class WaveScore : MonoBehaviour
         {
             State = GameState.Lost;
 
-            StartCoroutine(RunInEndEndScene(() =>
-            {
-                // We have lost
-                using (var e = GameLost.Get()) { /* Rest In Peace, ocean man :( */ }
-            }));
+            //StartCoroutine(RunInEndEndScene(() => {
+            //    // We have lost
+            //    using (var e = GameLost.Get()) { /* Rest In Peace, ocean man :( */ }
+            //}));
+            StartCoroutine(SplashTransition());
         }
     }
 
@@ -85,6 +92,28 @@ public class WaveScore : MonoBehaviour
 
 
         SceneManager.UnloadSceneAsync("Game");
+    }
+
+    IEnumerator SplashTransition() 
+    {
+        sceneTransition.SetActive(true);
+
+        // Play Animation
+        transition.SetTrigger("Splash");
+
+        // Wait
+        yield return new WaitForSeconds(1.2f);
+
+        // Load Scene & Teleport player
+        StartCoroutine(RunInEndEndScene(() =>
+        {
+            // We have lost
+            using (var e = GameLost.Get()) { /* Rest In Peace, ocean man :( */ }
+        }));
+        
+        // Wait
+        yield return new WaitForSeconds(0.5f);
+        sceneTransition.SetActive(false);
     }
 
     IEnumerator RunInEndEndScene(Action action)
