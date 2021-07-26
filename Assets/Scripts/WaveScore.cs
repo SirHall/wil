@@ -102,7 +102,7 @@ public class WaveScore : MonoBehaviour
         transition.SetTrigger("Splash");
 
         // Wait
-        yield return new WaitForSeconds(1.2f);
+        yield return new WaitForSeconds(1.6f);
 
         // Load Scene & Teleport player
         StartCoroutine(RunInEndEndScene(() =>
