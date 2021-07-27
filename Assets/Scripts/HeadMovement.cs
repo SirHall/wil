@@ -127,13 +127,13 @@ public class HeadMovement : MonoBehaviour
 
         // Cutoff values determin when the head position values should be ignored and returned as a 0 value (Essentially making the surfboard stationary)
         // Or when they should return their true values which will be used by the surfboard to move it. 
-        float forwardCutoff = 0.3f;
-        float sidewaysCutoff = 0.2f;
+        float forwardCutoff = 0.2f;
+        float sidewaysCutoff = 0.1f;
 
         // Leaning
-        if (headPos.x >= forwardCutoff) { dir.y = headPos.x; } // Forward
-        if (headPos.z >= sidewaysCutoff) { dir.x = -headPos.z; } //Left
-        if (headPos.z <= -sidewaysCutoff) { dir.x = Mathf.Abs(headPos.z); } //Right
+        if (headPos.x >= forwardCutoff) { dir.y = headPos.x - forwardCutoff; } // Forward
+        if (headPos.z >= sidewaysCutoff) { dir.x = -headPos.z + sidewaysCutoff; } //Left
+        if (headPos.z <= -sidewaysCutoff) { dir.x = Mathf.Abs(headPos.z + sidewaysCutoff); } //Right
 
         // Stationary
         if (headPos.x < forwardCutoff) { dir.y = 0; } // Forward

@@ -113,7 +113,7 @@ public class BoardController : MonoBehaviour, ICharacterController
         if (!inputAccepted)
             return;
         // Inputs direction X value is multiplied to make greater head movements apply a large value in comparison to smaller values. 
-        currentRotation *= Quaternion.AngleAxis((input.dir.x * 1.4f) * rotateAccel * deltaTime, transform.up);
+        currentRotation *= Quaternion.AngleAxis((input.dir.x * 3f) * rotateAccel * deltaTime, transform.up);
     }
 
     void ICharacterController.UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
@@ -125,7 +125,7 @@ public class BoardController : MonoBehaviour, ICharacterController
 
         if (motor.GroundingStatus.IsStableOnGround)
         {
-            currentVelocity += transform.forward * input.dir.y * moveAccel * deltaTime;
+            currentVelocity += transform.forward * (input.dir.y * 1.1f) * moveAccel * deltaTime;
 
             Collider col = motor.GroundingStatus.GroundCollider;
 
