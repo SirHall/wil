@@ -178,10 +178,6 @@ MonoBehaviour:
   vr_CameraGameObject: {fileID: 612938263532401153}
   startCooridnate: {x: 0, y: 0, z: 0}
   currentCoordinate: {x: 0, y: 0, z: 0}
-  maxForward: 0.9
-  maxBack: 0.5
-  maxLeft: 0.3
-  maxRight: 0.3
   forwardBoundary: {fileID: 612938262958139789}
   backBoundary: {fileID: 612938263735546684}
   leftBoundary: {fileID: 612938262966006931}

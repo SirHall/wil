@@ -19,7 +19,6 @@ public class HeadMovement : MonoBehaviour
     [Tooltip("Debug | current local cooridnates")]
     Vector3 currentCoordinate;
 
-    [SerializeField]
     [Tooltip("The max unit values the player can move in specified direction")]
     private float maxForward, maxBack, maxLeft, maxRight;
 
@@ -126,14 +125,19 @@ public class HeadMovement : MonoBehaviour
         // headPos X axis == dir Y axis (Forward)
         // headPos Z axis == dir X Axis (Side)
 
+        // Cutoff values determin when the head position values should be ignored and returned as a 0 value (Essentially making the surfboard stationary)
+        // Or when they should return their true values which will be used by the surfboard to move it. 
+        float forwardCutoff = 0.3f;
+        float sidewaysCutoff = 0.2f;
+
         // Leaning
-        if (headPos.x >= 0.4) { dir.y = headPos.x; } // Forward
-        if (headPos.z >= 0.3) { dir.x = -headPos.z; } //Left
-        if (headPos.z <= -0.3) { dir.x = Mathf.Abs(headPos.z); } //Right
+        if (headPos.x >= forwardCutoff) { dir.y = headPos.x; } // Forward
+        if (headPos.z >= sidewaysCutoff) { dir.x = -headPos.z; } //Left
+        if (headPos.z <= -sidewaysCutoff) { dir.x = Mathf.Abs(headPos.z); } //Right
 
         // Stationary
-        if (headPos.x < 0.4) { dir.y = 0; } // Forward
-        if (headPos.z < 0.3 && headPos.z > -0.3) { dir.x = 0; } // Side
+        if (headPos.x < forwardCutoff) { dir.y = 0; } // Forward
+        if (headPos.z < sidewaysCutoff && headPos.z > -sidewaysCutoff) { dir.x = 0; } // Side
 
         return dir;
     }
