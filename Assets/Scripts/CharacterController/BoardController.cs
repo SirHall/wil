@@ -72,22 +72,29 @@ public class BoardController : MonoBehaviour, ICharacterController
     IEnumerator Intro()
     {
         inputAccepted = false;
-        Vector3 dir = introEndPos.position - introStartPos.position;
-        float introVel = dir.magnitude / introTime;
-        motor.SetPositionAndRotation(introStartPos.position, Quaternion.LookRotation(dir, Vector3.up));
 
-        // Allow one frame to pass so the above SetPositionAndRotation takes effect
-        yield return null;
+        // Only run the intro if it is enabled, and all positions are set
+        introEnabled = introEnabled && introStartPos != null && introEndPos != null;
 
-        while (dir.magnitude > 0.01f)
+        if (introEnabled)
         {
-            float dist = Mathf.Min(dir.magnitude, introVel * Time.deltaTime);
-            motor.SetPosition(motor.TransientPosition + dir.normalized * dist);
-            dir = introEndPos.position - motor.TransientPosition;
-            yield return null;
-        }
+            Vector3 dir = introEndPos.position - introStartPos.position;
+            float introVel = dir.magnitude / introTime;
+            motor.SetPositionAndRotation(introStartPos.position, Quaternion.LookRotation(dir, Vector3.up));
 
-        inputAccepted = true;
+            // Allow one frame to pass so the above SetPositionAndRotation takes effect
+            yield return null;
+
+            while (dir.magnitude > 0.01f)
+            {
+                float dist = Mathf.Min(dir.magnitude, introVel * Time.deltaTime);
+                motor.SetPosition(motor.TransientPosition + dir.normalized * dist);
+                dir = introEndPos.position - motor.TransientPosition;
+                yield return null;
+            }
+
+            inputAccepted = true;
+        }
     }
 
     #region ICharacterController
