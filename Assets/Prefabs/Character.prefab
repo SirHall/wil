@@ -209,6 +209,17 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Cardinal Input
       m_Flags: 8
+  elevationRange: {x: 0, y: 180}
+  mouseDelta:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+  viewTransform: {fileID: 0}
+  sensitivity: 0.1
 --- !u!114 &5555672468371652483
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,8 +396,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f67650aa8161f9438361b55a5b9087c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObj1: {fileID: 5555672468371652489}
-  gameObj2: {fileID: 0}
+  keyboardRig: {fileID: 5555672468371652489}
+  vrRig: {fileID: 0}
 --- !u!114 &5555672468506556102
 MonoBehaviour:
   m_ObjectHideFlags: 0
