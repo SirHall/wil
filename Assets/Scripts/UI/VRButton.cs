@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using TMPro;
+using UnityEngine.Events;
 
 public class VRButton : MonoBehaviour
 {
@@ -24,17 +25,26 @@ public class VRButton : MonoBehaviour
     [TabGroup("Settings")]
     [SerializeField] float buttonRiseLerpSpeed = 1.0f;
 
+    [Tooltip("When the button has returned within this range of its original position, it has been 'unpressed'")]
+    [TabGroup("Settings")]
+    [SerializeField] float unpressDist = 0.1f;
+
     [Tooltip("When pressed by a non-physical source (user clicks on this button using their mouse), how far does the butto depress")]
     [TabGroup("Settings")]
     [SerializeField] float clickDist = 1.0f;
 
     [Tooltip("What is displayed on the button as text")]
+    [OnValueChanged("@this.text.text = this.label")]
     [TabGroup("Settings")]
     [SerializeField] string label = "Press";
 
     [Tooltip("The color of the button in play")]
     [TabGroup("Settings")]
     [SerializeField] Color buttonColor = Color.black;
+
+    [Tooltip("If whether the button should rotate itself to be pointed towards it's local origin")]
+    [TabGroup("Settings")]
+    [SerializeField] bool orientTowardsOrigin = true;
 
     #endregion
 
@@ -43,6 +53,12 @@ public class VRButton : MonoBehaviour
 
     [TabGroup("References")]
     [SerializeField] TextMeshPro text;
+
+    [TabGroup("References")]
+    [SerializeField] UnityEvent OnPressed;
+
+    [TabGroup("References")]
+    [SerializeField] UnityEvent OnLift;
 
     #region Bookkeeping
 
@@ -54,7 +70,7 @@ public class VRButton : MonoBehaviour
 
     void Start()
     {
-        initPos = transform.position;
+        initPos = transform.localPosition;
 
         text.text = label;
         meshRend.material.color = buttonColor;
@@ -62,14 +78,21 @@ public class VRButton : MonoBehaviour
 
     void Update()
     {
+        if (orientTowardsOrigin && transform.parent != null)
+            transform.LookAt(transform.parent.position, Vector3.up);
+
         // We move the button back to it's original position on the frame after it has been fully depressed
         if (pressed && momentarySwitch)
-            transform.position = Vector3.Lerp(transform.position, initPos, Time.deltaTime * buttonRiseLerpSpeed);
+            transform.localPosition = Vector3.Lerp(transform.localPosition, initPos, Time.deltaTime * buttonRiseLerpSpeed);
 
-        if (pressed && momentarySwitch && Vector3.Distance(initPos, transform.position) <= 0.01f)
+        if (pressed && momentarySwitch && Vector3.Distance(initPos, transform.localPosition) <= unpressDist)
+        {
             pressed = false; // This button has now returned to its original position, and is now 'unpressed'
+            transform.localPosition = initPos;
+            OnLift.Invoke();
+        }
 
-        if (!pressed && Vector3.Distance(initPos, transform.position) >= depressDist)
+        if (!pressed && Vector3.Distance(initPos, transform.localPosition) >= depressDist)
             ButtonPressed();
     }
 
@@ -85,11 +108,13 @@ public class VRButton : MonoBehaviour
 
         using (var e = VRButtonEvent.Get())
             e.button = button;
+
+        OnPressed.Invoke();
     }
 
     public void Press()
     {
         ButtonPressed();
-        transform.position = initPos - (transform.forward * Mathf.Max(depressDist, clickDist));
+        transform.localPosition = initPos - (transform.forward * Mathf.Max(depressDist, clickDist));
     }
 }
