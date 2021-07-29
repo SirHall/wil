@@ -3,11 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
+using Sirenix.OdinInspector;
+using UnityEngine.Serialization;
 
 public class povchange : MonoBehaviour
 {
-    public GameObject gameObj1;
-    public GameObject gameObj2;
+    [FormerlySerializedAs("gameObj1")]
+    public GameObject keyboardRig;
+    [FormerlySerializedAs("gameObj2")]
+    public GameObject vrRig;
 
     private List<InputDevice> headsetDevices = new List<InputDevice>();
     private InputDevice activeHeadset;
@@ -27,16 +31,16 @@ public class povchange : MonoBehaviour
 
         if (activeHeadset.isValid)
         {
-           // Debug.Log("Detected VR");
-            gameObj1.SetActive(false);
-            gameObj2.SetActive(true);
+            // Debug.Log("Detected VR");
+            keyboardRig.SetActive(false);
+            vrRig.SetActive(true);
 
         }
         else
         {
-           // Debug.Log("Not detected VR");
-            gameObj1.SetActive(true);
-            gameObj2.SetActive(false);
+            // Debug.Log("Not detected VR");
+            keyboardRig.SetActive(true);
+            vrRig.SetActive(false);
         }
     }
 
