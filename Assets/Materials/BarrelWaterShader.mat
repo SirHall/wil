@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: BarrelWaterShader
-  m_Shader: {fileID: -6465566751694194690, guid: dd97de70edf8a4141bee758a2efe7ff8, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 1b3a3fd0fa2993747be839a32e92148e, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
