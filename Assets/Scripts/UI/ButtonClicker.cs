@@ -26,9 +26,9 @@ public class ButtonClicker : MonoBehaviour
         if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, maxDist))
         {
             VRButton button =
-                hit.collider.GetComponent<VRButton>() ??
-                hit.collider.transform.parent.GetComponent<VRButton>() ??
-                hit.collider.transform.root.GetComponent<VRButton>();
+                hit.collider?.GetComponent<VRButton>() ??
+                hit.collider?.transform?.parent.GetComponent<VRButton>() ??
+                hit.collider?.transform?.root.GetComponent<VRButton>();
             if (button)
                 button.Press();
         }
