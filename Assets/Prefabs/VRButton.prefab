@@ -187,7 +187,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: be5bedb9f42770549af7600305d316fd, type: 2}
+  - {fileID: 2100000, guid: 388b7375547ca6a4ea3cef431dd3e213, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -272,13 +272,15 @@ MonoBehaviour:
   depressDist: 0.01
   momentarySwitch: 1
   button: 1
-  buttonRiseLerpSpeed: 5
+  buttonLiftVel: 5
   clickDist: 1
   label: Press
   buttonColor: {r: 0, g: 0, b: 0, a: 1}
   orientTowardsOrigin: 1
+  springForce: 10
   meshRend: {fileID: 1152624864155679274}
   text: {fileID: 1152624865515205056}
+  rb: {fileID: 1152624865079271474}
   OnPressed:
     m_PersistentCalls:
       m_Calls:
@@ -323,7 +325,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 118
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!1 &1152624865515205058
 GameObject:
