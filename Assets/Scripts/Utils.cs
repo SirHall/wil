@@ -14,4 +14,6 @@ public static class Utils
     public static float nSin(float x) => Mathf.Cos(x * Mathf.PI + Mathf.PI) * 0.5f + 0.5f;
 
     public static float Tau { get => (float)MathE.TAU; }
+
+    public static Vector3 ProjectPoint(Vector3 point, Vector3 linePoint, Vector3 lineDir) => linePoint + Vector3.Project(point - linePoint, lineDir);
 }
