@@ -91,7 +91,7 @@ public class VRButton : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.MovePosition(Utils.ProjectPoint(rb.position, GlobalInitPos, transform.forward));
+        rb.position = Utils.ProjectPoint(rb.position, GlobalInitPos, transform.forward);
 
         if (manualPress)
         {
@@ -99,7 +99,7 @@ public class VRButton : MonoBehaviour
             manualPress = false;
         }
 
-        if (pressed && momentarySwitch && Vector3.Distance(GlobalInitPos, transform.position) <= 0.001f)
+        if (pressed && momentarySwitch && Vector3.Distance(GlobalInitPos, transform.position) <= depressDist * 0.9f)
         {
             pressed = false; // This button has now returned to its original position, and is now 'unpressed'
             OnLift.Invoke();
