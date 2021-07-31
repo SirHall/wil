@@ -76,6 +76,8 @@ public class VRButton : MonoBehaviour
 
     #endregion
 
+    Vector3 CorrectedPosition => Utils.ProjectPoint(rb.position, GlobalInitPos, transform.forward);
+
     void Start()
     {
         initPos = transform.localPosition;
@@ -90,7 +92,8 @@ public class VRButton : MonoBehaviour
         // Distance the button is from its original position
         float dist = Vector3.Distance(GlobalInitPos, transform.position);
 
-        transform.position = Utils.ProjectPoint(rb.position, GlobalInitPos, transform.forward);
+        if (Vector3.Distance(transform.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
+            transform.position = CorrectedPosition;
 
         if (manualPress)
         {
@@ -118,7 +121,8 @@ public class VRButton : MonoBehaviour
 
     void LateUpdate()
     {
-        transform.position = Utils.ProjectPoint(rb.position, GlobalInitPos, transform.forward);
+        if (Vector3.Distance(transform.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
+            transform.position = CorrectedPosition;
     }
 
     void ButtonPressed()
