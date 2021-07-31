@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5555672467671455816
 Transform:
   m_ObjectHideFlags: 0
@@ -51,7 +51,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5555672468371652488
 Transform:
   m_ObjectHideFlags: 0
@@ -60,7 +60,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5555672468371652489}
   m_LocalRotation: {x: 0.08715579, y: -0, z: -0, w: 0.9961947}
-  m_LocalPosition: {x: -0.06000007, y: 1.45, z: -1.5400004}
+  m_LocalPosition: {x: 0, y: 1.45, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5555672467671455816}
@@ -211,14 +211,22 @@ MonoBehaviour:
       m_Flags: 8
   elevationRange: {x: 0, y: 180}
   mouseDelta:
-    m_Name: 
+    m_Name: Mouse Delta
     m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 
+    m_ExpectedControlType: Vector2
+    m_Id: ecfd26e0-8dfd-4aea-af30-c97880f42d22
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings: []
-  viewTransform: {fileID: 0}
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 271c2efa-06d7-4dae-a0ca-c4c02c23e847
+      m_Path: <Mouse>/delta
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Mouse Delta
+      m_Flags: 0
+  viewTransform: {fileID: 5555672468371652488}
   sensitivity: 0.1
 --- !u!114 &5555672468371652483
 MonoBehaviour:
@@ -248,7 +256,7 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Button Click
       m_Flags: 0
-  maxDist: 2
+  maxDist: 5
 --- !u!1 &5555672468506556108
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,6 +272,7 @@ GameObject:
   - component: {fileID: 5555672468506556107}
   - component: {fileID: 5555672468506556101}
   - component: {fileID: 5555672468506556102}
+  - component: {fileID: 771109794}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -396,8 +405,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f67650aa8161f9438361b55a5b9087c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyboardRig: {fileID: 5555672468371652489}
-  vrRig: {fileID: 0}
+  keyboardRig: {fileID: 5555672467671455817}
+  vrRig: {fileID: 5555672469118418112}
 --- !u!114 &5555672468506556102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -411,6 +420,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   applyToBaseObject: 1
+--- !u!114 &771109794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5555672468506556108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17ed53909e547e647b0ccb3804f2ae39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockOnStart: 0
+  controlSelf: 1
 --- !u!1 &5555672469118418112
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,7 +449,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5555672469118418143
 Transform:
   m_ObjectHideFlags: 0
