@@ -46,10 +46,6 @@ public class VRButton : MonoBehaviour
     [TabGroup("Settings")]
     [SerializeField] bool orientTowardsOrigin = true;
 
-    [Tooltip("The force/metre of depression at which the button will be lifted")]
-    [TabGroup("Settings")]
-    [SerializeField] float springForce = 10.0f;
-
     #endregion
 
     [TabGroup("References")]
@@ -91,24 +87,26 @@ public class VRButton : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.position = Utils.ProjectPoint(rb.position, GlobalInitPos, transform.forward);
+        // Distance the button is from its original position
+        float dist = Vector3.Distance(GlobalInitPos, transform.position);
+
+        transform.position = Utils.ProjectPoint(rb.position, GlobalInitPos, transform.forward);
 
         if (manualPress)
         {
-            rb.MovePosition(transform.position - (transform.forward * Mathf.Max(depressDist, clickDist)));
+            rb.MovePosition(transform.position - (transform.forward * Mathf.Max(depressDist * 1.01f, clickDist)));
             manualPress = false;
         }
 
-        if (pressed && momentarySwitch && Vector3.Distance(GlobalInitPos, transform.position) <= depressDist * 0.9f)
+        if (pressed && momentarySwitch && dist <= depressDist * 0.9f)
         {
             pressed = false; // This button has now returned to its original position, and is now 'unpressed'
             OnLift.Invoke();
         }
 
         // We move the button back to it's original position on the frame after it has been fully depressed
-        if (pressed && momentarySwitch)
+        if (momentarySwitch && dist > 0.001f)
             rb.MovePosition(Vector3.MoveTowards(transform.position, GlobalInitPos, Time.deltaTime * buttonLiftVel));
-
 
         if (!pressed && Vector3.Distance(GlobalInitPos, transform.position) >= depressDist)
             ButtonPressed();
@@ -116,6 +114,11 @@ public class VRButton : MonoBehaviour
         // Keep the buttons facing the player no matter their position or distance from the origin
         if (orientTowardsOrigin && transform.parent != null)
             transform.LookAt(transform.parent.position, Vector3.up);
+    }
+
+    void LateUpdate()
+    {
+        transform.position = Utils.ProjectPoint(rb.position, GlobalInitPos, transform.forward);
     }
 
     void ButtonPressed()
