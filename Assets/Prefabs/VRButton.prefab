@@ -269,7 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d13ca1cd4dfa133499c156a1fbfe0eae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  depressDist: 0.01
+  depressDist: 0.1
   momentarySwitch: 1
   button: 1
   buttonLiftVel: 5
@@ -277,7 +277,6 @@ MonoBehaviour:
   label: Press
   buttonColor: {r: 0, g: 0, b: 0, a: 1}
   orientTowardsOrigin: 1
-  springForce: 10
   meshRend: {fileID: 1152624864155679274}
   text: {fileID: 1152624865515205056}
   rb: {fileID: 1152624865079271474}
