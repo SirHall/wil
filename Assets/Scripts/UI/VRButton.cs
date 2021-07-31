@@ -12,7 +12,7 @@ public class VRButton : MonoBehaviour
 
     [Tooltip("The distance the button must be moved from its starting position by the hand to be considered 'pressed'")]
     [TabGroup("Settings")]
-    [SerializeField] float depressDist = 0.01f;
+    [SerializeField] float depressDist = 0.1f;
 
     [Tooltip("If enabled, the button will move back to its original position after being depressed")]
     [TabGroup("Settings")]
@@ -80,6 +80,7 @@ public class VRButton : MonoBehaviour
 
     void Start()
     {
+        Orient();
         initPos = transform.localPosition;
 
         text.text = label;
@@ -101,22 +102,18 @@ public class VRButton : MonoBehaviour
             manualPress = false;
         }
 
-        if (pressed && momentarySwitch && dist <= depressDist * 0.9f)
+        if (pressed && momentarySwitch && dist < depressDist * 0.1f)
         {
             pressed = false; // This button has now returned to its original position, and is now 'unpressed'
             OnLift.Invoke();
         }
 
+        if (!pressed && dist >= depressDist)
+            ButtonPressed();
+
         // We move the button back to it's original position on the frame after it has been fully depressed
         if (momentarySwitch && dist > 0.001f)
             rb.MovePosition(Vector3.MoveTowards(transform.position, GlobalInitPos, Time.deltaTime * buttonLiftVel));
-
-        if (!pressed && Vector3.Distance(GlobalInitPos, transform.position) >= depressDist)
-            ButtonPressed();
-
-        // Keep the buttons facing the player no matter their position or distance from the origin
-        if (orientTowardsOrigin && transform.parent != null)
-            transform.LookAt(transform.parent.position, Vector3.up);
     }
 
     void LateUpdate()
@@ -147,7 +144,13 @@ public class VRButton : MonoBehaviour
         if (pressed)
             return;
         manualPress = true;
-        // ButtonPressed();
+    }
+
+    // Keep the buttons facing the player no matter their position or distance from the origin
+    public void Orient()
+    {
+        if (orientTowardsOrigin && transform.parent != null)
+            transform.LookAt(transform.parent.position, Vector3.up);
     }
 }
 
