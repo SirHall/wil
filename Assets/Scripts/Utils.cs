@@ -16,4 +16,16 @@ public static class Utils
     public static float Tau { get => (float)MathE.TAU; }
 
     public static Vector3 ProjectPoint(Vector3 point, Vector3 linePoint, Vector3 lineDir) => linePoint + Vector3.Project(point - linePoint, lineDir);
+
+    public static void Quit() // Yes, this is how it must be done
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
+    public static float Clamp(this float v, Vector2 r) => Mathf.Clamp(v, r.x, r.y);
+
 }
