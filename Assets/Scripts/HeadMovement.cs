@@ -128,7 +128,7 @@ public class HeadMovement : MonoBehaviour
         // Cutoff values determin when the head position values should be ignored and returned as a 0 value (Essentially making the surfboard stationary)
         // Or when they should return their true values which will be used by the surfboard to move it. 
         float forwardCutoff = 0.2f;
-        float sidewaysCutoff = 0.1f;
+        float sidewaysCutoff = 0.15f;
 
         // Leaning
         if (headPos.x >= forwardCutoff) { dir.y = headPos.x - forwardCutoff; } // Forward
