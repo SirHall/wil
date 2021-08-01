@@ -44,7 +44,7 @@ public class VisualEffects : MonoBehaviour
             float headPosDist = Mathf.Max(Mathf.Abs(dir.z), Mathf.Abs(dir.x));
 
             vignette.intensity.overrideState = true;
-            vignette.intensity.value = headPosDist;
+            vignette.intensity.value = headPosDist + 0.1f;
         }
     }
 }
