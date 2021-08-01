@@ -15,4 +15,11 @@ public enum VRButtons
     Test, // A button that simply makes a noise, for testing only
     MainMenu_Start, // Start button in the main menu
     Exit, // Any button which attemptes to close the game
+    Designer, // Go to the barrel designer UI
+    Surf, // Start surf scene
+
+    Designer_IncreaseRadius, // Increase the radius of the barrel
+    Designer_DecreaseRadius, // Decrease the radius of the barrel
+    Designer_Longer, // Increase the length of the barrel
+    Designer_Shorter, // Decrease the length of the barrel
 }
