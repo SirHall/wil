@@ -116,11 +116,11 @@ public class VRButton : MonoBehaviour
             rb.MovePosition(Vector3.MoveTowards(transform.position, GlobalInitPos, Time.deltaTime * buttonLiftVel));
     }
 
-    void LateUpdate()
-    {
-        if (Vector3.Distance(transform.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
-            transform.position = CorrectedPosition;
-    }
+    // void LateUpdate()
+    // {
+    //     if (Vector3.Distance(transform.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
+    //         transform.position = CorrectedPosition;
+    // }
 
     void ButtonPressed()
     {
