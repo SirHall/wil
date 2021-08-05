@@ -9,7 +9,7 @@ MonoImporter:
   - Idle: {fileID: 8300000, guid: 5f1fc3e9f524b864eaecd15d9cfa374b, type: 3}
   - Background: {fileID: 8300000, guid: 5c2a69648fc379f4aa636f6c07589ddb, type: 3}
   - Moving: {fileID: 8300000, guid: a3d0b83a54d8aa940b775aab24c4c44d, type: 3}
-  - Inwave: {fileID: 8300000, guid: 2718204b5d83ab147aef154fa555c9e9, type: 3}
+  - Inwave: {fileID: 8300000, guid: db084e7be4cbcf54ebe0baa505e06647, type: 3}
   - backgroundsource1: {instanceID: 0}
   - backgroundsource2: {instanceID: 0}
   - boardcontroller: {instanceID: 0}

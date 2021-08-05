@@ -5,13 +5,13 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour{
 
     //Sounds
-    [SerializeField] public AudioClip Splash;
-    [SerializeField] public AudioClip Underwater;
-    [SerializeField] public AudioClip Idle;
-    [SerializeField] public AudioClip Background;
-    [SerializeField] public AudioClip Moving;
-    [SerializeField] public AudioClip Inwave;
-
+    [SerializeField] private AudioClip Splash;
+    [SerializeField] private AudioClip Underwater;
+    [SerializeField] private AudioClip Idle;
+    [SerializeField] private AudioClip Background;
+    [SerializeField] private AudioClip Moving;
+    [SerializeField] private AudioClip Inwave;
+    [SerializeField] private AudioClip Woah;
 
     //Creating an instance for other files control
     public static SoundManager instance;
@@ -24,9 +24,20 @@ public class SoundManager : MonoBehaviour{
     [SerializeField] AudioSource backgroundsource1;
     [SerializeField] AudioSource backgroundsource2;
 
+    Vector3 headPos = new Vector3();
 
+    void OnEnable() {
+        SoundControlEvent.RegisterListener(OnLeanWarningEvent);
+    }
 
+    void OnDisable() {
+        SoundControlEvent.UnregisterListener(OnLeanWarningEvent);
+    }
 
+    // A controller has announced new data
+    void OnLeanWarningEvent(SoundControlEvent e) {
+        headPos = e.headInput.dir;
+    }
 
     //A class that is called upon from any other file
     //Example of referencing in other parts of the code
@@ -50,7 +61,6 @@ public class SoundManager : MonoBehaviour{
     }
 
     void Start(){
-
         Playsound(Splash);
     }      
 
@@ -59,12 +69,9 @@ public class SoundManager : MonoBehaviour{
     Vector3 Wavepos;
     Vector3 Boardpos;
 
-
-
     //for board
     public BoardController boardcontroller;
     float Total_Velocity = 0;
-
 
     void Update(){
         Total_Velocity = Mathf.Abs(boardcontroller.Motor.BaseVelocity.x) + Mathf.Abs(boardcontroller.Motor.BaseVelocity.z);
@@ -93,10 +100,15 @@ public class SoundManager : MonoBehaviour{
 
         backgroundsource2.volume = (Total_Velocity * Mathf.Sin(Mathf.PI / 2) / 10)/100 * MovementMaxVolume;
 
-        
-
-
-   
+        LeanWarningSound();
     }
 
+    private void LeanWarningSound() {
+        float headPosDist = Mathf.Max(Mathf.Abs(headPos.z), Mathf.Abs(headPos.x));
+        if (headPosDist > 0.8f) {
+            // Trigger Woah Sound
+
+            // Woah sound will play in stages. headpos < 0.8 and > 0.6 = woah sound at 20% volume. headpos < 1 and > 0.9 = woah sound at 60% volume. headpos > 1 or == 1 = woah sound at 100% volume.
+        }
+    }
 }

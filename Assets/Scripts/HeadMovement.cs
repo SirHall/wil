@@ -78,18 +78,25 @@ public class HeadMovement : MonoBehaviour
         CheckPlayerStability();
         SetState();
         HeadScoring();
+        CallGlobalEvents();
+
+    }
+
+    private void CallGlobalEvents() {
         using (var e = BoardControlEvent.Get())
             e.input.dir = HeadPosToBoardInput(headPosRel);
 
-        using (var e = VisualControlEvent.Get())
-            e.dir = headPosRel;
-
-        using (var e = ScoreControlEvent.Get())
-        {
+        using (var e = ScoreControlEvent.Get()) {
             e.warningAmt = totalWarnings;
             e.warningTime = timeInWarning;
         }
 
+        using (var e = VisualControlEvent.Get())
+            e.dir = headPosRel;
+
+        using (var e = SoundControlEvent.Get())
+            e.headInput.dir = headPosRel;
+        
     }
 
     /// <summary>
