@@ -93,9 +93,6 @@ public class VRButton : MonoBehaviour
         // Distance the button is from its original position
         float dist = Vector3.Distance(GlobalInitPos, transform.position);
 
-        if (Vector3.Distance(transform.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
-            transform.position = CorrectedPosition;
-
         if (manualPress)
         {
             rb.MovePosition(transform.position - (transform.forward * Mathf.Max(depressDist * 1.01f, clickDist)));
@@ -114,6 +111,9 @@ public class VRButton : MonoBehaviour
         // We move the button back to it's original position on the frame after it has been fully depressed
         if (momentarySwitch && dist > 0.001f)
             rb.MovePosition(Vector3.MoveTowards(transform.position, GlobalInitPos, Time.deltaTime * buttonLiftVel));
+
+        if (Vector3.Distance(transform.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
+            transform.position = CorrectedPosition;
     }
 
     // void LateUpdate()
