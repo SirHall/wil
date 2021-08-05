@@ -160,6 +160,7 @@ public class Wave : MonoBehaviour, IMoverController
         float fullAnglePerPart = Utils.Tau / piecesPerCircle;
 
         Vector3 barrelCenter = transform.localPosition + transform.up * Radius;
+        Vector3 adjustedCenter = barrelCenter.WithY(MapHeight(barrelCenter.y));
 
         int piecesPerLength = Mathf.FloorToInt(barrelLength / wavePartLength);
 
@@ -181,7 +182,9 @@ public class Wave : MonoBehaviour, IMoverController
                 continue;
             }
 
-            n.transform.localPosition =
+
+            Vector3 localPos =
+            (
                 (barrelCenter + -transform.forward * Radius) // Place forward
                 .RotateAround(
                     barrelCenter,
@@ -190,15 +193,23 @@ public class Wave : MonoBehaviour, IMoverController
                         transform.right
                     )
                 ) +
-                (transform.right * ((wavePartLength * x) + (wavePieceZOffset * y) + (n.transform.localScale.x * 0.5f))); // Move right
+                (transform.right * ((wavePartLength * x) + (wavePieceZOffset * y) + (n.transform.localScale.x * 0.5f))) // Move right
+            );
+
+            localPos.y = MapHeight(localPos.y); // Squish the barrel's height
+
+            n.transform.localPosition = localPos;
 
             n.transform.localRotation =
-            Quaternion.FromToRotation(
-                transform.up,
-                (barrelCenter.WithX(n.transform.localPosition.x) - n.transform.localPosition).normalized
-            );
+              Quaternion.FromToRotation(
+                  transform.up,
+                  (adjustedCenter.WithX(n.transform.localPosition.x) - n.transform.localPosition).normalized
+              );
         }
     }
+
+    // Maps altitude to something lower, allowing for a 'squashed' barrel
+    float MapHeight(float h) => h / 2.0f;
 
     void OnWaveSettingsEvent(WaveSettingEvent e)
     {
@@ -212,4 +223,5 @@ public class Wave : MonoBehaviour, IMoverController
     float Radius { get => UseAnim ? anim.barrelRadius.Evaluate(waveTime) * barrelRadius : barrelRadius; }
     float ForwardPos { get => UseAnim ? anim.forwardPosition.Evaluate(waveTime) : transform.position.z; }
     float Arc { get => UseAnim ? anim.barrelArcAngle.Evaluate(waveTime) : arc; }
+
 }
