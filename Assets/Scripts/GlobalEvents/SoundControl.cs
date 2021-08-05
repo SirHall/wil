@@ -8,10 +8,12 @@ public class SoundControlEvent : GlobalEvent<SoundControlEvent>, System.IDisposa
     public GameInput gameInput;
 }
 
-public struct HeadInput {
+public struct HeadInput 
+{
     public Vector3 dir;
 }
 
-public struct GameInput {
+public struct GameInput 
+{
     public GameState state;
 }

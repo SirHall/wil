@@ -60,7 +60,8 @@ public class WaveScore : MonoBehaviour
         CallGlobalEvents();
     }
 
-    private void CallGlobalEvents() {
+    private void CallGlobalEvents() 
+    {
         using (var e = SoundControlEvent.Get())
             e.gameInput.state = State;
     }
