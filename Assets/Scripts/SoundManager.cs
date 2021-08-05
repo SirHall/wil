@@ -119,6 +119,9 @@ public class SoundManager : MonoBehaviour{
 
         LeanWarningSound();
     }
+    /// <summary>
+    /// Handles the Lean warning sound which plays when the user is too far off the board
+    /// </summary>
     private void LeanWarningSound() 
     {
         if (!WaveScore.IsPlaying) return;
@@ -161,7 +164,9 @@ public class SoundManager : MonoBehaviour{
         else
             return SoundMode.None;
     }
-
+    /// <summary>
+    /// Sets the sound state based on the heads distance from the center of the board
+    /// </summary>
     void SetState() 
     {
         SoundMode previousState = currentSoundState;
