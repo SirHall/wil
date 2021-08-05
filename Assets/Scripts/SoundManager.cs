@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioManager : MonoBehaviour{
+public class SoundManager : MonoBehaviour{
 
     //Sounds
     [SerializeField] private AudioClip Splash;
@@ -17,9 +17,9 @@ public class AudioManager : MonoBehaviour{
     private SoundMode currentSoundState;
 
     //Creating an instance for other files control
-    public static AudioManager instance;
-    public static AudioClip aSplash { get => AudioManager.instance.Splash; }
-    public static AudioClip aUnderwater { get => AudioManager.instance.Underwater; }
+    public static SoundManager instance;
+    public static AudioClip aSplash { get => SoundManager.instance.Splash; }
+    public static AudioClip aUnderwater { get => SoundManager.instance.Underwater; }
 
     //settings
     [Range(10,100)]
