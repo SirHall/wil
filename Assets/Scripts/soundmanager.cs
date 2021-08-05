@@ -2,34 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour
-{
+public class SoundManager : MonoBehaviour{
 
-    //Active sounds
-    [SerializeField] public AudioClip splash;
-    [SerializeField] public AudioClip underwater;
+    //Sounds
+    [SerializeField] public AudioClip Splash;
+    [SerializeField] public AudioClip Underwater;
+    [SerializeField] public AudioClip Idle;
+    [SerializeField] public AudioClip Background;
+    [SerializeField] public AudioClip Moving;
+    [SerializeField] public AudioClip Inwave;
+
 
     //Creating an instance for other files control
     public static SoundManager instance;
-    public static AudioClip Splash { get => SoundManager.instance.splash; }
-    public static AudioClip Underwater { get => SoundManager.instance.underwater; }
-
-
-
-    //background sounds
-    [SerializeField] public AudioClip idle;
-    [SerializeField] public AudioClip notidle;
-    [SerializeField] public AudioClip moving;
-    [SerializeField] public AudioClip inwave;
-
-
+    public static AudioClip aSplash { get => SoundManager.instance.Splash; }
+    public static AudioClip aUnderwater { get => SoundManager.instance.Underwater; }
 
     //settings
-    [SerializeField] public int stance = 0;
-    [SerializeField] public int previous_stance = 1;
+    [Range(10,100)]
+    [SerializeField] public int MovementMaxVolume = 100;
     [SerializeField] AudioSource backgroundsource1;
     [SerializeField] AudioSource backgroundsource2;
-    public static int Stance { get => SoundManager.instance.stance; }
+
 
 
 
@@ -38,70 +32,71 @@ public class SoundManager : MonoBehaviour
     //Example of referencing in other parts of the code
     //SoundManager.Playsound(SoundManager.instance.splash);
     //it plays all of the sound and doesn't stop
-    public static void Playsound(AudioClip sound)
-    {
+
+    public static void Playsound(AudioClip sound){
         GameObject soundmanager = GameObject.Find("SoundManager");
         AudioSource audioSource = soundmanager.AddComponent<AudioSource>();
+        audioSource.clip = sound;
         audioSource.PlayOneShot(sound);
     }
 
-
-
-    private void Awake()
-    {
+    private void Awake(){
         instance = this;
 
         backgroundsource1 = gameObject.AddComponent<AudioSource>();
         backgroundsource2 = gameObject.AddComponent<AudioSource>();
+
+        boardcontroller = GameObject.FindObjectOfType<BoardController>();
     }
 
+    void Start(){
+
+        Playsound(Splash);
+    }      
+
+    //wave stuff
+    int range = 4;
+    Vector3 Wavepos;
+    Vector3 Boardpos;
 
 
-    void Start()
-    {
 
-        Playsound(splash);
-
-
-    }
+    //for board
+    public BoardController boardcontroller;
+    float Total_Velocity = 0;
 
 
-    void Update()
-    {
-        //stance is initially set to idle and can be changed.
-        //stance can be change in other files by 
-        //SoundManager.instance.stance = 1;
-        if (stance != previous_stance)
-        {
-            switch (stance)
-            {
-                case 0:
-
-                    backgroundsource1.clip = idle;
-                    backgroundsource1.loop = true;
-                    backgroundsource1.Play();
-
-                    backgroundsource2.Stop();
-                    break;
-                case 1:
-                    backgroundsource1.clip = notidle;
-                    backgroundsource1.loop = true;
-                    backgroundsource1.Play();
-
-                    backgroundsource2.clip = moving;
-                    backgroundsource2.loop = true;
-                    backgroundsource2.Play();
-
-                    break;
-                case 2:
-                    backgroundsource1.clip = inwave;
-                    backgroundsource1.loop = true;
-                    backgroundsource1.Play();
-
-                    backgroundsource2.Stop();
-                    break;
-            }
+    void Update(){
+        Total_Velocity = Mathf.Abs(boardcontroller.Motor.BaseVelocity.x) + Mathf.Abs(boardcontroller.Motor.BaseVelocity.z);
+        //set velocity to set range between 1-10
+        if (Total_Velocity > 10){
+            Total_Velocity = 10;
         }
-        previous_stance = stance;
+        else if (Total_Velocity < 1){
+            Total_Velocity = 0;
+        }
+        Total_Velocity = (int)Total_Velocity;
+
+        //Playsound here
+        if (!backgroundsource1.isPlaying) {
+            backgroundsource1.clip = Background;
+            backgroundsource1.loop = true;
+            backgroundsource1.Play();
+        }
+
+        if (!backgroundsource2.isPlaying)
+        {
+            backgroundsource2.clip = Moving;
+            backgroundsource2.loop = true;
+            backgroundsource2.Play();
+        }
+
+        backgroundsource2.volume = (Total_Velocity * Mathf.Sin(Mathf.PI / 2) / 10)/100 * MovementMaxVolume;
+
+        
+
+
+   
     }
+
 }
