@@ -5,8 +5,13 @@ using UnityEngine;
 public class SoundControlEvent : GlobalEvent<SoundControlEvent>, System.IDisposable 
 {
     public HeadInput headInput;
+    public GameInput gameInput;
 }
 
 public struct HeadInput {
-    public Vector2 dir;
+    public Vector3 dir;
+}
+
+public struct GameInput {
+    public GameState state;
 }

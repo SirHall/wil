@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2252522849026433175}
-  - component: {fileID: 2252522849026433168}
+  - component: {fileID: 9188513977892446272}
   m_Layer: 0
   m_Name: SoundManager
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2252522849026433168
+--- !u!114 &9188513977892446272
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,12 +45,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Splash: {fileID: 8300000, guid: 2f9a6b82f628427489f2431743b474cf, type: 3}
   Underwater: {fileID: 8300000, guid: 732606f1124f92f458f0527c4c6b0fda, type: 3}
-  Idle: {fileID: 8300000, guid: a4e1582b75f69744fa8d2bc4cb6aa45f, type: 3}
+  Idle: {fileID: 8300000, guid: 5f1fc3e9f524b864eaecd15d9cfa374b, type: 3}
   Background: {fileID: 8300000, guid: 5c2a69648fc379f4aa636f6c07589ddb, type: 3}
   Moving: {fileID: 8300000, guid: a3d0b83a54d8aa940b775aab24c4c44d, type: 3}
   Inwave: {fileID: 8300000, guid: db084e7be4cbcf54ebe0baa505e06647, type: 3}
   Woah: {fileID: 8300000, guid: 69b1ffcc617ecd34e9905bb72d041774, type: 3}
+  currentSoundState: 0
   MovementMaxVolume: 100
   backgroundsource1: {fileID: 0}
   backgroundsource2: {fileID: 0}
+  leanWarningSource: {fileID: 0}
   boardcontroller: {fileID: 0}

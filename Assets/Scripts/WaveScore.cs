@@ -57,6 +57,12 @@ public class WaveScore : MonoBehaviour
             //}));
             StartCoroutine(SplashTransition());
         }
+        CallGlobalEvents();
+    }
+
+    private void CallGlobalEvents() {
+        using (var e = SoundControlEvent.Get())
+            e.gameInput.state = State;
     }
 
     void OnWaveSettingsEvent(WaveSettingEvent e) =>

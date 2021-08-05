@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour{
+public class AudioManager : MonoBehaviour{
 
     //Sounds
     [SerializeField] private AudioClip Splash;
@@ -13,30 +13,39 @@ public class SoundManager : MonoBehaviour{
     [SerializeField] private AudioClip Inwave;
     [SerializeField] private AudioClip Woah;
 
+    [SerializeField]
+    private SoundMode currentSoundState;
+
     //Creating an instance for other files control
-    public static SoundManager instance;
-    public static AudioClip aSplash { get => SoundManager.instance.Splash; }
-    public static AudioClip aUnderwater { get => SoundManager.instance.Underwater; }
+    public static AudioManager instance;
+    public static AudioClip aSplash { get => AudioManager.instance.Splash; }
+    public static AudioClip aUnderwater { get => AudioManager.instance.Underwater; }
 
     //settings
     [Range(10,100)]
     [SerializeField] public int MovementMaxVolume = 100;
     [SerializeField] AudioSource backgroundsource1;
     [SerializeField] AudioSource backgroundsource2;
+    [SerializeField] private AudioSource leanWarningSource;
 
-    Vector3 headPos = new Vector3();
+    private Vector3 headPos = new Vector3();
+
+    private GameState currentGameState;
+
+    private bool playSound = false;
 
     void OnEnable() {
-        SoundControlEvent.RegisterListener(OnLeanWarningEvent);
+        SoundControlEvent.RegisterListener(SoundEvent);
     }
 
     void OnDisable() {
-        SoundControlEvent.UnregisterListener(OnLeanWarningEvent);
+        SoundControlEvent.UnregisterListener(SoundEvent);
     }
 
     // A controller has announced new data
-    void OnLeanWarningEvent(SoundControlEvent e) {
+    void SoundEvent(SoundControlEvent e) {
         headPos = e.headInput.dir;
+        currentGameState = e.gameInput.state;
     }
 
     //A class that is called upon from any other file
@@ -44,10 +53,11 @@ public class SoundManager : MonoBehaviour{
     //SoundManager.Playsound(SoundManager.instance.splash);
     //it plays all of the sound and doesn't stop
 
-    public static void Playsound(AudioClip sound){
+    public static void PlaySound(AudioClip sound, float volume){
         GameObject soundmanager = GameObject.Find("SoundManager");
         AudioSource audioSource = soundmanager.AddComponent<AudioSource>();
         audioSource.clip = sound;
+        audioSource.volume = volume;
         audioSource.PlayOneShot(sound);
     }
 
@@ -57,11 +67,13 @@ public class SoundManager : MonoBehaviour{
         backgroundsource1 = gameObject.AddComponent<AudioSource>();
         backgroundsource2 = gameObject.AddComponent<AudioSource>();
 
+        leanWarningSource = gameObject.AddComponent<AudioSource>();
+
         boardcontroller = GameObject.FindObjectOfType<BoardController>();
     }
 
     void Start(){
-        Playsound(Splash);
+        PlaySound(Splash, 0.5f);
     }      
 
     //wave stuff
@@ -102,13 +114,54 @@ public class SoundManager : MonoBehaviour{
 
         LeanWarningSound();
     }
-
     private void LeanWarningSound() {
-        float headPosDist = Mathf.Max(Mathf.Abs(headPos.z), Mathf.Abs(headPos.x));
-        if (headPosDist > 0.8f) {
-            // Trigger Woah Sound
+        SetState();
+        if (playSound) {
+            leanWarningSource.clip = Woah;
+            switch (currentSoundState) {
+                case SoundMode.Quite:
+                    leanWarningSource.volume = 0.2f;
+                    break;
+                case SoundMode.Warning:
+                    leanWarningSource.volume = 0.5f;
+                    break;
+                case SoundMode.Alarm:
+                    leanWarningSource.volume = 1f;
+                    break;
+            }
+            if (currentSoundState == SoundMode.Quite || currentSoundState == SoundMode.Warning || currentSoundState == SoundMode.Alarm) 
+                leanWarningSource.Play();
 
-            // Woah sound will play in stages. headpos < 0.8 and > 0.6 = woah sound at 20% volume. headpos < 1 and > 0.9 = woah sound at 60% volume. headpos > 1 or == 1 = woah sound at 100% volume.
+            playSound = false;
         }
+    }
+
+    // This function takes in the head tilt and returns it as a sound mode
+    public static SoundMode HeadPosToSoundMode(Vector3 headTilt) {
+        // The scalar euclidean distance the head has moved from its original position 
+        float headPosDist = Mathf.Max(Mathf.Abs(headTilt.z), Mathf.Abs(headTilt.x));
+
+        if (headPosDist >= 1.0f) 
+            return SoundMode.Alarm;
+        else if (headPosDist >= 0.8)
+            return SoundMode.Warning;
+        else if (headPosDist >= 0.6f) 
+            return SoundMode.Quite;
+        else
+            return SoundMode.None;
+    }
+
+    void SetState() {
+        SoundMode previousState = currentSoundState;
+        currentSoundState = HeadPosToSoundMode(headPos);
+        if (previousState != currentSoundState)
+            playSound = true;
+    }
+
+    public enum SoundMode {
+        None,
+        Quite,
+        Warning,
+        Alarm
     }
 }
