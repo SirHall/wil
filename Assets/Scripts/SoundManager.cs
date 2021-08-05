@@ -43,7 +43,8 @@ public class SoundManager : MonoBehaviour{
     }
 
     // A controller has announced new data
-    void SoundEvent(SoundControlEvent e) {
+    void SoundEvent(SoundControlEvent e) 
+    {
         headPos = e.headInput.dir;
         currentGameState = e.gameInput.state;
     }
@@ -53,7 +54,8 @@ public class SoundManager : MonoBehaviour{
     //SoundManager.Playsound(SoundManager.instance.splash);
     //it plays all of the sound and doesn't stop
 
-    public static void PlaySound(AudioClip sound, float volume){
+    public static void PlaySound(AudioClip sound, float volume)
+    {
         GameObject soundmanager = GameObject.Find("SoundManager");
         AudioSource audioSource = soundmanager.AddComponent<AudioSource>();
         audioSource.clip = sound;
@@ -61,7 +63,8 @@ public class SoundManager : MonoBehaviour{
         audioSource.PlayOneShot(sound);
     }
 
-    private void Awake(){
+    private void Awake()
+    {
         instance = this;
 
         backgroundsource1 = gameObject.AddComponent<AudioSource>();
@@ -72,7 +75,8 @@ public class SoundManager : MonoBehaviour{
         boardcontroller = GameObject.FindObjectOfType<BoardController>();
     }
 
-    void Start(){
+    void Start()
+    {
         PlaySound(Splash, 0.5f);
     }      
 
@@ -85,19 +89,23 @@ public class SoundManager : MonoBehaviour{
     public BoardController boardcontroller;
     float Total_Velocity = 0;
 
-    void Update(){
+    void Update()
+    {
         Total_Velocity = Mathf.Abs(boardcontroller.Motor.BaseVelocity.x) + Mathf.Abs(boardcontroller.Motor.BaseVelocity.z);
         //set velocity to set range between 1-10
-        if (Total_Velocity > 10){
+        if (Total_Velocity > 10)
+        {
             Total_Velocity = 10;
         }
-        else if (Total_Velocity < 1){
+        else if (Total_Velocity < 1)
+        {
             Total_Velocity = 0;
         }
         Total_Velocity = (int)Total_Velocity;
 
         //Playsound here
-        if (!backgroundsource1.isPlaying) {
+        if (!backgroundsource1.isPlaying) 
+        {
             backgroundsource1.clip = Background;
             backgroundsource1.loop = true;
             backgroundsource1.Play();
@@ -114,11 +122,14 @@ public class SoundManager : MonoBehaviour{
 
         LeanWarningSound();
     }
-    private void LeanWarningSound() {
+    private void LeanWarningSound() 
+    {
         SetState();
-        if (playSound) {
+        if (playSound) 
+        {
             leanWarningSource.clip = Woah;
-            switch (currentSoundState) {
+            switch (currentSoundState) 
+            {
                 case SoundMode.Quite:
                     leanWarningSource.volume = 0.2f;
                     break;
@@ -129,7 +140,7 @@ public class SoundManager : MonoBehaviour{
                     leanWarningSource.volume = 1f;
                     break;
             }
-            if (currentSoundState == SoundMode.Quite || currentSoundState == SoundMode.Warning || currentSoundState == SoundMode.Alarm) 
+            if (currentSoundState == SoundMode.Quite || currentSoundState == SoundMode.Warning || currentSoundState == SoundMode.Alarm)
                 leanWarningSource.Play();
 
             playSound = false;
@@ -137,7 +148,8 @@ public class SoundManager : MonoBehaviour{
     }
 
     // This function takes in the head tilt and returns it as a sound mode
-    public static SoundMode HeadPosToSoundMode(Vector3 headTilt) {
+    public static SoundMode HeadPosToSoundMode(Vector3 headTilt)
+    {
         // The scalar euclidean distance the head has moved from its original position 
         float headPosDist = Mathf.Max(Mathf.Abs(headTilt.z), Mathf.Abs(headTilt.x));
 
@@ -151,14 +163,16 @@ public class SoundManager : MonoBehaviour{
             return SoundMode.None;
     }
 
-    void SetState() {
+    void SetState() 
+    {
         SoundMode previousState = currentSoundState;
         currentSoundState = HeadPosToSoundMode(headPos);
         if (previousState != currentSoundState)
             playSound = true;
     }
 
-    public enum SoundMode {
+    public enum SoundMode 
+    {
         None,
         Quite,
         Warning,
