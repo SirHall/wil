@@ -30,8 +30,6 @@ public class SoundManager : MonoBehaviour{
 
     private Vector3 headPos = new Vector3();
 
-    private GameState currentGameState;
-
     private bool playSound = false;
 
     void OnEnable() {
@@ -46,7 +44,6 @@ public class SoundManager : MonoBehaviour{
     void SoundEvent(SoundControlEvent e) 
     {
         headPos = e.headInput.dir;
-        currentGameState = e.gameInput.state;
     }
 
     //A class that is called upon from any other file
@@ -124,6 +121,8 @@ public class SoundManager : MonoBehaviour{
     }
     private void LeanWarningSound() 
     {
+        if (!WaveScore.IsPlaying) return;
+
         SetState();
         if (playSound) 
         {
