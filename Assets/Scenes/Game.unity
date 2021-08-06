@@ -1371,6 +1371,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5555672468371652484, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
+      propertyPath: headMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555672468371652484, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
+      propertyPath: mouseSteerSensitivity
+      value: 0.0005
+      objectReference: {fileID: 0}
     - target: {fileID: 5555672468371652489, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
       propertyPath: m_IsActive
       value: 1
