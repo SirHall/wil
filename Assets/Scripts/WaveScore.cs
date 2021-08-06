@@ -32,7 +32,7 @@ public class WaveScore : MonoBehaviour
 
     void Start()
     {
-        if (waveTransform)
+        if (waveTransform == null)
             Debug.LogError("Ensure that WaveScore.waveTransform has the wave's transform assigned");
     }
 
