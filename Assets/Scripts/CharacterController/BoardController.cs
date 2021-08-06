@@ -76,24 +76,31 @@ public class BoardController : MonoBehaviour, ICharacterController
         // Only run the intro if it is enabled, and all positions are set
         introEnabled = introEnabled && introStartPos != null && introEndPos != null;
 
+
         if (introEnabled)
         {
             Vector3 dir = introEndPos.position - introStartPos.position;
             float introVel = dir.magnitude / introTime;
             motor.SetPositionAndRotation(introStartPos.position, Quaternion.LookRotation(dir, Vector3.up));
+            float introClock = 0.0f;
 
             // Allow one frame to pass so the above SetPositionAndRotation takes effect
             yield return null;
 
-            while (dir.magnitude > 0.01f)
+            while (introClock <= introTime)
             {
-                float dist = Mathf.Min(dir.magnitude, introVel * Time.deltaTime);
-                motor.SetPosition(motor.TransientPosition + dir.normalized * dist);
-                dir = introEndPos.position - motor.TransientPosition;
+                introClock += Time.deltaTime;
+                // float dist = Mathf.Min(dir.magnitude, introVel * Time.deltaTime);
+                // motor.pos(motor.TransientPosition + dir.normalized * dist);
+                // dir = introEndPos.position - motor.TransientPosition;
+                Motor.BaseVelocity = (introEndPos.position - introStartPos.position) / introTime;
                 yield return null;
             }
 
+            Motor.BaseVelocity += (introEndPos.position - introStartPos.position) / introTime;
+
             inputAccepted = true;
+
         }
     }
 
@@ -132,19 +139,25 @@ public class BoardController : MonoBehaviour, ICharacterController
 
         if (motor.GroundingStatus.IsStableOnGround)
         {
-            currentVelocity += transform.forward * (input.dir.y * 1.1f) * moveAccel * deltaTime;
+            // currentVelocity += transform.forward * (input.dir.y * 1.1f) * moveAccel * deltaTime;
 
             Collider col = motor.GroundingStatus.GroundCollider;
 
             if (col.name == "WavePart") // Wave force
+            {
+                // TODO: Leaning forward/backward increases speed/drag
                 currentVelocity +=
-                    Vector3.ProjectOnPlane(
-                        (
-                            (col.transform.forward * -wavePullUpAccel) +
-                            (col.transform.right * waveForwardAccel)
-                        ) * deltaTime,
-                        Vector3.up
-                    );
+                   Vector3.ProjectOnPlane(
+                       (
+                           (col.transform.forward * -wavePullUpAccel) +
+                           Vector3.Lerp(
+                               col.transform.right,
+                               Motor.CharacterForward,
+                               0.25f) * waveForwardAccel
+                       ) * deltaTime,
+                       Vector3.up
+                   );
+            }
         }
         else // We're in the air
         {
