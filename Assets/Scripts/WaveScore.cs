@@ -8,6 +8,8 @@ public class WaveScore : MonoBehaviour
 {
     [SerializeField] Collider winCollider;
 
+    [SerializeField] Transform waveTransform;
+
     public Animator transition;
 
     [SerializeField]
@@ -26,6 +28,12 @@ public class WaveScore : MonoBehaviour
     {
         State = GameState.Playing;
         sceneTransition.SetActive(false);
+    }
+
+    void Start()
+    {
+        if (waveTransform)
+            Debug.LogError("Ensure that WaveScore.waveTransform has the wave's transform assigned");
     }
 
     void OnEnable()
@@ -60,7 +68,7 @@ public class WaveScore : MonoBehaviour
     }
 
     void OnWaveSettingsEvent(WaveSettingEvent e) =>
-        winCollider.transform.position = new Vector3(e.settings.length, 0.0f, 0.0f);
+        winCollider.transform.position = waveTransform.position + (waveTransform.right * e.settings.length);
 
     void OnScoreControlEvent(ScoreControlEvent e)
     {
@@ -94,7 +102,7 @@ public class WaveScore : MonoBehaviour
         SceneManager.UnloadSceneAsync("Game");
     }
 
-    IEnumerator SplashTransition() 
+    IEnumerator SplashTransition()
     {
         sceneTransition.SetActive(true);
 
@@ -110,7 +118,7 @@ public class WaveScore : MonoBehaviour
             // We have lost
             using (var e = GameLost.Get()) { /* Rest In Peace, ocean man :( */ }
         }));
-        
+
         // Wait
         yield return new WaitForSeconds(0.5f);
         sceneTransition.SetActive(false);
