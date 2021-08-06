@@ -7,6 +7,7 @@ public class SoundControlEvent : GlobalEvent<SoundControlEvent>, System.IDisposa
     public HeadInput headInput;
 }
 
-public struct HeadInput {
-    public Vector2 dir;
+public struct HeadInput 
+{
+    public Vector3 dir;
 }
