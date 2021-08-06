@@ -153,7 +153,7 @@ public class BoardController : MonoBehaviour, ICharacterController
                            Vector3.Lerp(
                                col.transform.right,
                                Motor.CharacterForward,
-                               0.25f) * waveForwardAccel
+                               0.5f) * waveForwardAccel
                        ) * deltaTime,
                        Vector3.up
                    );
