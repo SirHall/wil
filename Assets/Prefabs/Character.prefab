@@ -227,7 +227,9 @@ MonoBehaviour:
       m_Action: Mouse Delta
       m_Flags: 0
   viewTransform: {fileID: 5555672468371652488}
+  headMode: 0
   sensitivity: 0.1
+  mouseSteerSensitivity: 0.01
 --- !u!114 &5555672468371652483
 MonoBehaviour:
   m_ObjectHideFlags: 0
