@@ -35,36 +35,34 @@ public class GFXBoard : MonoBehaviour
     [SerializeField] [FoldoutGroup("WaterBobPoints")] Transform waterBobRearRightPoint;
     [SerializeField] [FoldoutGroup("WaterBobPoints")] Transform waterBobRearLeftPoint;
 
+    [SerializeField] float posInterp = 3.0f;
+    [SerializeField] float rotInterp = 3.0f;
+
     void FixedUpdate()
     {
-        //Temporarily undo the last tick's animation offsets so it doesn't affect our base lerp
-        transform.localRotation *= Quaternion.Inverse(animRot);
-        transform.localPosition -= animPos;
+        // Make the board track the player character
+        transform.position = board.Motor.TransientPosition;
+        transform.rotation = board.Motor.TransientRotation;
 
-        // transform.position = board.Motor.TransientPosition;
-        // transform.rotation = board.Motor.TransientRotation;
+        Vector3 forwardBob = waterBobForwardPoint.position.WithY(v => WaterData.Instance.EvalAtWorldPos(v));
+        Vector3 rearLeftBob = waterBobRearLeftPoint.position.WithY(v => WaterData.Instance.EvalAtWorldPos(v));
+        Vector3 rearRighhtBob = waterBobRearRightPoint.position.WithY(v => WaterData.Instance.EvalAtWorldPos(v));
 
-        transform.position = Vector3.Lerp(transform.position, board.transform.position, 1.0f/* Time.deltaTime * positionLerpSpeed*/);
+        // Position/rotation due to wave bobbing
+        Vector3 bobNormal = -UnityExcessives.FindNormal(forwardBob, rearLeftBob, rearRighhtBob);
+        Vector3 bobPos = UnityExcessives.MeanPos(forwardBob, rearLeftBob, rearRighhtBob);
 
-        transform.rotation = Quaternion.Lerp(
-            transform.rotation,
-            board.transform.rotation,
-            // Quaternion.FromToRotation(
-            //     board.transform.forward,
-            //     board.Motor.GetDirectionTangentToSurface(board.transform.forward, Vector3.up)
-            // ),
-            // Time.deltaTime * rotateLerpSpeed
-            1.0f
-            );
+        // Position/rotation from floor/barrel
+        Vector3 motorNormal = board.Motor.GroundingStatus.GroundNormal;
+        Vector3 motorPos = board.Motor.TransientPosition;
 
-        Vector3 bobNormal = -UnityExcessives.FindNormal(waterBobForwardPoint.position, waterBobRearLeftPoint.position, waterBobRearRightPoint.position);
-        Vector3 bobPos = UnityExcessives.MeanPos(waterBobForwardPoint.position, waterBobRearLeftPoint.position, waterBobRearRightPoint.position);
+        // We select between using bobbing information versus motor info, based on which water level is higher
+        bool useMotor = motorPos.y > bobPos.y;
 
-        animPos = Vector3.Lerp(animPos, Vector3.up * WaterData.Instance.EvalAtWorldPos(bobPos), 1.0f);
+        Vector3 normal = useMotor ? motorNormal : bobNormal;
+        Vector3 pos = useMotor ? motorPos : bobPos;
 
-        animRot = Quaternion.FromToRotation(Vector3.up, bobNormal);
-
-        transform.localRotation *= animRot;
-        transform.localPosition += animPos;
+        transform.position = Vector3.Lerp(transform.position, pos, 1.0f);
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(board.Motor.CharacterForward, normal), 1.0f);
     }
 }
