@@ -196,15 +196,15 @@ public class Wave : MonoBehaviour, IMoverController
                 (transform.right * ((wavePartLength * x) + (wavePieceZOffset * y) + (n.transform.localScale.x * 0.5f))) // Move right
             );
 
-            localPos.y = MapHeight(localPos.y); // Squish the barrel's height
-
             n.transform.localPosition = localPos;
 
             n.transform.localRotation =
               Quaternion.FromToRotation(
                   transform.up,
-                  (adjustedCenter.WithX(n.transform.localPosition.x) - n.transform.localPosition).normalized
+                  (barrelCenter.WithX(n.transform.localPosition.x) - n.transform.localPosition).normalized
               );
+
+            n.transform.localPosition = n.transform.localPosition.WithY(MapHeight(n.transform.localPosition.y)); // Squish the barrel's height
         }
     }
 
