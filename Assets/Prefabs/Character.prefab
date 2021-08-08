@@ -227,9 +227,11 @@ MonoBehaviour:
       m_Action: Mouse Delta
       m_Flags: 0
   viewTransform: {fileID: 5555672468371652488}
+  autoHeadMode: 1
   headMode: 0
   sensitivity: 0.1
-  mouseSteerSensitivity: 0.01
+  mouseSteerSensitivity: 0.0005
+  board: {fileID: 5555672468506556107}
 --- !u!114 &5555672468371652483
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,7 +276,6 @@ GameObject:
   - component: {fileID: 5555672468506556107}
   - component: {fileID: 5555672468506556101}
   - component: {fileID: 5555672468506556102}
-  - component: {fileID: 771109794}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -395,6 +396,7 @@ MonoBehaviour:
   introStartPos: {fileID: 0}
   introEndPos: {fileID: 0}
   introTime: 10
+  inputAccepted: 1
 --- !u!114 &5555672468506556101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -422,20 +424,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   applyToBaseObject: 1
---- !u!114 &771109794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5555672468506556108}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17ed53909e547e647b0ccb3804f2ae39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lockOnStart: 0
-  controlSelf: 1
 --- !u!1 &5555672469118418112
 GameObject:
   m_ObjectHideFlags: 0
