@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +13,14 @@ public class WaveScore : MonoBehaviour
     [SerializeField] Transform waveTransform;
 
     public Animator transition;
+
+    [SerializeField] BoardController board;
+
+    [SerializeField] [FoldoutGroup("Game Won")] GameObject winObject;
+    [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro winDataText;
+
+    [SerializeField] [FoldoutGroup("Game Lost")] GameObject loseObject;
+
 
     [SerializeField]
     [Tooltip("Time in seconds it takes for the transition to occur")]
@@ -42,6 +52,9 @@ public class WaveScore : MonoBehaviour
         WaveEndEvent.RegisterListener(OnWaveEndEvent);
         ScoreControlEvent.RegisterListener(OnScoreControlEvent);
         VisualControlEvent.RegisterListener(OnVisualControlEvent);
+        GameWon.RegisterListener(OnGameWon);
+        GameLost.RegisterListener(OnGameLost);
+        VRButtonEvent.RegisterListener(OnVRButtonEvent);
     }
 
     void OnDisable()
@@ -50,6 +63,9 @@ public class WaveScore : MonoBehaviour
         WaveEndEvent.UnregisterListener(OnWaveEndEvent);
         ScoreControlEvent.UnregisterListener(OnScoreControlEvent);
         VisualControlEvent.UnregisterListener(OnVisualControlEvent);
+        GameWon.UnregisterListener(OnGameWon);
+        GameLost.UnregisterListener(OnGameLost);
+        VRButtonEvent.UnregisterListener(OnVRButtonEvent);
     }
 
     void Update()
@@ -58,12 +74,7 @@ public class WaveScore : MonoBehaviour
         if (moveState == MovementState.Fallen && IsPlaying)
         {
             State = GameState.Lost;
-
-            //StartCoroutine(RunInEndEndScene(() => {
-            //    // We have lost
-            //    using (var e = GameLost.Get()) { /* Rest In Peace, ocean man :( */ }
-            //}));
-            StartCoroutine(SplashTransition());
+            StartCoroutine(SplashTransition()); /* Rest In Peace, ocean man :( */
         }
     }
 
@@ -84,22 +95,15 @@ public class WaveScore : MonoBehaviour
         if (!IsPlaying)
             return;
 
-        State = GameState.Won;
-        StartCoroutine(RunInEndEndScene(() =>
+        // It isn't exactly necessary to use a separate win event, it's more
+        // in the *event* that we need to add more specific data
+        // regarding the win that we don't get from the WaveEndEvent data -
+        // it's a little bit of future proofing if you will.
+        using (var winE = GameWon.Get())
         {
-            // It isn't exactly necessary to use a separate win event, it's more
-            // in the *event* that we need to add more specific data
-            // regarding the win that we don't get from the WaveEndEvent data -
-            // it's a little bit of future proofing if you will.
-            using (var winE = GameWon.Get())
-            {
-                winE.warningAmt = warningAmt;
-                winE.warningTime = warningTime;
-            }
-        }));
-
-
-        SceneManager.UnloadSceneAsync("Game");
+            winE.warningAmt = warningAmt;
+            winE.warningTime = warningTime;
+        }
     }
 
     IEnumerator SplashTransition()
@@ -112,33 +116,61 @@ public class WaveScore : MonoBehaviour
         // Wait
         yield return new WaitForSeconds(1.6f);
 
-        // Load Scene & Teleport player
-        StartCoroutine(RunInEndEndScene(() =>
-        {
-            // We have lost
-            using (var e = GameLost.Get()) { /* Rest In Peace, ocean man :( */ }
-        }));
+        // We have lost so load scene & teleport player
+        using (var e = GameLost.Get()) { /* Rest In Peace, ocean man :( */ }
 
         // Wait
         yield return new WaitForSeconds(0.5f);
         sceneTransition.SetActive(false);
     }
 
-    IEnumerator RunInEndEndScene(Action action)
+    void OnGameWon(GameWon e)
     {
-        AsyncOperation load = SceneManager.LoadSceneAsync("GameEndScreen", LoadSceneMode.Additive);
-        load.allowSceneActivation = true;
-        while (!load.isDone)
-            yield return null;
-
-        Scene endScene = SceneManager.GetSceneByName("GameEndScreen");
-        SceneManager.SetActiveScene(endScene);
-
-        action();
-
-        // Comment this out and we have the game end screen over the main game
-        // SceneManager.UnloadSceneAsync("Game");
+        // We pass the event's fields rather than the entire event itself as we should not copy the
+        // singleton event instance past a single invocation
+        StartCoroutine(SetupWonMenu(e.warningAmt, e.warningTime));
     }
+
+    // We have to defer setting up the win screen to an IEnumerator as the player continues the move after winning,
+    // so we have to wait for the player to stop moving before setting up the win menu
+    IEnumerator SetupWonMenu(int warningAmt, float warningTime)
+    {
+        yield return new WaitUntil(() => board.Motor.Velocity.magnitude <= 0.1f);
+
+        winObject.transform.position = board.transform.position.WithY(n => n + 1.0f);
+        winObject.SetActive(true);
+        //--- More human-friendly format ---//
+        // winDataText.text = $"You were warned {e.warningAmt} times and spend {e.warningTime} seconds in a warning state";
+        //--- Simple statistics listing ---//
+        winDataText.text = $"Warned: {warningAmt} times\nWarn Time: {warningTime}s";
+        board.StopImmediately();
+        board.InputAccepted = false;
+
+    }
+
+    void OnGameLost(GameLost e)
+    {
+        loseObject.transform.position = board.transform.position.WithY(n => n + 1.0f);
+        loseObject.SetActive(true);
+        board.StopImmediately();
+        board.InputAccepted = false;
+    }
+
+
+    void OnVRButtonEvent(VRButtonEvent e)
+    {
+        switch (e.button)
+        {
+            case VRButtons.MainMenu: OnMainMenuButton(); break;
+            case VRButtons.Retry: OnRetryButton(); break;
+            case VRButtons.Designer: OnBarrelDesignerButton(); break;
+            default: break; // Ignore all other buttons
+        }
+    }
+
+    public void OnMainMenuButton() => SceneManager.LoadSceneAsync("Main Menu", LoadSceneMode.Single);
+    public void OnRetryButton() => SceneManager.LoadSceneAsync("Game", LoadSceneMode.Single);
+    public void OnBarrelDesignerButton() => SceneManager.LoadSceneAsync("BarrelDesigner", LoadSceneMode.Single);
 }
 
 public enum GameState
