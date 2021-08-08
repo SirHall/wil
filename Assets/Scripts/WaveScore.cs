@@ -24,7 +24,11 @@ public class WaveScore : MonoBehaviour
 
     [SerializeField]
     [Tooltip("Time in seconds it takes for the transition to occur")]
-    public GameObject sceneTransition;
+    private GameObject sceneTransition;
+
+    [SerializeField]
+    [Tooltip("Gameobject which contains the position for the player to teleport too when fallen")]
+    private GameObject failureLocation;
 
     int warningAmt;
     float warningTime;
@@ -114,7 +118,12 @@ public class WaveScore : MonoBehaviour
         transition.SetTrigger("Splash");
 
         // Wait
-        yield return new WaitForSeconds(1.6f);
+        yield return new WaitForSeconds(1.3f);
+
+        //Teleport Player to custom end location
+        board.StopImmediately();
+        board.InputAccepted = false;
+        board.Motor.SetPosition(failureLocation.transform.position);
 
         // We have lost so load scene & teleport player
         using (var e = GameLost.Get()) { /* Rest In Peace, ocean man :( */ }

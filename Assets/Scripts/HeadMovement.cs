@@ -95,7 +95,7 @@ public class HeadMovement : MonoBehaviour
         using (var e = VisualControlEvent.Get())
         {
             e.dir = headPosRel;
-            e.dir.y = vr_CameraGameObject.transform.localPosition.y;
+            e.dir.y = vr_CameraGameObject.transform.position.y;
         }
         
 

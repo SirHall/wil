@@ -10,6 +10,10 @@ public class VisualEffects : MonoBehaviour
     [Tooltip("Post Processing Volume Gameobject")]
     private GameObject volume;
 
+    [SerializeField]
+    [Tooltip("Water Gameobject")]
+    private GameObject water;
+
     private Volume postProcessingVolume;
 
     // Players head position
@@ -63,10 +67,19 @@ public class VisualEffects : MonoBehaviour
     {
         bool isUnderWater = false;
         // Check if players position is below the water
-        if (headPos.y <= 0) isUnderWater = true; 
-        else isUnderWater = false;
+        if (headPos.y <= 0)
+        {
+            water.transform.rotation = new Quaternion(180, 0, 0, 0);
+            isUnderWater = true;
+        }
+        else
+        {
+            water.transform.rotation = new Quaternion(0, 0, 0, 0);
+            isUnderWater = false;
+        }
 
         //Enable or disable all existing effects on post processing game object which create an underwater effect.
+        if (postProcessingVolume.profile.TryGet<Vignette>(out var vignette)) vignette.active = !isUnderWater;
         if (postProcessingVolume.profile.TryGet<DepthOfField>(out var dof)) dof.active = isUnderWater;
         if (postProcessingVolume.profile.TryGet<ColorAdjustments>(out var colorAdjust)) colorAdjust.active = isUnderWater;
         if (postProcessingVolume.profile.TryGet<WhiteBalance>(out var whiteBalance)) whiteBalance.active = isUnderWater;

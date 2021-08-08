@@ -18,7 +18,7 @@ public class KeyboardHeadHeight : MonoBehaviour
     {
         using (var e = VisualControlEvent.Get())
         {
-            e.dir.y = keyboard_CameraGameObject.transform.localPosition.y;
+            e.dir.y = keyboard_CameraGameObject.transform.position.y;
         }
     }
 }
