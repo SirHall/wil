@@ -9,19 +9,19 @@ public class GameEndScreen : MonoBehaviour
 {
     public static GameEndScreen Instance { get; private set; }
 
+    [SerializeField] BoardController board;
+
     [SerializeField] [FoldoutGroup("Game Won")] GameObject winObject;
-    [SerializeField] [FoldoutGroup("Game Won")] TextMeshProUGUI winDataText;
+    [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro winDataText;
 
     [SerializeField] [FoldoutGroup("Game Lost")] GameObject loseObject;
-
-    // [SerializeField] [FoldoutGroup("Buttons")] ;
-
 
     void OnEnable()
     {
         Instance = this;
         GameWon.RegisterListener(OnGameWon);
         GameLost.RegisterListener(OnGameLost);
+        VRButtonEvent.RegisterListener(OnVRButtonEvent);
     }
 
     void OnDisable()
@@ -29,12 +29,13 @@ public class GameEndScreen : MonoBehaviour
         Instance = null;
         GameWon.UnregisterListener(OnGameWon);
         GameLost.UnregisterListener(OnGameLost);
+        VRButtonEvent.UnregisterListener(OnVRButtonEvent);
     }
 
     void OnGameWon(GameWon e)
     {
+        winObject.transform.position = board.transform.position;
         winObject.SetActive(true);
-        loseObject.SetActive(false);
 
         //--- More human-friendly format ---//
         // winDataText.text = $"You were warned {e.warningAmt} times and spend {e.warningTime} seconds in a warning state";
@@ -45,22 +46,25 @@ public class GameEndScreen : MonoBehaviour
 
     void OnGameLost(GameLost e)
     {
-        winObject.SetActive(false);
+        loseObject.transform.position = board.transform.position;
         loseObject.SetActive(true);
     }
 
-    public void OnMainMenuButton()
+    [SerializeField] string barrelDesignerScene = "BarrelDesigner";
+
+
+    void OnVRButtonEvent(VRButtonEvent e)
     {
-        SceneManager.LoadSceneAsync("Main Menu", LoadSceneMode.Single);
+        switch (e.button)
+        {
+            case VRButtons.MainMenu: OnMainMenuButton(); break;
+            case VRButtons.Retry: OnRetryButton(); break;
+            case VRButtons.Designer: OnBarrelDesignerButton(); break;
+            default: break; // Ignore all other buttons
+        }
     }
 
-    public void OnRetryButton()
-    {
-        SceneManager.LoadSceneAsync("Game", LoadSceneMode.Single);
-    }
-
-    public void OnBarrelDesignerButton()
-    {
-        SceneManager.LoadSceneAsync("BarrelDesigner", LoadSceneMode.Single);
-    }
+    public void OnMainMenuButton() => SceneManager.LoadSceneAsync("Main Menu", LoadSceneMode.Single);
+    public void OnRetryButton() => SceneManager.LoadSceneAsync("Game", LoadSceneMode.Single);
+    public void OnBarrelDesignerButton() => SceneManager.LoadSceneAsync("BarrelDesigner", LoadSceneMode.Single);
 }
