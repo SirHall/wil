@@ -275,6 +275,7 @@ GameObject:
   - component: {fileID: 5555672468506556101}
   - component: {fileID: 5555672468506556102}
   - component: {fileID: 771109794}
+  - component: {fileID: 7926625676263110419}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -436,6 +437,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lockOnStart: 0
   controlSelf: 1
+--- !u!114 &7926625676263110419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5555672468506556108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eecad27f68a47124697b5a9d6d8a4bd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vr_CameraGameObject: {fileID: 576255697668831358}
+  keyboard_CameraGameObject: {fileID: 5555672468371652489}
 --- !u!1 &5555672469118418112
 GameObject:
   m_ObjectHideFlags: 0
@@ -583,6 +598,11 @@ PrefabInstance:
 --- !u!4 &576255695540641418 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 612938262074447093, guid: d1277bb803ddcf34b960e1cd1efe9e97, type: 3}
+  m_PrefabInstance: {fileID: 1116573413617404543}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &576255697668831358 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 612938263532401153, guid: d1277bb803ddcf34b960e1cd1efe9e97, type: 3}
   m_PrefabInstance: {fileID: 1116573413617404543}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &576255697668831349 stripped
