@@ -17,13 +17,17 @@ public class KeyboardInput : MonoBehaviour
     [Tooltip("This should be the transform of the gameobject to which the camera is attached")]
     [SerializeField] [TitleGroup("Head")] Transform viewTransform;
 
+    [SerializeField] [TitleGroup("Head")] bool autoHeadMode = true;
     // TODO: Add code to allow this value to be changed after instantiation and correct the camera appropriately
     [Tooltip("Whether the camera is able to rotate freely, or if it is used in steer mode")]
-    [SerializeField] [TitleGroup("Head")] KeyboardHeadMode headMode = KeyboardHeadMode.View;
+    [SerializeField] [TitleGroup("Head")] [ShowIf("@this.autoHeadMode == false")] KeyboardHeadMode headMode = KeyboardHeadMode.View;
+
     [Tooltip("Sensitivity of the mouse when using the camera in view mode")]
     [SerializeField] [TitleGroup("Head")] float sensitivity = 0.1f;
     [Tooltip("Sensitivity of the camera in steer mode")]
     [SerializeField] [TitleGroup("Head")] float mouseSteerSensitivity = 1.0f;
+
+    [SerializeField] BoardController board;
 
     void OnEnable()
     {
@@ -41,6 +45,7 @@ public class KeyboardInput : MonoBehaviour
     #region Bookkeeeping
 
     Vector2 currentCamRotation = new Vector2(0.0f, 0.0f);
+    KeyboardHeadMode prevHeadMode;
 
     #endregion
 
@@ -52,18 +57,28 @@ public class KeyboardInput : MonoBehaviour
     {
         prev = Cardinal;
         viewInitPos = viewTransform.localPosition;
+        prevHeadMode = headMode;
     }
 
     void Update()
     {
-        // if ((Cardinal - prev).sqrMagnitude > 0.01f)
-        //     using (var e = BoardControlEvent.Get())
-        //         e.input.dir = Cardinal;
+        if (autoHeadMode)
+            headMode = (board.InputAccepted ? KeyboardHeadMode.Steer : KeyboardHeadMode.View);
 
+        // Handle switching between headmodes
+        if (headMode == KeyboardHeadMode.View)
+            viewTransform.transform.localPosition = Vector3.MoveTowards(
+                viewTransform.transform.localPosition,
+                viewInitPos,
+                Time.deltaTime * 1.0f
+            );
+        else if (headMode == KeyboardHeadMode.Steer)
+            viewTransform.localRotation = Quaternion.RotateTowards(
+                viewTransform.localRotation,
+                Quaternion.LookRotation(Vector3.forward, Vector3.up), Time.deltaTime * 90.0f
+            );
 
-        // currentCamRotation.x +=;
-        // currentCamRotation.y += sensitivity * -mouseDelta.ReadValue<Vector2>().y; // Mathf.Clamp(currentCamRotation.y + mouseDelta.ReadValue<Vector2>().x, elevationRange.x, elevationRange.y);
-
+        // Move head using mouse input and head mode
         Vector2 delta = mouseDelta.ReadValue<Vector2>();
 
         if (MouseLock.IsMouseLocked)
@@ -84,6 +99,7 @@ public class KeyboardInput : MonoBehaviour
             e.input.dir = (viewTransform.localPosition - viewInitPos).xy();
 
         // prev = Cardinal;
+        prevHeadMode = headMode;
     }
 }
 
