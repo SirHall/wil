@@ -22,4 +22,7 @@ public enum VRButtons
     Designer_DecreaseRadius, // Decrease the radius of the barrel
     Designer_Longer, // Increase the length of the barrel
     Designer_Shorter, // Decrease the length of the barrel
+
+    MainMenu, // Go back to the main menu
+    Retry, // Re-attempt the current barrel
 }
