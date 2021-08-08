@@ -33,7 +33,14 @@ public class BoardController : MonoBehaviour, ICharacterController
     /// <summary>
     /// Is this board accepting user input?
     /// </summary>
-    bool inputAccepted = true;
+    public bool InputAccepted { get => inputAccepted; set => inputAccepted = value; }
+    [SerializeField] bool inputAccepted = true;
+
+    /// <summary>
+    /// Stops the board from moving along cardinal axis'
+    /// </summary>
+    public void StopImmediately() => immediateStop = true;
+    bool immediateStop = false;
 
     void Awake()
     {
@@ -132,6 +139,12 @@ public class BoardController : MonoBehaviour, ICharacterController
 
     void ICharacterController.UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
     {
+        if (immediateStop == true)
+        {
+            immediateStop = false;
+            currentVelocity = currentVelocity.WithX(0.0f).WithZ(0.0f);
+        }
+
         if (!inputAccepted)
             return;
         // Drag is only applied to horizontal components
