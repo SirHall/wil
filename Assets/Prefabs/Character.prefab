@@ -451,6 +451,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vr_CameraGameObject: {fileID: 576255697668831358}
   keyboard_CameraGameObject: {fileID: 5555672468371652489}
+  activeCamera: {fileID: 0}
 --- !u!1 &5555672469118418112
 GameObject:
   m_ObjectHideFlags: 0
