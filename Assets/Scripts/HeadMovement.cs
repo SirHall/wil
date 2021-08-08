@@ -93,7 +93,11 @@ public class HeadMovement : MonoBehaviour
         }
 
         using (var e = VisualControlEvent.Get())
+        {
             e.dir = headPosRel;
+            e.dir.y = vr_CameraGameObject.transform.localPosition.y;
+        }
+        
 
         using (var e = SoundControlEvent.Get())
             e.headInput.dir = headPosRel;

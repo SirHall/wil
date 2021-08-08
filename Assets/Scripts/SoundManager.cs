@@ -32,6 +32,8 @@ public class SoundManager : MonoBehaviour{
 
     private bool playSound = false;
 
+    private bool isFallen = false;
+
     void OnEnable() {
         SoundControlEvent.RegisterListener(SoundEvent);
     }
@@ -118,6 +120,7 @@ public class SoundManager : MonoBehaviour{
         backgroundsource2.volume = (Total_Velocity * Mathf.Sin(Mathf.PI / 2) / 10)/100 * MovementMaxVolume;
 
         LeanWarningSound();
+        FallenSound();
     }
     /// <summary>
     /// Handles the Lean warning sound which plays when the user is too far off the board
@@ -148,7 +151,21 @@ public class SoundManager : MonoBehaviour{
             playSound = false;
         }
     }
+    private void FallenSound()
+    {
+        if (WaveScore.IsPlaying)
+        {
+            isFallen = false;
+            return;
+        }
 
+        if (!isFallen)
+        {
+            PlaySound(Splash, 0.5f);
+            isFallen = true;
+        }
+
+    }
     // This function takes in the head tilt and returns it as a sound mode
     public static SoundMode HeadPosToSoundMode(Vector3 headTilt)
     {
