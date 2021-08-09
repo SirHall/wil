@@ -14,7 +14,10 @@ public class SoundManager : MonoBehaviour{
     [SerializeField] private AudioClip Woah;
 
     [SerializeField]
-    private SoundMode currentSoundState;
+    private SoundLevelMode currentSoundLevelState;
+
+    [SerializeField]
+    private EnvironmentMode currentEnvironmentState;
 
     //Creating an instance for other files control
     public static SoundManager instance;
@@ -26,11 +29,9 @@ public class SoundManager : MonoBehaviour{
     [SerializeField] public int MovementMaxVolume = 100;
     [SerializeField] AudioSource backgroundsource1;
     [SerializeField] AudioSource backgroundsource2;
-    [SerializeField] private AudioSource leanWarningSource;
+    [SerializeField] AudioSource leanWarningSource;
 
     private Vector3 headPos = new Vector3();
-
-    private bool playSound = false;
 
     private bool isFallen = false;
 
@@ -68,8 +69,8 @@ public class SoundManager : MonoBehaviour{
 
         backgroundsource1 = gameObject.AddComponent<AudioSource>();
         backgroundsource2 = gameObject.AddComponent<AudioSource>();
-
         leanWarningSource = gameObject.AddComponent<AudioSource>();
+
 
         boardcontroller = GameObject.FindObjectOfType<BoardController>();
     }
@@ -103,12 +104,18 @@ public class SoundManager : MonoBehaviour{
         Total_Velocity = (int)Total_Velocity;
 
         //Playsound here
-        if (!backgroundsource1.isPlaying) 
+
+        bool playingMusic;
+
+
+        if (WaterStateChanged())
         {
-            backgroundsource1.clip = Background;
+            if (currentEnvironmentState == EnvironmentMode.UnderWater) backgroundsource1.clip = Underwater;
+            else if (currentEnvironmentState == EnvironmentMode.AboveWater) backgroundsource1.clip = Background;
+
             backgroundsource1.loop = true;
             backgroundsource1.Play();
-        }
+        } 
 
         if (!backgroundsource2.isPlaying)
         {
@@ -129,26 +136,23 @@ public class SoundManager : MonoBehaviour{
     {
         if (!WaveScore.IsPlaying) return;
 
-        SetState();
-        if (playSound) 
+        if (LeanStateChanged()) 
         {
             leanWarningSource.clip = Woah;
-            switch (currentSoundState) 
+            switch (currentSoundLevelState) 
             {
-                case SoundMode.Quite:
+                case SoundLevelMode.Quite:
                     leanWarningSource.volume = 0.2f;
                     break;
-                case SoundMode.Warning:
+                case SoundLevelMode.Warning:
                     leanWarningSource.volume = 0.5f;
                     break;
-                case SoundMode.Alarm:
+                case SoundLevelMode.Alarm:
                     leanWarningSource.volume = 1f;
                     break;
             }
-            if (currentSoundState == SoundMode.Quite || currentSoundState == SoundMode.Warning || currentSoundState == SoundMode.Alarm)
+            if (currentSoundLevelState == SoundLevelMode.Quite || currentSoundLevelState == SoundLevelMode.Warning || currentSoundLevelState == SoundLevelMode.Alarm)
                 leanWarningSource.Play();
-
-            playSound = false;
         }
     }
     private void FallenSound()
@@ -166,37 +170,64 @@ public class SoundManager : MonoBehaviour{
         }
 
     }
-    // This function takes in the head tilt and returns it as a sound mode
-    public static SoundMode HeadPosToSoundMode(Vector3 headTilt)
+
+    /// <summary>
+    /// Takes in the head tilt and returns it as a sound mode
+    /// </summary>
+    /// <param name="headTilt">Vector 3 value for the current VR head tilt coordinates</param>
+    /// <returns>SoundLevelMode Enum corresponding to the heads positional distance from the center of the board</returns>
+    public static SoundLevelMode HeadPosToSoundMode(Vector3 headTilt)
     {
         // The scalar euclidean distance the head has moved from its original position 
         float headPosDist = Mathf.Max(Mathf.Abs(headTilt.z), Mathf.Abs(headTilt.x));
 
         if (headPosDist >= 1.0f) 
-            return SoundMode.Alarm;
+            return SoundLevelMode.Alarm;
         else if (headPosDist >= 0.8)
-            return SoundMode.Warning;
+            return SoundLevelMode.Warning;
         else if (headPosDist >= 0.6f) 
-            return SoundMode.Quite;
+            return SoundLevelMode.Quite;
         else
-            return SoundMode.None;
+            return SoundLevelMode.None;
     }
     /// <summary>
     /// Sets the sound state based on the heads distance from the center of the board
     /// </summary>
-    void SetState() 
+    private bool LeanStateChanged() 
     {
-        SoundMode previousState = currentSoundState;
-        currentSoundState = HeadPosToSoundMode(headPos);
-        if (previousState != currentSoundState)
-            playSound = true;
+        SoundLevelMode previousState = currentSoundLevelState;
+        currentSoundLevelState = HeadPosToSoundMode(headPos);
+        if (previousState != currentSoundLevelState) return true;
+        else return false;
     }
 
-    public enum SoundMode 
+    /// <summary>
+    /// Sets the sound state based on if the head is above or below the water and returns a bool if the state has changed
+    /// </summary>
+    /// <returns>Bool value if environment state has changed or not</returns>
+    private bool WaterStateChanged()
+    {
+        EnvironmentMode previousState = currentEnvironmentState;
+
+        if (headPos.y <= 0) currentEnvironmentState = EnvironmentMode.UnderWater;
+        else currentEnvironmentState = EnvironmentMode.AboveWater;
+
+        if (previousState != currentEnvironmentState) return true;
+        else return false;
+    }
+
+    public enum SoundLevelMode 
     {
         None,
         Quite,
         Warning,
         Alarm
+    }
+
+    public enum EnvironmentMode
+    {
+        None,
+        AboveWater,
+        UnderWater
     }
 }
