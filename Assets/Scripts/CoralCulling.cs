@@ -27,9 +27,13 @@ public class CoralCulling : MonoBehaviour
         // For each coral in coralList check distance from player. Disable if distance is too far away to save resources. 
         foreach (GameObject coral in coralList)
         {
-            bool visible = Vector3.Distance(coral.transform.position, player.transform.position) <= seeDist;
+            Transform coralChild = coral.transform.GetChild(0);
+            Vector3 closestToPlayer = coralChild.gameObject.GetComponent<MeshRenderer>().bounds.ClosestPoint(player.transform.position);
+
+            bool visible = Vector3.Distance(closestToPlayer, player.transform.position) <= seeDist;
             if (coral.activeSelf != visible) // Only update active state if it needs to be changes
                 coral.gameObject.SetActive(visible);
+
         }
     }
 }
