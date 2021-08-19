@@ -250,7 +250,7 @@ Transform:
   m_GameObject: {fileID: 1152624865079271475}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 1152624865515205057}
   - {fileID: 1152624864155679268}
@@ -274,7 +274,7 @@ MonoBehaviour:
   momentarySwitch: 1
   button: 1
   buttonLiftVel: 5
-  clickDist: 1
+  clickDist: 0.6
   label: Press
   buttonColor: {r: 0, g: 0, b: 0, a: 1}
   orientTowardsOrigin: 1
