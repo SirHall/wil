@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7501596812986962721
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7501596812986962722}
+  - component: {fileID: 7501596812986962723}
+  - component: {fileID: 7501596812986962733}
+  - component: {fileID: 7501596812986962732}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7501596812986962722
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7501596812986962721}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.5610886, y: 5.9898224, z: -5.3772984}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7501596812986962723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7501596812986962721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f161f3374ad21d4aa42ce4323c01f38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resetInput:
+    m_Name: Reset Input
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: b6468154-3ef7-4bc2-966e-a078fcb05dee
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: e4507556-ae9e-4259-b537-70c59b531ebd
+      m_Path: <Keyboard>/r
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Reset Input
+      m_Flags: 0
+--- !u!114 &7501596812986962733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7501596812986962721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 790ec7f547fe26a49a8bb67d6bc911e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: {fileID: 0}
+  water: {fileID: 0}
+--- !u!114 &7501596812986962732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7501596812986962721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60da8a5c62984b2488215e7c4f44e597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  winCollider: {fileID: 0}
+  waveTransform: {fileID: 0}
+  transition: {fileID: 0}
+  board: {fileID: 0}
+  winObject: {fileID: 0}
+  winDataText: {fileID: 0}
+  loseObject: {fileID: 0}
+  startTime: 3
+  sceneTransition: {fileID: 0}
+  failureLocation: {fileID: 0}

@@ -21,6 +21,11 @@ public class WaveScore : MonoBehaviour
 
     [SerializeField] [FoldoutGroup("Game Lost")] GameObject loseObject;
 
+    [Tooltip("Starting time the player has to get ready before being monitored")]
+    public float startTime;
+
+    [Tooltip("During warmup the player will not be measured or penalised")]
+    private static bool warmup = true;
 
     [SerializeField]
     [Tooltip("Time in seconds it takes for the transition to occur")]
@@ -37,10 +42,12 @@ public class WaveScore : MonoBehaviour
     public static GameState State { get; private set; }
 
     public static bool IsPlaying { get => WaveScore.State == GameState.Playing; }
+    public static bool IsWarmup { get => WaveScore.warmup == true; }
 
     void Awake()
     {
         State = GameState.Playing;
+        StartCoroutine(WarmupWaitTime());
         sceneTransition.SetActive(false);
     }
 
@@ -75,11 +82,34 @@ public class WaveScore : MonoBehaviour
     void Update()
     {
         MovementState moveState = HeadMovement.HeadTiltToState(headTilt);
-        if (moveState == MovementState.Fallen && IsPlaying)
+        if (moveState == MovementState.Fallen && IsPlaying && !IsWarmup)
         {
             State = GameState.Lost;
             StartCoroutine(SplashTransition()); /* Rest In Peace, ocean man :( */
         }
+
+        //Testing code to stop board at any point
+        if (Input.GetKey(KeyCode.I))
+        {
+            board.InputAccepted = false;
+            board.StopImmediately();
+        }
+    }
+
+    /// <summary>
+    /// Determins if the player is within the warmup period and sets warmup variable to false when time is exceeded
+    /// </summary>
+    /// <returns>Null if timer has not been reached or exceeded</returns>
+    IEnumerator WarmupWaitTime()
+    {
+        float startClock = 0.0f;
+
+        while (startClock <= startTime)
+        {
+            startClock += Time.deltaTime;
+            yield return null;
+        }
+        warmup = false;
     }
 
     void OnWaveSettingsEvent(WaveSettingEvent e) =>
@@ -121,9 +151,9 @@ public class WaveScore : MonoBehaviour
         yield return new WaitForSeconds(1.3f);
 
         //Teleport Player to custom end location
+        board.Motor.SetPosition(failureLocation.transform.position);
         board.StopImmediately();
         board.InputAccepted = false;
-        board.Motor.SetPosition(failureLocation.transform.position);
 
         // We have lost so load scene & teleport player
         using (var e = GameLost.Get()) { /* Rest In Peace, ocean man :( */ }
@@ -137,6 +167,7 @@ public class WaveScore : MonoBehaviour
     {
         // We pass the event's fields rather than the entire event itself as we should not copy the
         // singleton event instance past a single invocation
+        State = GameState.Won;
         StartCoroutine(SetupWonMenu(e.warningAmt, e.warningTime));
     }
 
