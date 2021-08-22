@@ -240,6 +240,13 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.xtaltools.unityconstantsgenerator": {
+      "version": "https://github.com/neptaco/UnityConstantsGenerator.git?path=Assets/ConstantsGenerator",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "9bc5b34f32edbbe14fc52ddf1ee5697711301f22"
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,
