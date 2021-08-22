@@ -238,7 +238,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CollisionEnter:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1152624865079271472}
+        m_TargetAssemblyTypeName: VRButton, Assembly-CSharp
+        m_MethodName: OnTouched
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   CollisionStay:
     m_PersistentCalls:
       m_Calls:
@@ -256,7 +268,19 @@ MonoBehaviour:
         m_CallState: 2
   CollisionExit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1152624865079271472}
+        m_TargetAssemblyTypeName: VRButton, Assembly-CSharp
+        m_MethodName: OnTouched
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1152624865079271475
 GameObject:
   m_ObjectHideFlags: 0
