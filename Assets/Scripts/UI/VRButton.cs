@@ -29,7 +29,7 @@ public class VRButton : MonoBehaviour
     // [TabGroup("Settings")]
     // [SerializeField] float unpressDist = 0.1f;
 
-    [Tooltip("When pressed by a non-physical source (user clicks on this button using their mouse), how far does the butto depress")]
+    [Tooltip("When pressed by a non-physical source (user clicks on this button using their mouse), how far does the button depress")]
     [TabGroup("Settings")]
     [SerializeField] float clickDist = 1.0f;
 
@@ -73,6 +73,8 @@ public class VRButton : MonoBehaviour
     [SerializeField] DebugGizmoDrawMode gizmoDrawMode = DebugGizmoDrawMode.Disabled;
 
 
+    Vector3 ViewTarget => BoardController.Instance?.transform?.position ?? transform.parent?.position ?? rb.position;
+
     #region Bookkeeping
 
     Vector3 initPos;
@@ -86,7 +88,7 @@ public class VRButton : MonoBehaviour
 
     #endregion
 
-    Vector3 CorrectedPosition => Utils.ProjectPoint(rb.position, GlobalInitPos, transform.forward);
+    Vector3 CorrectedPosition => Utils.ProjectPoint(rb.position, ViewTarget, (ViewTarget - rb.position).normalized);
 
     void Start()
     {
@@ -101,15 +103,16 @@ public class VRButton : MonoBehaviour
     void FixedUpdate()
     {
         // Distance the button is from its original position
-        float dist = Vector3.Distance(GlobalInitPos, transform.position);
+        float dist = Vector3.Distance(GlobalInitPos, rb.position);
+        float unDepressDist = depressDist * 0.1f;
 
         if (manualPress)
         {
-            rb.MovePosition(transform.position - (transform.forward * Mathf.Max(depressDist * 1.01f, clickDist)));
+            rb.MovePosition(rb.position - (transform.forward * Mathf.Max(depressDist * 1.01f, clickDist)));
             manualPress = false;
         }
 
-        if (pressed && momentarySwitch && dist < depressDist * 0.1f)
+        if (pressed && momentarySwitch && dist < unDepressDist)
         {
             pressed = false; // This button has now returned to its original position, and is now 'unpressed'
             OnLift.Invoke();
@@ -120,10 +123,10 @@ public class VRButton : MonoBehaviour
 
         // We move the button back to it's original position on the frame after it has been fully depressed
         if (momentarySwitch && dist > 0.001f)
-            rb.MovePosition(Vector3.MoveTowards(transform.position, GlobalInitPos, Time.deltaTime * buttonLiftVel));
+            rb.MovePosition(Vector3.MoveTowards(rb.position, GlobalInitPos, Time.deltaTime * buttonLiftVel));
 
-        if (enablePositionCorrection && Vector3.Distance(transform.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
-            transform.position = CorrectedPosition;
+        if (enablePositionCorrection && Vector3.Distance(rb.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
+            rb.MovePosition(CorrectedPosition);
     }
 
     void ButtonPressed()
@@ -154,8 +157,8 @@ public class VRButton : MonoBehaviour
     // Keep the buttons facing the player no matter their position or distance from the origin
     public void Orient()
     {
-        if (orientTowardsOrigin && transform.parent != null)
-            transform.LookAt(transform.parent.position, Vector3.up);
+        if (orientTowardsOrigin)
+            transform.LookAt(ViewTarget, Vector3.up);
     }
 
     public void OnDrawGizmos()
