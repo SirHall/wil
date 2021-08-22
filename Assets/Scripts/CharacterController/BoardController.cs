@@ -9,6 +9,9 @@ using Sirenix.OdinInspector;
 
 public class BoardController : MonoBehaviour, ICharacterController
 {
+
+    public static BoardController Instance { get; private set; }
+
     [SerializeField] KinematicCharacterMotor motor;
     public KinematicCharacterMotor Motor { get => motor; }
     [SerializeField] float sensitivity = 1.0f;
@@ -57,11 +60,21 @@ public class BoardController : MonoBehaviour, ICharacterController
     void OnEnable()
     {
         BoardControlEvent.RegisterListener(OnBoardControlEvent);
+
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
     }
 
     void OnDisable()
     {
         BoardControlEvent.UnregisterListener(OnBoardControlEvent);
+
+        if (Instance == this)
+            Instance = null;
     }
 
     void Update()
