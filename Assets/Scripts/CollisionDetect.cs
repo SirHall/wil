@@ -5,9 +5,9 @@ using UnityEngine.Events;
 
 public class CollisionDetect : MonoBehaviour
 {
-    [SerializeField] UnityEvent<Collision> CollisionEnter;
-    [SerializeField] UnityEvent<Collision> CollisionStay;
-    [SerializeField] UnityEvent<Collision> CollisionExit;
+    [SerializeField] UnityEvent<Collision> CollisionEnter = new UnityEvent<Collision>();
+    [SerializeField] UnityEvent<Collision> CollisionStay = new UnityEvent<Collision>();
+    [SerializeField] UnityEvent<Collision> CollisionExit = new UnityEvent<Collision>();
 
 
     void OnCollisionEnter(Collision collision) => CollisionEnter.Invoke(collision);
