@@ -1462,10 +1462,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Water HighPoly
       objectReference: {fileID: 0}
-    - target: {fileID: 3599054377695778588, guid: 974db2c5abe29734796c8fad873fbc48, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 974db2c5abe29734796c8fad873fbc48, type: 3}
 --- !u!1001 &4290934392966451052
@@ -1607,6 +1603,14 @@ PrefabInstance:
     - target: {fileID: 5555672468506556103, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555672468506556106, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
+      propertyPath: StepHandling
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555672468506556106, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
+      propertyPath: StableGroundLayers.m_Bits
+      value: 375
       objectReference: {fileID: 0}
     - target: {fileID: 5555672468506556107, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
       propertyPath: introEndPos

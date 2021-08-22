@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3599054377695778585}
   - component: {fileID: 3599054377695778590}
   - component: {fileID: 3599054377695778591}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Water HighPoly
   m_TagString: Untagged
   m_Icon: {fileID: 0}

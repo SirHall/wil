@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7695224392046153920}
   - component: {fileID: 4661827096657422391}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Press
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 1152624864155679273}
   - component: {fileID: 1152624864155679274}
   - component: {fileID: 1152624864155679275}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -234,7 +234,7 @@ GameObject:
   - component: {fileID: 1152624865079271473}
   - component: {fileID: 1152624865079271472}
   - component: {fileID: 1152624865079271474}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: VRButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -338,7 +338,7 @@ GameObject:
   - component: {fileID: 1152624865515205057}
   - component: {fileID: 1152624865515205063}
   - component: {fileID: 1152624865515205056}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -506,7 +506,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3305983249253163647}
   - component: {fileID: 2366390720267694375}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Lift
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -635,7 +635,7 @@ GameObject:
   - component: {fileID: 5164775264864613273}
   - component: {fileID: 2534108278832068795}
   - component: {fileID: 475238461697523693}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -732,7 +732,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3112719810610168988}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sound
   m_TagString: Untagged
   m_Icon: {fileID: 0}

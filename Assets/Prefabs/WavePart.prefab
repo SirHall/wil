@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1478592951831798780}
   - component: {fileID: 7658313830037136223}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: WavePart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 671831561708373225}
   - component: {fileID: 7170525466940297013}
   - component: {fileID: 7306043574210884114}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
