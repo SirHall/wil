@@ -157,8 +157,10 @@ public class VRButton : MonoBehaviour
     // Keep the buttons facing the player no matter their position or distance from the origin
     public void Orient()
     {
+        rb.constraints = RigidbodyConstraints.None;
         if (orientTowardsOrigin)
             transform.LookAt(ViewTarget, Vector3.up);
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
     public void OnDrawGizmos()
