@@ -19,6 +19,10 @@ public class WaveScore : MonoBehaviour
     [SerializeField] [FoldoutGroup("Game Won")] GameObject winObject;
     [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro winDataText;
 
+    [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro winDataWarningText;
+    [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro winDataWarningTimeText;
+    [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro winDataScoreText;
+
     [SerializeField] [FoldoutGroup("Game Lost")] GameObject loseObject;
 
     [Tooltip("Starting time the player has to get ready before being monitored")]
@@ -182,7 +186,9 @@ public class WaveScore : MonoBehaviour
         //--- More human-friendly format ---//
         // winDataText.text = $"You were warned {e.warningAmt} times and spend {e.warningTime} seconds in a warning state";
         //--- Simple statistics listing ---//
-        winDataText.text = $"Warned: {warningAmt} times\nWarn Time: {warningTime}s";
+        winDataWarningText.text = $"{warningAmt}";
+        winDataWarningTimeText.text = $"{warningTime}s";
+        winDataScoreText.text = $"2500";
         board.StopImmediately();
         board.InputAccepted = false;
 
