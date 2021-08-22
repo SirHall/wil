@@ -63,9 +63,15 @@ public class VRButton : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] UnityEvent OnLift;
 
+
     [TabGroup("Debugging")]
     [Tooltip("Locks the button's position along a single axis, preventing it from being pushed side-to-side")]
     [SerializeField] bool enablePositionCorrection = true;
+
+    [TabGroup("Debugging")]
+    [Tooltip("Assigns to which buttons the debug gizmos will be drawn on")]
+    [SerializeField] DebugGizmoDrawMode gizmoDrawMode = DebugGizmoDrawMode.Disabled;
+
 
     #region Bookkeeping
 
@@ -151,6 +157,31 @@ public class VRButton : MonoBehaviour
         if (orientTowardsOrigin && transform.parent != null)
             transform.LookAt(transform.parent.position, Vector3.up);
     }
+
+    public void OnDrawGizmos()
+    {
+        if (gizmoDrawMode == DebugGizmoDrawMode.All)
+            DrawGizmos();
+    }
+
+    public void OnDrawGizmosSelected()
+    {
+        if (gizmoDrawMode == DebugGizmoDrawMode.Selected)
+            DrawGizmos();
+    }
+
+    void DrawGizmos()
+    {
+        if (!Application.isPlaying)
+            return;
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(GlobalInitPos, 0.25f);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(CorrectedPosition, 0.25f);
+    }
+
 }
 
 public enum ButtonState
@@ -159,4 +190,11 @@ public enum ButtonState
     Down, // This button is in the intermediate stage between being pressed, and lifted
     Pressing, // This button is being lowered by player interaction
     Lifting // The player has stopped interacting with this button and is now returning to its original position
+}
+
+public enum DebugGizmoDrawMode
+{
+    Disabled, // The gizmos will never be drawn
+    Selected, // The gizmos will only be drawn on objects that have been selected in the editor
+    All // Gizmos will be drawn on all objects
 }
