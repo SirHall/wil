@@ -415,6 +415,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 178e9ad7d4c41ef47b61f5295ba8271c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &902025392 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3387486865098324988, guid: c26aa9fa9e60c30449d00fbd56ccdb9a, type: 3}
+  m_PrefabInstance: {fileID: 3145168696831687382}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &903483341
 GameObject:
   m_ObjectHideFlags: 0
@@ -850,6 +861,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f12ca0ff35d2944480b2ec2f6a9ba4b, type: 3}
+--- !u!114 &1440949102 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2832560886423654080, guid: c26aa9fa9e60c30449d00fbd56ccdb9a, type: 3}
+  m_PrefabInstance: {fileID: 3145168696831687382}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1441122647 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8764940590080499590, guid: bfdf04f8ec9287547be73cf5d36ed073, type: 3}
@@ -1197,6 +1219,17 @@ Transform:
   m_Father: {fileID: 1005744915}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2075454999 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6412516577306403640, guid: c26aa9fa9e60c30449d00fbd56ccdb9a, type: 3}
+  m_PrefabInstance: {fileID: 3145168696831687382}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2252522848590330867
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1324,7 +1357,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 434741702990195558, guid: c26aa9fa9e60c30449d00fbd56ccdb9a, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3145168696900350430, guid: c26aa9fa9e60c30449d00fbd56ccdb9a, type: 3}
       propertyPath: m_RootOrder
@@ -1388,11 +1421,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6504027640292508324, guid: c26aa9fa9e60c30449d00fbd56ccdb9a, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8618400943091909661, guid: c26aa9fa9e60c30449d00fbd56ccdb9a, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c26aa9fa9e60c30449d00fbd56ccdb9a, type: 3}
@@ -1540,6 +1573,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5014809547904436924, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5014809547904436926, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5555672468371652484, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
       propertyPath: headMode
       value: 1
@@ -1928,6 +1969,18 @@ PrefabInstance:
       propertyPath: sceneTransition
       value: 
       objectReference: {fileID: 1927320380}
+    - target: {fileID: 7501596812986962732, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
+      propertyPath: winDataScoreText
+      value: 
+      objectReference: {fileID: 902025392}
+    - target: {fileID: 7501596812986962732, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
+      propertyPath: winDataWarningText
+      value: 
+      objectReference: {fileID: 2075454999}
+    - target: {fileID: 7501596812986962732, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
+      propertyPath: winDataWarningTimeText
+      value: 
+      objectReference: {fileID: 1440949102}
     - target: {fileID: 7501596812986962733, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
       propertyPath: water
       value: 

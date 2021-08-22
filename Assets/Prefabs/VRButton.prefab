@@ -311,6 +311,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  enablePositionCorrection: 1
+  gizmoDrawMode: 0
 --- !u!54 &1152624865079271474
 Rigidbody:
   m_ObjectHideFlags: 0
