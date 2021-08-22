@@ -63,6 +63,10 @@ public class VRButton : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] UnityEvent OnLift;
 
+    [TabGroup("Debugging")]
+    [Tooltip("Locks the button's position along a single axis, preventing it from being pushed side-to-side")]
+    [SerializeField] bool enablePositionCorrection = true;
+
     #region Bookkeeping
 
     Vector3 initPos;
@@ -112,15 +116,9 @@ public class VRButton : MonoBehaviour
         if (momentarySwitch && dist > 0.001f)
             rb.MovePosition(Vector3.MoveTowards(transform.position, GlobalInitPos, Time.deltaTime * buttonLiftVel));
 
-        if (Vector3.Distance(transform.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
+        if (enablePositionCorrection && Vector3.Distance(transform.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
             transform.position = CorrectedPosition;
     }
-
-    // void LateUpdate()
-    // {
-    //     if (Vector3.Distance(transform.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
-    //         transform.position = CorrectedPosition;
-    // }
 
     void ButtonPressed()
     {
@@ -139,6 +137,7 @@ public class VRButton : MonoBehaviour
         OnPressed.Invoke();
     }
 
+    //Allows us to manually press the button
     public void Press()
     {
         if (pressed)
