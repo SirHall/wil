@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityConstantsGenerator;
 using System.Collections.Generic;
 using Excessives.Unity;
 using KinematicCharacterController;
@@ -117,7 +118,9 @@ public class BoardController : MonoBehaviour, ICharacterController
 
     void ICharacterController.BeforeCharacterUpdate(float deltaTime) { }
 
-    bool ICharacterController.IsColliderValidForCollisions(Collider coll) { return true; }
+    bool ICharacterController.IsColliderValidForCollisions(Collider coll) =>
+        (coll.gameObject.layer == (int)LayerId.Water) ||
+        (coll.gameObject.layer == (int)LayerId.Default);
 
     void ICharacterController.OnDiscreteCollisionDetected(Collider hitCollider) { }
 
