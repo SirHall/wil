@@ -126,8 +126,10 @@ public class VRButton : MonoBehaviour
             ButtonPressed();
 
         // We move the button back to it's original position on the frame after it has been fully depressed
-        if (!Touched && momentarySwitch && dist > 0.001f)
+        if (momentarySwitch && dist > 0.001f)
+        {
             rb.MovePosition(Vector3.MoveTowards(rb.position, GlobalInitPos, Time.deltaTime * buttonLiftVel));
+        }
 
         if (enablePositionCorrection && Vector3.Distance(rb.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
             rb.position = CorrectedPosition;
@@ -164,10 +166,10 @@ public class VRButton : MonoBehaviour
     // Keep the buttons facing the player no matter their position or distance from the origin
     public void Orient()
     {
-        rb.constraints = RigidbodyConstraints.None;
+        //rb.constraints = RigidbodyConstraints.None;
         if (orientTowardsOrigin)
             transform.LookAt(ViewTarget, Vector3.up);
-        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
     }
 
     public void OnDrawGizmos()
