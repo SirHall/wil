@@ -312,7 +312,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   enablePositionCorrection: 1
-  gizmoDrawMode: 0
+  gizmoDrawMode: 2
 --- !u!54 &1152624865079271474
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -636,7 +636,6 @@ GameObject:
   - component: {fileID: 2609606478761616463}
   - component: {fileID: 5164775264864613273}
   - component: {fileID: 2534108278832068795}
-  - component: {fileID: 475238461697523693}
   m_Layer: 8
   m_Name: Back
   m_TagString: Untagged
@@ -712,19 +711,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &475238461697523693
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4448178521754755874}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6095785122328717603
 GameObject:
   m_ObjectHideFlags: 0
