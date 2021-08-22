@@ -139,6 +139,7 @@ GameObject:
   - component: {fileID: 1152624864155679273}
   - component: {fileID: 1152624864155679274}
   - component: {fileID: 1152624864155679275}
+  - component: {fileID: 9125870279044469208}
   m_Layer: 8
   m_Name: GFX
   m_TagString: Untagged
@@ -223,6 +224,39 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &9125870279044469208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1152624864155679269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 377035b9e316bf54ebf735fc72cb664c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  CollisionStay:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1152624865079271472}
+        m_TargetAssemblyTypeName: VRButton, Assembly-CSharp
+        m_MethodName: OnTouched
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  CollisionExit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1152624865079271475
 GameObject:
   m_ObjectHideFlags: 0

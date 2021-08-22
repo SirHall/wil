@@ -74,6 +74,7 @@ public class VRButton : MonoBehaviour
 
 
     Vector3 ViewTarget => BoardController.Instance?.transform?.position ?? transform.parent?.position ?? rb.position;
+    Vector3 ButtonDir => (ViewTarget - rb.position).normalized;
 
     #region Bookkeeping
 
@@ -86,9 +87,12 @@ public class VRButton : MonoBehaviour
 
     bool manualPress = false;
 
+    int touch = 0; // If 'touch > 0', then we're being touched by another collider
+    bool Touched => touch > 0;
+
     #endregion
 
-    Vector3 CorrectedPosition => Utils.ProjectPoint(rb.position, ViewTarget, (ViewTarget - rb.position).normalized);
+    Vector3 CorrectedPosition => Utils.ProjectPoint(rb.position, ViewTarget, ButtonDir);
 
     void Start()
     {
@@ -108,7 +112,7 @@ public class VRButton : MonoBehaviour
 
         if (manualPress)
         {
-            rb.MovePosition(rb.position - (transform.forward * Mathf.Max(depressDist * 1.01f, clickDist)));
+            rb.MovePosition(rb.position + (-ButtonDir * Mathf.Max(depressDist * 1.01f, clickDist)));
             manualPress = false;
         }
 
@@ -122,11 +126,14 @@ public class VRButton : MonoBehaviour
             ButtonPressed();
 
         // We move the button back to it's original position on the frame after it has been fully depressed
-        if (momentarySwitch && dist > 0.001f)
+        if (!Touched && momentarySwitch && dist > 0.001f)
             rb.MovePosition(Vector3.MoveTowards(rb.position, GlobalInitPos, Time.deltaTime * buttonLiftVel));
 
         if (enablePositionCorrection && Vector3.Distance(rb.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
-            rb.MovePosition(CorrectedPosition);
+            rb.position = CorrectedPosition;
+
+        if (Touched)
+            touch--;
     }
 
     void ButtonPressed()
@@ -186,6 +193,8 @@ public class VRButton : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(CorrectedPosition, 0.25f);
     }
+
+    public void OnTouched() => touch = 2;
 
 }
 
