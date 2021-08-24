@@ -109,7 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4357c2d88838faf4fa287a72d8714162, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: {x: 100, y: 100}
+  scale: {x: 200, y: 200}
   center: {x: 0, y: 0}
   displacement: 0.7
   debugMode: 0
