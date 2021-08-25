@@ -13,4 +13,5 @@ public struct WaveSettings
     public float length;
     public float arc;
     public float squash;
+    public RightLeft surfDir;
 }

@@ -11,6 +11,7 @@ public class BarrelSettings : MonoBehaviour
     [ShowInInspector] public float Radius { get; set; } = 4.0f;
     [ShowInInspector] public float Length { get; set; } = 50.0f;
     [ShowInInspector] public float Arc { get; set; } = 0.8f;
+    [ShowInInspector] public RightLeft SurfDir { get; set; } = RightLeft.Right;
 
     void OnEnable()
     {
@@ -38,8 +39,15 @@ public class BarrelSettings : MonoBehaviour
                 radius = Instance.Radius,
                 length = Instance.Length,
                 arc = Instance.Arc,
-                squash = 1.0f
+                squash = 1.0f,
+                surfDir = Instance.SurfDir,
             };
         }
     }
+}
+
+public enum RightLeft
+{
+    Right,
+    Left
 }
