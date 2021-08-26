@@ -88,11 +88,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   winCollider: {fileID: 0}
+  introPoints: {fileID: 0}
   waveTransform: {fileID: 0}
   transition: {fileID: 0}
   board: {fileID: 0}
   winObject: {fileID: 0}
   winDataText: {fileID: 0}
+  winDataWarningText: {fileID: 0}
+  winDataWarningTimeText: {fileID: 0}
+  winDataScoreText: {fileID: 0}
   loseObject: {fileID: 0}
   startTime: 3
   sceneTransition: {fileID: 0}

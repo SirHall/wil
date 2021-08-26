@@ -330,7 +330,7 @@ GameObject:
   m_Layer: 0
   m_Name: StartPos
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -5397416234189338067, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -372,7 +372,7 @@ GameObject:
   m_Layer: 0
   m_Name: EndDetector
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -583,7 +583,7 @@ GameObject:
   m_Layer: 0
   m_Name: BoardIntro
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1201,7 +1201,7 @@ GameObject:
   m_Layer: 0
   m_Name: EndPos
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1895,15 +1895,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7501596812986962722, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.5610886
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7501596812986962722, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.9898224
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7501596812986962722, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.3772984
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7501596812986962722, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1949,6 +1949,10 @@ PrefabInstance:
       propertyPath: transition
       value: 
       objectReference: {fileID: 820340161}
+    - target: {fileID: 7501596812986962732, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
+      propertyPath: introPoints
+      value: 
+      objectReference: {fileID: 1005744914}
     - target: {fileID: 7501596812986962732, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
       propertyPath: winCollider
       value: 

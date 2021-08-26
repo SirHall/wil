@@ -178,11 +178,11 @@ public class BoardController : MonoBehaviour, ICharacterController
                 currentVelocity +=
                    Vector3.ProjectOnPlane(
                        (
-                           (col.transform.forward * -wavePullUpAccel) +
-                           Vector3.Lerp(
-                               col.transform.right,
-                               Motor.CharacterForward,
-                               0.5f) * waveForwardAccel
+                            (col.transform.forward * -wavePullUpAccel) +
+                            Vector3.Lerp(
+                                col.transform.right * ((BarrelSettings.Instance.SurfDir == RightLeft.Right) ? 1.0f : -1.0f),
+                                Motor.CharacterForward,
+                                0.5f) * waveForwardAccel
                        ) * deltaTime,
                        Vector3.up
                    );

@@ -119,14 +119,15 @@ public class WaveScore : MonoBehaviour
 
     void OnWaveSettingsEvent(WaveSettingEvent e)
     {
-        Vector3 waveRight = waveTransform.position + (waveTransform.right * e.settings.length);
-        Vector3 waveLeft = waveTransform.position;
+        Vector3 waveRight = waveTransform.position;
+        Vector3 waveLeft = waveTransform.position + (waveTransform.right * e.settings.length);
 
         bool isRight = e.settings.surfDir == RightLeft.Right;
 
         winCollider.transform.position = isRight ? waveLeft : waveRight;
         introPoints.transform.position = isRight ? waveRight : waveLeft;
         introPoints.transform.RotateAround(introPoints.transform.position, Vector3.up, isRight ? 0.0f : 180.0f);
+        winObject.transform.RotateAround(winCollider.transform.position, Vector3.up, isRight ? 0.0f : 180.0f);
     }
 
     void OnScoreControlEvent(ScoreControlEvent e)
