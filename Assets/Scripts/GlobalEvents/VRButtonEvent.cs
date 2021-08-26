@@ -25,4 +25,6 @@ public enum VRButtons
 
     MainMenu, // Go back to the main menu
     Retry, // Re-attempt the current barrel
+
+    SurfDir, // Toggle the surfing direction
 }
