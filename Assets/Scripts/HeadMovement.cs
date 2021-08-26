@@ -13,7 +13,7 @@ public class HeadMovement : MonoBehaviour
 
     [SerializeField]
     [Tooltip("Starting local Cooridnate of the player")]
-    private Vector3 startCooridnate;
+    private Vector3 startCoordinate;
 
     [SerializeField]
     [Tooltip("Debug | current local cooridnates")]
@@ -69,7 +69,7 @@ public class HeadMovement : MonoBehaviour
     }
     void Start()
     {
-        startCooridnate = cameraGameObject.transform.localPosition;
+        startCoordinate = cameraGameObject.transform.localPosition;
     }
 
     void Update()
@@ -82,7 +82,8 @@ public class HeadMovement : MonoBehaviour
 
     }
 
-    private void CallGlobalEvents() {
+    private void CallGlobalEvents() 
+    {
         using (var e = BoardControlEvent.Get())
             e.input.dir = HeadPosToBoardInput(headPosRel);
 
@@ -102,9 +103,7 @@ public class HeadMovement : MonoBehaviour
         {
             e.headInput.dir = headPosRel;
             e.headInput.dir.y = vr_CameraGameObject.transform.position.y;
-        }
-            
-        
+        } 
     }
 
     /// <summary>
@@ -164,7 +163,7 @@ public class HeadMovement : MonoBehaviour
     {
         // Diff X axis = Forward
         // Diff Z Axis = Side
-        Vector3 diff = cameraGameObject.transform.localPosition - startCooridnate;
+        Vector3 diff = cameraGameObject.transform.localPosition - startCoordinate;
 
         // Assign variable values based on the direction the player is leaning / standing
         if (diff.x > 0)

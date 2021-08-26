@@ -5,6 +5,8 @@ using UnityEngine;
 public class InteractionControlEvent : GlobalEvent<InteractionControlEvent>, System.IDisposable 
 {
     public Interaction input;
+
+    public Interactables inputInteractable;
 }
 // This is a simple structure that holds the input data itself.
 // This is used so that each input receptor or listener can also hold the input

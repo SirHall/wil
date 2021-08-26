@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3379499606036186405}
   - component: {fileID: 5171044613718438448}
   m_Layer: 0
-  m_Name: Left_HandManager
+  m_Name: Right_HandManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 8012659888062952121}
+  - {fileID: 8455697723188810986}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -44,10 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cbb2a9f4a6f3714386e81f60c382804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handPrefab: {fileID: 109434732395284509, guid: 65847589f926b734d9eaed6e25f0046b, type: 3}
+  handPrefab: {fileID: 5686134208185362930, guid: 1fd3a7c43c8190f4d8c167ebde694364, type: 3}
   visibleHandModel: {fileID: 0}
-  deviceCharacteristics: 320
---- !u!1001 &3489626026319150227
+  deviceCharacteristics: 516
+  maxUp: 2
+  maxDown: 2
+  startCoordinate: {x: 0, y: 0, z: 0}
+--- !u!1001 &3028573518343772864
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -104,8 +107,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 48e95a174a1a5ce48a611ed46e18c512, type: 3}
---- !u!4 &8012659888062952121 stripped
+--- !u!4 &8455697723188810986 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6872224573626420778, guid: 48e95a174a1a5ce48a611ed46e18c512, type: 3}
-  m_PrefabInstance: {fileID: 3489626026319150227}
+  m_PrefabInstance: {fileID: 3028573518343772864}
   m_PrefabAsset: {fileID: 0}

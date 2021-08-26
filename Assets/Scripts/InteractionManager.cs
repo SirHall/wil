@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityConstantsGenerator;
 using UnityEngine;
 
 /// <summary>
@@ -8,6 +9,7 @@ using UnityEngine;
 /// </summary>
 public class InteractionManager : MonoBehaviour
 {
+    [SerializeField] Interactables interactable = Interactables.None;
     private bool isInteractable;
     // Start is called before the first frame update
     void Start()
@@ -18,21 +20,25 @@ public class InteractionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        using (var e = InteractionControlEvent.Get())
-            e.input.isInteracting = isInteractable;
+        if (isInteractable)
+        {
+            using (var e = InteractablesEvent.Get())
+                e.interactables = interactable;
+        }
     }
 
-    void OnCollisionEnter(Collision collision) 
+    void OnTriggerEnter(Collider collision) 
     {
-        if(collision.gameObject.layer == 6) 
+
+        if(collision.gameObject.layer == (int)LayerId.Hands) 
         {
-            print("I'm interacting");
+            print("I'm interacting with hands");
             isInteractable = true;
         }
     }
 
-    void OnCollisionExit(Collision collision) {
-        if (collision.gameObject.layer == 6) {
+    void OnTriggerExit(Collider collision) {
+        if (collision.gameObject.layer == (int)LayerId.Hands) {
             isInteractable = false;
         }
     }
