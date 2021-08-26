@@ -20,18 +20,18 @@ public class HandManager : MonoBehaviour
 
     private Animator handAnimator;
 
-    Interaction interaction = new Interaction();
+    Interactables interaction = new Interactables();
 
     void OnEnable() {
-        InteractionControlEvent.RegisterListener(OnGripControlEvent);
+        InteractablesEvent.RegisterListener(OnGripControlEvent);
     }
 
     void OnDisable() {
-        InteractionControlEvent.UnregisterListener(OnGripControlEvent);
+        InteractablesEvent.UnregisterListener(OnGripControlEvent);
     }
     // A controller has announced new data
-    void OnGripControlEvent(InteractionControlEvent e) {
-        interaction = e.input;
+    void OnGripControlEvent(InteractablesEvent e) {
+        interaction = e.interactables;
     }
 
     // Start is called before the first frame update
@@ -61,7 +61,7 @@ public class HandManager : MonoBehaviour
 
         // Run Animations
         HandAnimation();
-        HandGripping();
+        InteractableGripping();
     }
 
     /// <summary>
@@ -113,11 +113,11 @@ public class HandManager : MonoBehaviour
     /// <summary>
     /// Conditions to check if player is gripping while in contact with an interactable object. 
     /// </summary>
-    private void HandGripping() 
+    private void InteractableGripping() 
     {
         if (devices[0].TryGetFeatureValue(CommonUsages.grip, out float gripvalue)) 
         {
-            if (gripvalue == 1 && interaction.isInteracting) 
+            if (gripvalue == 1 && interaction == Interactables.Surfboard) 
             {
                 print("Player is gripping side of board");
             }

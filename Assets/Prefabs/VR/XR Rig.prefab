@@ -712,10 +712,8 @@ GameObject:
   - component: {fileID: 5397268574884282564}
   - component: {fileID: 5397268574884282568}
   - component: {fileID: 6953876109788477416}
-  - component: {fileID: 5622340255751977389}
-  - component: {fileID: 5397268574884282566}
   - component: {fileID: 5397268574884282567}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RightHand Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -920,31 +918,6 @@ MonoBehaviour:
   m_PlayHapticsOnHoverCanceled: 0
   m_HapticHoverCancelIntensity: 0
   m_HapticHoverCancelDuration: 0
---- !u!114 &5622340255751977389
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5397268574884282561}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 748ca81b82358c645a5a89e42d09e3f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!135 &5397268574884282566
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5397268574884282561}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 0.095
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &5397268574884282567
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -969,10 +942,8 @@ GameObject:
   - component: {fileID: 5397268574884282569}
   - component: {fileID: 5397268574884282572}
   - component: {fileID: 5397268574884282575}
-  - component: {fileID: 1846677364359234944}
   - component: {fileID: 5397268574884282574}
-  - component: {fileID: 5397268574884282560}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LeftHand Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1177,18 +1148,6 @@ MonoBehaviour:
   m_PlayHapticsOnHoverCanceled: 0
   m_HapticHoverCancelIntensity: 0
   m_HapticHoverCancelDuration: 0
---- !u!114 &1846677364359234944
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5397268574884282563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 748ca81b82358c645a5a89e42d09e3f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &5397268574884282574
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1201,17 +1160,4 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &5397268574884282560
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5397268574884282563}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 0.095
   m_Center: {x: 0, y: 0, z: 0}
