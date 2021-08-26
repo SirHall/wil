@@ -46,7 +46,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handPrefab: {fileID: 5686134208185362930, guid: 1fd3a7c43c8190f4d8c167ebde694364, type: 3}
   visibleHandModel: {fileID: 0}
-  deviceCharacteristics: 576
+  deviceCharacteristics: 516
+  maxUp: 2
+  maxDown: 2
+  startCoordinate: {x: 0, y: 0, z: 0}
 --- !u!1001 &3028573518343772864
 PrefabInstance:
   m_ObjectHideFlags: 0
