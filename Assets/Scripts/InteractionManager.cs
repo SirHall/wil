@@ -9,8 +9,9 @@ using UnityEngine;
 /// </summary>
 public class InteractionManager : MonoBehaviour
 {
-    [SerializeField] Interactables interactable = Interactables.None;
-    private bool isInteractable;
+    private Interactables leftInteractableType;
+    private Interactables rightInteractableType;
+    //private bool isInteractable;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,26 +21,52 @@ public class InteractionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isInteractable)
+        if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.left)
         {
-            using (var e = InteractablesEvent.Get())
-                e.interactables = interactable;
+            using (var e = LeftInteractablesEvent.Get())
+                e.leftInteractable = leftInteractableType;
+        }
+        if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.right)
+        {
+            using (var e = RightInteractablesEvent.Get())
+                e.rightInteractable = rightInteractableType;
         }
     }
 
     void OnTriggerEnter(Collider collision) 
     {
 
-        if(collision.gameObject.layer == (int)LayerId.Hands) 
+        if(collision.gameObject.layer == (int)LayerId.Interactable) 
         {
-            print("I'm interacting with hands");
-            isInteractable = true;
+            if (collision.GetComponent<InteractionType>() != null)
+            {
+                if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.left)
+                    leftInteractableType = collision.GetComponent<InteractionType>().interactable;
+
+                if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.right)
+                    rightInteractableType = collision.GetComponent<InteractionType>().interactable;
+
+                //print("I'm interacting with hands");
+                //isInteractable = true;
+            }
+           
         }
     }
 
     void OnTriggerExit(Collider collision) {
-        if (collision.gameObject.layer == (int)LayerId.Hands) {
-            isInteractable = false;
+        if (collision.gameObject.layer == (int)LayerId.Interactable) {
+
+            if (collision.GetComponent<InteractionType>() != null)
+            {
+                if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.left)
+                    leftInteractableType = Interactables.None;
+
+                if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.right)
+                    rightInteractableType = Interactables.None;
+
+                //print("I'm interacting with hands");
+                //isInteractable = false;
+            }
         }
     }
 }

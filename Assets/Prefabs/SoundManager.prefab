@@ -50,7 +50,9 @@ MonoBehaviour:
   Moving: {fileID: 8300000, guid: a3d0b83a54d8aa940b775aab24c4c44d, type: 3}
   Inwave: {fileID: 8300000, guid: db084e7be4cbcf54ebe0baa505e06647, type: 3}
   Woah: {fileID: 8300000, guid: 69b1ffcc617ecd34e9905bb72d041774, type: 3}
-  currentSoundState: 0
+  Grab: {fileID: 8300000, guid: 065a00cf43007534bb9dacfd3b7a8c8f, type: 3}
+  currentSoundLevelState: 0
+  currentEnvironmentState: 0
   MovementMaxVolume: 100
   backgroundsource1: {fileID: 0}
   backgroundsource2: {fileID: 0}

@@ -12,6 +12,7 @@ public class SoundManager : MonoBehaviour{
     [SerializeField] private AudioClip Moving;
     [SerializeField] private AudioClip Inwave;
     [SerializeField] private AudioClip Woah;
+    [SerializeField] private AudioClip Grab;
 
     [SerializeField]
     private SoundLevelMode currentSoundLevelState;
@@ -30,23 +31,44 @@ public class SoundManager : MonoBehaviour{
     [SerializeField] AudioSource backgroundsource1;
     [SerializeField] AudioSource backgroundsource2;
     [SerializeField] AudioSource leanWarningSource;
+    
+    private AudioSource grabSource;
 
     private Vector3 headPos = new Vector3();
+
+    private bool isLeftGrabbing;
+    private bool isRightGrabbing;
+    private bool isGrabSound;
 
     private bool isFallen = false;
 
     void OnEnable() {
         SoundControlEvent.RegisterListener(SoundEvent);
+        LeftGrabbingEvent.RegisterListener(LeftGrabEvent);
+        RightGrabbingEvent.RegisterListener(RightGrabEvent);
     }
 
     void OnDisable() {
         SoundControlEvent.UnregisterListener(SoundEvent);
+        LeftGrabbingEvent.RegisterListener(LeftGrabEvent);
+        RightGrabbingEvent.RegisterListener(RightGrabEvent);
     }
 
     // A controller has announced new data
     void SoundEvent(SoundControlEvent e) 
     {
         headPos = e.headInput.dir;
+    }
+
+    // A controller has announced new data
+    void LeftGrabEvent(LeftGrabbingEvent e)
+    {
+        isLeftGrabbing = e.grabLeftInput.isLeftGrabbing;
+    }
+    // A controller has announced new data
+    void RightGrabEvent(RightGrabbingEvent e)
+    {
+        isRightGrabbing = e.grabRightInput.isRightGrabbing;
     }
 
     //A class that is called upon from any other file
@@ -70,7 +92,7 @@ public class SoundManager : MonoBehaviour{
         backgroundsource1 = gameObject.AddComponent<AudioSource>();
         backgroundsource2 = gameObject.AddComponent<AudioSource>();
         leanWarningSource = gameObject.AddComponent<AudioSource>();
-
+        grabSource = gameObject.AddComponent<AudioSource>();
 
         boardcontroller = GameObject.FindObjectOfType<BoardController>();
     }
@@ -128,6 +150,7 @@ public class SoundManager : MonoBehaviour{
 
         LeanWarningSound();
         FallenSound();
+        GrabSound();
     }
     /// <summary>
     /// Handles the Lean warning sound which plays when the user is too far off the board
@@ -155,6 +178,22 @@ public class SoundManager : MonoBehaviour{
                 leanWarningSource.Play();
         }
     }
+
+    private void GrabSound()
+    {
+        bool previousGrabState = isGrabSound;
+
+        if (isLeftGrabbing || isRightGrabbing) isGrabSound = true;
+        else isGrabSound = false;
+
+        if (previousGrabState != isGrabSound && (isLeftGrabbing || isRightGrabbing))
+        {
+            grabSource.clip = Grab;
+            grabSource.volume = 100f;
+            grabSource.Play();
+        }
+    }
+
     private void FallenSound()
     {
         if (WaveScore.IsPlaying)

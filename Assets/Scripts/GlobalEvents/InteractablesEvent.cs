@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractablesEvent : GlobalEvent<InteractablesEvent>, System.IDisposable
+public class LeftInteractablesEvent : GlobalEvent<LeftInteractablesEvent>, System.IDisposable
 {
-    public Interactables interactables;
+    public Interactables leftInteractable;
 }
-
+public class RightInteractablesEvent : GlobalEvent<RightInteractablesEvent>, System.IDisposable
+{
+    public Interactables rightInteractable;
+}
 // Stores a value for each possible button in the game.
 // A much better alternative to using 'floating strings'.
 public enum Interactables

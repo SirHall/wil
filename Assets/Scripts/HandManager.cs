@@ -12,6 +12,16 @@ public class HandManager : MonoBehaviour
     [Tooltip("Contains the visible hand model that the user can see")]
     private GameObject visibleHandModel;
 
+    public enum HandType
+    {
+        left,
+        right
+    }
+
+    [SerializeField]
+    [Tooltip("Determines if the hand is the left or right controller")]
+    public HandType handType;
+
     [Tooltip("Characteristics of current gameobject device you want to get")]
     public InputDeviceCharacteristics deviceCharacteristics;
 
@@ -22,7 +32,11 @@ public class HandManager : MonoBehaviour
 
     private bool isInteracting = false;
 
-    Interactables interaction = new Interactables();
+    private bool isLeftInteracting = false;
+    private bool isRightInteracting = false;
+
+    Interactables leftInteraction = new Interactables();
+    Interactables rightInteraction = new Interactables();
 
     [Tooltip("The max unit values the player can move in specified direction")]
     public float maxUp, maxDown;
@@ -37,21 +51,35 @@ public class HandManager : MonoBehaviour
     private Vector3 handPosRel = Vector3.zero;
 
     void OnEnable() {
-        InteractablesEvent.RegisterListener(OnGripControlEvent);
+        LeftInteractablesEvent.RegisterListener(OnLeftGripControlEvent);
+        RightInteractablesEvent.RegisterListener(OnRightGripControlEvent);
     }
 
     void OnDisable() {
-        InteractablesEvent.UnregisterListener(OnGripControlEvent);
+        LeftInteractablesEvent.UnregisterListener(OnLeftGripControlEvent);
+        RightInteractablesEvent.RegisterListener(OnRightGripControlEvent);
     }
     // A controller has announced new data
-    void OnGripControlEvent(InteractablesEvent e) {
-        interaction = e.interactables;
+    void OnLeftGripControlEvent(LeftInteractablesEvent e) {
+        leftInteraction = e.leftInteractable;
     }
-
+    // A controller has announced new data
+    void OnRightGripControlEvent(RightInteractablesEvent e)
+    {
+        rightInteraction = e.rightInteractable;
+    }
     private void CallGlobalEvents()
     {
-        using (var e = BoardControlEvent.Get())
-            e.input.dir = HandPosToBoardInput(handPosRel);
+        if (handType == HandType.left)
+        {
+            using (var e = LeftGrabbingEvent.Get()) 
+                e.grabLeftInput.isLeftGrabbing = isLeftInteracting;
+        }
+        if (handType == HandType.right)
+        {
+            using (var e = RightGrabbingEvent.Get())
+                e.grabRightInput.isRightGrabbing = isRightInteracting;
+        }
     }
 
     // Start is called before the first frame update
@@ -81,10 +109,9 @@ public class HandManager : MonoBehaviour
 
         // Run Animations
         HandAnimation();
+        InteractableGripping();
 
         CallGlobalEvents();
-        CheckHandPosition();
-        InteractableGripping();
     }
 
     private Vector3 HandPosToBoardInput(Vector3 handPos)
@@ -96,12 +123,11 @@ public class HandManager : MonoBehaviour
 
         // Cutoff values determin when the head position values should be ignored and returned as a 0 value (Essentially making the surfboard stationary)
         // Or when they should return their true values which will be used by the surfboard to move it. 
-        float heightCutoff = 0.2f;
+        float heightCutoff = 0.05f;
 
         // Moving
-        //if (handPos.y >= heightCutoff) { dir.y = handPos.x - heightCutoff; } // Height
-        if (handPos.y >= heightCutoff) { dir.x = -handPos.z + heightCutoff; } //Left
-        if (handPos.y <= -heightCutoff) { dir.x = Mathf.Abs(handPos.z + heightCutoff); } //Right
+        if (handPos.y >= heightCutoff) { dir.x = -handPos.y + heightCutoff; } //Left
+        if (handPos.y <= -heightCutoff) { dir.x = Mathf.Abs(handPos.y + heightCutoff); } //Right
 
         // Stationary
         if (handPos.y < heightCutoff && handPos.y > -heightCutoff) { dir.x = 0; } // Side
@@ -115,22 +141,12 @@ public class HandManager : MonoBehaviour
     private void InitialiseHands() {
         InputDevices.GetDevicesWithCharacteristics(deviceCharacteristics, devices);
         if (devices.Count > 0) {
-            Vector3 pos;
-            Quaternion rot;
+
             visibleHandModel = new GameObject();
             currentDevice = devices[0];
 
-            //if (currentDevice.TryGetFeatureValue(CommonUsages.devicePosition, out pos)) {
-            //    this.transform.position = pos;
-            //}
-            //if (currentDevice.TryGetFeatureValue(CommonUsages.deviceRotation, out rot)) {
-            //    this.transform.rotation = rot;
-            //}
-
             visibleHandModel = Instantiate(handPrefab, transform);
-            
-            //print("1: " + pos);
-            //print("2: " + visibleHandModel.transform.position);
+
             handAnimator = visibleHandModel.GetComponent<Animator>();
         }
 
@@ -161,17 +177,34 @@ public class HandManager : MonoBehaviour
     private void InteractableGripping() 
     {
         bool previousInteractionState = isInteracting;
-        if (devices[0].TryGetFeatureValue(CommonUsages.grip, out float gripvalue)) 
+        if (devices[0].TryGetFeatureValue(CommonUsages.grip, out float gripvalue))
         {
-            if (gripvalue == 1 && interaction == Interactables.Surfboard) isInteracting = true;
-            else isInteracting = false;
+            if (gripvalue == 1)
+            {
+                if (leftInteraction == Interactables.Surfboard || rightInteraction == Interactables.Surfboard)
+                {
+                    if (handType == HandType.left) isLeftInteracting = true;
+                    if (handType == HandType.right) isRightInteracting = true;
+                    isInteracting = true;
+                }
+            }
+            else
+            {
+                if (handType == HandType.left) isLeftInteracting = false;
+                if (handType == HandType.right) isRightInteracting = false;
+                isInteracting = false;
+            }
             
         }
-
+        //print("Interactable: " + interaction);
         if (isInteracting)
         {
-            if (previousInteractionState != isInteracting) startCoordinate = visibleHandModel.transform.localPosition;
-
+            if (previousInteractionState != isInteracting)
+                startCoordinate = transform.localPosition;
+            
+            CheckHandPosition();
+            using (var e = BoardControlEvent.Get())
+                e.input.dir = HandPosToBoardInput(handPosRel);
         }
         
         
@@ -194,14 +227,16 @@ public class HandManager : MonoBehaviour
     /// </summary>
     void CheckHandPosition()
     {
-        // Diff X axis = Forward
-        // Diff Z Axis = Side
-        Vector3 diff = visibleHandModel.transform.localPosition - startCoordinate;
+        if (startCoordinate != Vector3.zero)
+        {
+            Vector3 diff = transform.localPosition - startCoordinate;
 
-        // Assign variable values based on the direction the player is leaning / standing
-        if (diff.y > 0)
-            handPosRel.y = DirectionScale(diff.y, maxUp); // Positive
-        else
-            handPosRel.y = -DirectionScale(diff.y, maxDown); // Negative
+            // Assign variable values based on the direction the player is leaning / standing
+            if (diff.y > 0)
+                handPosRel.y = DirectionScale(diff.y, maxUp); // Positive
+            else
+                handPosRel.y = -DirectionScale(diff.y, maxDown); // Negative
+        }
+        
     }
 }
