@@ -6,6 +6,7 @@ using Excessives.LinqE;
 using Excessives.Unity;
 using Sirenix.OdinInspector;
 using KinematicCharacterController;
+using static UnityEngine.ParticleSystem;
 
 //         ______________________________________
 //        |                 NOTE                 |
@@ -47,6 +48,11 @@ public class Wave : MonoBehaviour, IMoverController
     [SerializeField] Rigidbody rb;
 
     [SerializeField] float barrelRadius = 2.0f;
+
+    [SerializeField] ParticleSystem foamParticles;
+    [Tooltip("Foam particles emitted per second - per meter of the wave's length")]
+    [SerializeField] float foamParticleCount = 10.0f;
+
     public float BarrelRadius
     {
         get => barrelRadius; set
@@ -125,6 +131,8 @@ public class Wave : MonoBehaviour, IMoverController
         // TODO: This may be removed, just positions the wave so it's end is always at 0,0.
         // This allows the board's start surf position to be very predictable.
         // transform.position = transform.position.WithX(wavePartLength * 0.5f);
+
+        SetupFoamParticles();
 
         dirty = false;
     }
@@ -206,6 +214,9 @@ public class Wave : MonoBehaviour, IMoverController
 
             n.transform.localPosition = n.transform.localPosition.WithY(MapHeight(n.transform.localPosition.y)); // Squish the barrel's height
         }
+
+        if (!foamParticles.gameObject.activeSelf && Arc >= 0.75f)
+            foamParticles.gameObject.SetActive(true);
     }
 
     // Maps altitude to something lower, allowing for a 'squashed' barrel
@@ -224,4 +235,18 @@ public class Wave : MonoBehaviour, IMoverController
     float ForwardPos { get => UseAnim ? anim.forwardPosition.Evaluate(waveTime) : transform.position.z; }
     float Arc { get => UseAnim ? anim.barrelArcAngle.Evaluate(waveTime) : arc; }
 
+    void SetupFoamParticles()
+    {
+        Vector3 foamPos = transform.position +
+            (transform.right * (barrelLength * 0.5f)) +
+            (transform.forward * barrelRadius * 0.8f);
+
+        foamParticles.transform.position = foamPos;
+
+        EmissionModule em = foamParticles.emission;
+        em.rateOverTime = new MinMaxCurve(foamParticleCount * barrelLength);
+
+        ShapeModule sh = foamParticles.shape;
+        sh.scale = new Vector3(barrelLength, 1.0f, 1.0f);
+    }
 }
