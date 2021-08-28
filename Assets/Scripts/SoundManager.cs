@@ -165,10 +165,10 @@ public class SoundManager : MonoBehaviour{
             switch (currentSoundLevelState) 
             {
                 case SoundLevelMode.Quite:
-                    leanWarningSource.volume = 0.2f;
+                    leanWarningSource.volume = 0.4f;
                     break;
                 case SoundLevelMode.Warning:
-                    leanWarningSource.volume = 0.5f;
+                    leanWarningSource.volume = 0.6f;
                     break;
                 case SoundLevelMode.Alarm:
                     leanWarningSource.volume = 1f;
