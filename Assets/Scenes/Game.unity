@@ -1882,6 +1882,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8eb414e589b79e340b2e62149cba340f, type: 3}
+--- !u!114 &7154862949902103260 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 246480319568853334, guid: 8eb414e589b79e340b2e62149cba340f, type: 3}
+  m_PrefabInstance: {fileID: 7154862949902103259}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7154862949902103261 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4370482765623892859, guid: 8eb414e589b79e340b2e62149cba340f, type: 3}
+  m_PrefabInstance: {fileID: 7154862949902103259}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7154862949902103262 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8356264711207900320, guid: 8eb414e589b79e340b2e62149cba340f, type: 3}
+  m_PrefabInstance: {fileID: 7154862949902103259}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7501596813231120388
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1982,13 +2015,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 902025392}
     - target: {fileID: 7501596812986962732, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
+      propertyPath: loseDataScoreText
+      value: 
+      objectReference: {fileID: 7154862949902103262}
+    - target: {fileID: 7501596812986962732, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
       propertyPath: winDataWarningText
       value: 
       objectReference: {fileID: 2075454999}
     - target: {fileID: 7501596812986962732, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
+      propertyPath: loseDataWarningText
+      value: 
+      objectReference: {fileID: 7154862949902103261}
+    - target: {fileID: 7501596812986962732, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
       propertyPath: winDataWarningTimeText
       value: 
       objectReference: {fileID: 1440949102}
+    - target: {fileID: 7501596812986962732, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
+      propertyPath: loseDataWarningTimeText
+      value: 
+      objectReference: {fileID: 7154862949902103260}
     - target: {fileID: 7501596812986962733, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
       propertyPath: water
       value: 

@@ -15,6 +15,9 @@ public class WaveScore : MonoBehaviour
 
     public Animator transition;
 
+    [Tooltip("The max score the player will be ranked off")]
+    public int maxScore = 1000;
+
     [SerializeField] BoardController board;
 
     [SerializeField] [FoldoutGroup("Game Won")] GameObject winObject;
@@ -25,6 +28,9 @@ public class WaveScore : MonoBehaviour
     [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro winDataScoreText;
 
     [SerializeField] [FoldoutGroup("Game Lost")] GameObject loseObject;
+    [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro loseDataWarningText;
+    [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro loseDataWarningTimeText;
+    [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro loseDataScoreText;
 
     [Tooltip("Starting time the player has to get ready before being monitored")]
     public float startTime;
@@ -87,10 +93,11 @@ public class WaveScore : MonoBehaviour
     void Update()
     {
         MovementState moveState = HeadMovement.HeadTiltToState(headTilt);
+        print("5: Board Motor Current: " + board.Motor.Velocity.magnitude);
         if (moveState == MovementState.Fallen && IsPlaying && !IsWarmup)
         {
             State = GameState.Lost;
-            StartCoroutine(SplashTransition()); /* Rest In Peace, ocean man :( */
+            StartCoroutine(SplashTransition(warningAmt, warningTime, maxScore)); /* Rest In Peace, ocean man :( */
         }
 
         //Testing code to stop board at any point
@@ -155,7 +162,7 @@ public class WaveScore : MonoBehaviour
         }
     }
 
-    IEnumerator SplashTransition()
+    IEnumerator SplashTransition(int warningAmt, float warningTime, int maxScore)
     {
         sceneTransition.SetActive(true);
 
@@ -167,6 +174,10 @@ public class WaveScore : MonoBehaviour
 
         //Teleport Player to custom end location
         board.Motor.SetPosition(failureLocation.transform.position);
+
+        loseDataWarningText.text = $"{warningAmt}";
+        loseDataWarningTimeText.text = warningTime.ToString("F2") + "s";
+
         board.StopImmediately();
         board.InputAccepted = false;
 
@@ -183,32 +194,59 @@ public class WaveScore : MonoBehaviour
         // We pass the event's fields rather than the entire event itself as we should not copy the
         // singleton event instance past a single invocation
         State = GameState.Won;
-        StartCoroutine(SetupWonMenu(e.warningAmt, e.warningTime));
+
+        StartCoroutine(SetupWonMenu(e.warningAmt, e.warningTime, maxScore));
     }
 
     // We have to defer setting up the win screen to an IEnumerator as the player continues the move after winning,
     // so we have to wait for the player to stop moving before setting up the win menu
-    IEnumerator SetupWonMenu(int warningAmt, float warningTime)
+    IEnumerator SetupWonMenu(int warningAmt, float warningTime, int maxScore)
     {
-        yield return new WaitUntil(() => board.Motor.Velocity.magnitude <= 0.1f);
+        yield return new WaitUntil(() => board.Motor.Velocity.magnitude <= 2f);
 
         winObject.transform.position = board.transform.position.WithY(n => n + 1.0f);
         winObject.SetActive(true);
         //--- More human-friendly format ---//
         // winDataText.text = $"You were warned {e.warningAmt} times and spend {e.warningTime} seconds in a warning state";
         //--- Simple statistics listing ---//
+
+        int currentScore = FinalScore(warningAmt, warningTime, maxScore);
+
+        print("Warning Amt: " + warningAmt);
+        print("Warning Time: " + warningTime);
         winDataWarningText.text = $"{warningAmt}";
-        winDataWarningTimeText.text = $"{warningTime}s";
-        winDataScoreText.text = $"2500";
+        winDataWarningTimeText.text = warningTime.ToString("F2") + "s";
+        // Need to implement dynamic score based on warnings and performance. 
+        // Ideas: Max score of 1000. All errors reduce current score (starts at max score). Essentially a surf without any errors will result in the max score. 
+        winDataScoreText.text = $"{currentScore}"; 
         board.StopImmediately();
         board.InputAccepted = false;
 
+    }
+
+    /// <summary>
+    /// Returns an adjusted int score when given the number of errors, length they have occured, and total maxScore.
+    /// </summary>
+    /// <param name="errorAmt"></param>
+    /// <param name="errorTime"></param>
+    /// <param name="maxScore"></param>
+    /// <returns>Int value with new clamped score between 0 and 1000</returns>
+    int FinalScore(int errorAmt, float errorTime, int maxScore)
+    {
+        float correctedTime = errorTime + 1f; // Always add 1 second to warning time to increase errorScore results from time. 
+        int correctedScore = (int)(((float)errorAmt * correctedTime) * 20); // ErrorScore based off warning time and warning amount. Score is then multipled to return a much larger value. 
+        int clampedErrorScore = Mathf.Clamp(correctedScore, 0, maxScore); // ErrorScore is clamped to be between the 0 and the maxScore
+
+        int currentScore = maxScore - clampedErrorScore; // Finished score to display on UI. 
+
+        return currentScore;
     }
 
     void OnGameLost(GameLost e)
     {
         loseObject.transform.position = board.transform.position.WithY(n => n + 1.0f);
         loseObject.SetActive(true);
+
         board.StopImmediately();
         board.InputAccepted = false;
     }
