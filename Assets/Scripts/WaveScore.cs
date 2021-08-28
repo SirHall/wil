@@ -202,7 +202,7 @@ public class WaveScore : MonoBehaviour
     // so we have to wait for the player to stop moving before setting up the win menu
     IEnumerator SetupWonMenu(int warningAmt, float warningTime, int maxScore)
     {
-        yield return new WaitUntil(() => board.Motor.Velocity.magnitude <= 2f);
+        yield return new WaitUntil(() => board.Motor.Velocity.magnitude <= 1.2f);
 
         winObject.transform.position = board.transform.position.WithY(n => n + 1.0f);
         winObject.SetActive(true);
