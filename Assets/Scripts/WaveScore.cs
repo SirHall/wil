@@ -128,6 +128,7 @@ public class WaveScore : MonoBehaviour
         introPoints.transform.position = isRight ? waveRight : waveLeft;
         introPoints.transform.RotateAround(introPoints.transform.position, Vector3.up, isRight ? 0.0f : 180.0f);
         winObject.transform.RotateAround(winCollider.transform.position, Vector3.up, isRight ? 0.0f : 180.0f);
+        loseObject.transform.RotateAround(winCollider.transform.position, Vector3.up, isRight ? 0.0f : 180.0f);
     }
 
     void OnScoreControlEvent(ScoreControlEvent e)
