@@ -93,7 +93,6 @@ public class WaveScore : MonoBehaviour
     void Update()
     {
         MovementState moveState = HeadMovement.HeadTiltToState(headTilt);
-        print("5: Board Motor Current: " + board.Motor.Velocity.magnitude);
         if (moveState == MovementState.Fallen && IsPlaying && !IsWarmup)
         {
             State = GameState.Lost;

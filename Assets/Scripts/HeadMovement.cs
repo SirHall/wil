@@ -8,16 +8,19 @@ using UnityEngine;
 public class HeadMovement : MonoBehaviour
 {
     [SerializeField]
-    [Tooltip("The GameObject that contains the VR camera")]
-    GameObject vr_CameraGameObject;
+    [Tooltip("Attach all cameras which you want to monitor the head movement. Only the remaining active camera will be used")]
+    private GameObject[] cameraGameObjects;
 
     [SerializeField]
     [Tooltip("Starting local Cooridnate of the player")]
     private Vector3 startCoordinate;
 
+    [Tooltip("The remaining and primary active camera in the scene hierarchy")]
+    private GameObject mainCamera;
+
     [SerializeField]
     [Tooltip("Debug | current local cooridnates")]
-    Vector3 currentCoordinate;
+    private Vector3 currentCoordinate;
 
     [Tooltip("The max unit values the player can move in specified direction")]
     private float maxForward, maxBack, maxLeft, maxRight;
@@ -47,18 +50,16 @@ public class HeadMovement : MonoBehaviour
     /// <summary>
     /// The player's head position relative to the starting head position
     /// </summary>
-    Vector3 headPosRel = Vector3.zero;
+    [SerializeField]
+    private Vector3 headPosRel = Vector3.zero;
 
     #endregion
-
-    /// <summary>
-    /// The <see cref="GameObject"/> that contains the camera, this is usually the "Head" of XR rigs.
-    /// </summary>
-    public GameObject cameraGameObject
+    public GameObject[] cameras
     {
-        get => vr_CameraGameObject;
-        set => vr_CameraGameObject = value;
+        get => cameraGameObjects;
+        set => cameraGameObjects = value;
     }
+
     private void Awake()
     {
         // Assign MaxValues based on boundry gameobjects coordinates
@@ -69,12 +70,26 @@ public class HeadMovement : MonoBehaviour
     }
     void Start()
     {
-        startCoordinate = cameraGameObject.transform.localPosition;
+        foreach (GameObject camera in cameras)
+        {
+            if (camera.activeInHierarchy)
+                mainCamera = camera;
+        }
+
+        if (mainCamera == null)
+        {
+            Debug.LogWarning("No camera is active on game start");
+            return;
+        }
+
+        startCoordinate = mainCamera.transform.localPosition;
     }
 
     void Update()
     {
-        currentCoordinate = cameraGameObject.transform.localPosition;
+        if (mainCamera == null) return;
+
+        currentCoordinate = mainCamera.transform.localPosition;
         CheckPlayerStability();
         SetState();
         HeadScoring();
@@ -96,13 +111,13 @@ public class HeadMovement : MonoBehaviour
         using (var e = VisualControlEvent.Get())
         {
             e.dir = headPosRel;
-            e.dir.y = vr_CameraGameObject.transform.position.y;
+            e.dir.y = mainCamera.transform.position.y;
         }
 
         using (var e = SoundControlEvent.Get())
         {
             e.headInput.dir = headPosRel;
-            e.headInput.dir.y = vr_CameraGameObject.transform.position.y;
+            e.headInput.dir.y = mainCamera.transform.position.y;
         } 
     }
 
@@ -133,25 +148,22 @@ public class HeadMovement : MonoBehaviour
     {
         Vector3 dir = Vector3.zero;
 
-        // Apply forward movement if the player leans 40% or greater based on the max forward value.
-        // and use 30% on the sides
-
-        // headPos X axis == dir Y axis (Forward)
-        // headPos Z axis == dir X Axis (Side)
+        // headPos Z axis == dir Y axis (Forward)
+        // headPos X axis == dir X Axis (Side)
 
         // Cutoff values determin when the head position values should be ignored and returned as a 0 value (Essentially making the surfboard stationary)
         // Or when they should return their true values which will be used by the surfboard to move it. 
         float forwardCutoff = 0.2f;
-        float sidewaysCutoff = 0.15f;
+        float sidewaysCutoff = 0.1f;
 
         // Leaning
-        if (headPos.x >= forwardCutoff) { dir.y = headPos.x - forwardCutoff; } // Forward
-        if (headPos.z >= sidewaysCutoff) { dir.x = -headPos.z + sidewaysCutoff; } //Left
-        if (headPos.z <= -sidewaysCutoff) { dir.x = Mathf.Abs(headPos.z + sidewaysCutoff); } //Right
+        if (headPos.z >= forwardCutoff) { dir.y = headPos.z - forwardCutoff; } // Forward
+        if (headPos.x >= sidewaysCutoff) { dir.x = headPos.x - sidewaysCutoff; } //Right
+        if (headPos.x <= -sidewaysCutoff) { dir.x = headPos.x + sidewaysCutoff; } //Left
 
         // Stationary
-        if (headPos.x < forwardCutoff) { dir.y = 0; } // Forward
-        if (headPos.z < sidewaysCutoff && headPos.z > -sidewaysCutoff) { dir.x = 0; } // Side
+        if (headPos.z < forwardCutoff) { dir.y = 0; } // Forward
+        if (headPos.x < sidewaysCutoff && headPos.x > -sidewaysCutoff) { dir.x = 0; } // Side
 
         return dir;
     }
@@ -163,7 +175,7 @@ public class HeadMovement : MonoBehaviour
     {
         // Diff X axis = Forward
         // Diff Z Axis = Side
-        Vector3 diff = cameraGameObject.transform.localPosition - startCoordinate;
+        Vector3 diff = mainCamera.transform.localPosition - startCoordinate;
 
         // Assign variable values based on the direction the player is leaning / standing
         if (diff.x > 0)
