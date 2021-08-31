@@ -1219,6 +1219,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Directional Light
       objectReference: {fileID: 0}
+    - target: {fileID: 2736638679968097723, guid: 0135e1b5c41fc5e4393258fce0109dc1, type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2736638679968097723, guid: 0135e1b5c41fc5e4393258fce0109dc1, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2736638679968097723, guid: 0135e1b5c41fc5e4393258fce0109dc1, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0135e1b5c41fc5e4393258fce0109dc1, type: 3}
 --- !u!1001 &3145168696831687382
