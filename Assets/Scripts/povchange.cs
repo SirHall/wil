@@ -34,7 +34,6 @@ public class povchange : MonoBehaviour
             // Debug.Log("Detected VR");
             keyboardRig.SetActive(false);
             vrRig.SetActive(true);
-
         }
         else
         {

@@ -8,10 +8,6 @@ using UnityEngine;
 public class HeadMovement : MonoBehaviour
 {
     [SerializeField]
-    [Tooltip("Attach all cameras which you want to monitor the head movement. Only the remaining active camera will be used")]
-    private GameObject[] cameraGameObjects;
-
-    [SerializeField]
     [Tooltip("Starting local Cooridnate of the player")]
     private Vector3 startCoordinate;
 
@@ -54,12 +50,6 @@ public class HeadMovement : MonoBehaviour
     private Vector3 headPosRel = Vector3.zero;
 
     #endregion
-    public GameObject[] cameras
-    {
-        get => cameraGameObjects;
-        set => cameraGameObjects = value;
-    }
-
     private void Awake()
     {
         // Assign MaxValues based on boundry gameobjects coordinates
@@ -68,33 +58,38 @@ public class HeadMovement : MonoBehaviour
         maxLeft = Mathf.Abs(Mathf.Round(leftBoundary.transform.localPosition.x * 100f) / 100f);
         maxRight = Mathf.Abs(Mathf.Round(rightBoundary.transform.localPosition.x * 100f) / 100f);
     }
-    void Start()
-    {
-        foreach (GameObject camera in cameras)
-        {
-            if (camera.activeInHierarchy)
-                mainCamera = camera;
-        }
-
-        if (mainCamera == null)
-        {
-            Debug.LogWarning("No camera is active on game start");
-            return;
-        }
-
-        startCoordinate = mainCamera.transform.localPosition;
-    }
 
     void Update()
     {
-        if (mainCamera == null) return;
+        if (mainCamera != Camera.main.gameObject)
+        {
+            startCoordinate = Camera.main.transform.localPosition;
+            mainCamera = Camera.main.gameObject;
+        }
+        if (mainCamera == null)
+        {
+            Debug.LogError("No active camera found in the scene");
+            return;
+        }
 
+        //Debug
         currentCoordinate = mainCamera.transform.localPosition;
+
+        CheckStartingPos();
         CheckPlayerStability();
         SetState();
         HeadScoring();
         CallGlobalEvents();
 
+    }
+
+    /// <summary>
+    /// Re-assign start coordinate variable if it's zero
+    /// </summary>
+    private void CheckStartingPos()
+    {
+        if (startCoordinate == Vector3.zero)
+            startCoordinate = Camera.main.transform.localPosition;
     }
 
     private void CallGlobalEvents() 
@@ -140,10 +135,20 @@ public class HeadMovement : MonoBehaviour
     private float DirectionScale(float value, float maxValue)
     {
         // Clamp and scale positive value based off given maxValue
-        return Mathf.Clamp(Mathf.Abs(value), 0, maxValue) / maxValue;
+        float scaledValue;
+        scaledValue = Mathf.Clamp(Mathf.Abs(value), 0, maxValue) / maxValue;
+
+        if (value < 0)
+            scaledValue = -scaledValue;
+        
+        return scaledValue;
     }
 
-
+    /// <summary>
+    /// Gets the current head position and coverts its coordinates to the board controllers coordinates so the board can be rotated / moved. 
+    /// </summary>
+    /// <param name="headPos"></param>
+    /// <returns>Vector 3 coordinate values which match with the board controllers coordinate values</returns>
     private Vector3 HeadPosToBoardInput(Vector3 headPos)
     {
         Vector3 dir = Vector3.zero;
@@ -173,28 +178,25 @@ public class HeadMovement : MonoBehaviour
     /// </summary>
     void CheckPlayerStability()
     {
-        // Diff X axis = Forward
-        // Diff Z Axis = Side
         Vector3 diff = mainCamera.transform.localPosition - startCoordinate;
 
-        // Assign variable values based on the direction the player is leaning / standing
-        if (diff.x > 0)
-            headPosRel.x = DirectionScale(diff.x, maxForward); // Positive
-        else
-            headPosRel.x = -DirectionScale(diff.x, maxBack); // Negative
+        float forwardPos = diff.z; // Forward, Back
+        float sidePos = diff.x; // Left, Right
 
-        if (diff.z > 0)
-            headPosRel.z = DirectionScale(diff.z, maxLeft); // Positive
-        else
-            headPosRel.z = -DirectionScale(diff.z, maxRight); // Negative
+        // Assign variable values based on the direction the player is leaning / standing
+        headPosRel.z = DirectionScale(forwardPos, maxForward); // Positive
+        headPosRel.x = DirectionScale(sidePos, maxLeft); // Positive
     }
 
-    // This function takes in the head tilt and transforms it into a movement
-    // state, this allows code anywhere to check the board's stability
+    /// <summary>
+    /// Takes in the head tilt and returns a movement state
+    /// </summary>
+    /// <param name="headTilt"></param>
+    /// <returns>Enum movement state depending on head tilt</returns>
     public static MovementState HeadTiltToState(Vector3 headTilt)
     {
         // The scalar euclidean distance the head has moved from its original position 
-        float headPosDist = Mathf.Max(Mathf.Abs(headTilt.z), Mathf.Abs(headTilt.x));
+        float headPosDist = Mathf.Max(Mathf.Abs(headTilt.x), Mathf.Abs(headTilt.z));
 
         if (headPosDist >= 1.0f) // Fallen criteria
             return MovementState.Fallen;

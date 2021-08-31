@@ -52,10 +52,14 @@ public class VisualEffects : MonoBehaviour
     /// </summary>
     private void LeaningEffect()
     {
-        if (!WaveScore.IsPlaying) return;
-
         if (postProcessingVolume.profile.TryGet<Vignette>(out var vignette))
         {
+            if (!WaveScore.IsPlaying)
+            {
+                vignette.intensity.value = 0;
+                return;
+            }
+
             float headPosDist = Mathf.Max(Mathf.Abs(headPos.z), Mathf.Abs(headPos.x));
 
             vignette.intensity.overrideState = true;

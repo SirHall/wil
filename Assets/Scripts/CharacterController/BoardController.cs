@@ -150,7 +150,7 @@ public class BoardController : MonoBehaviour, ICharacterController
         if (!inputAccepted)
             return;
         // Inputs direction X value is multiplied to make greater head movements apply a large value in comparison to smaller values. 
-        currentRotation *= Quaternion.AngleAxis((input.dir.x * 3f) * rotateAccel * deltaTime, transform.up);
+        currentRotation *= Quaternion.AngleAxis((input.dir.x * 2.4f) * rotateAccel * deltaTime, transform.up);
     }
 
     void ICharacterController.UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
