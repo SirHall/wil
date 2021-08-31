@@ -165,6 +165,7 @@ public class WaveScore : MonoBehaviour
     IEnumerator SplashTransition(int warningAmt, float warningTime, int maxScore)
     {
         sceneTransition.SetActive(true);
+        sceneTransition.GetComponentInChildren<Canvas>().worldCamera = Camera.main;
 
         // Play Animation
         transition.SetTrigger("Splash");

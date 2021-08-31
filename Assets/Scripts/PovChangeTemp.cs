@@ -6,7 +6,7 @@ using UnityEngine.XR;
 using Sirenix.OdinInspector;
 using UnityEngine.Serialization;
 
-public class povchange : MonoBehaviour
+public class PovChange : MonoBehaviour
 {
     [FormerlySerializedAs("gameObj1")]
     public GameObject keyboardRig;

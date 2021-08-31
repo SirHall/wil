@@ -50,7 +50,7 @@ public class HeadMovement : MonoBehaviour
     private Vector3 headPosRel = Vector3.zero;
 
     #endregion
-    private void Awake()
+    private void Start()
     {
         // Assign MaxValues based on boundry gameobjects coordinates
         maxForward = Mathf.Abs(Mathf.Round(forwardBoundary.transform.localPosition.z * 100f) / 100f);
