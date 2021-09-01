@@ -32,11 +32,14 @@ public class WaveScore : MonoBehaviour
     [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro loseDataWarningTimeText;
     [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro loseDataScoreText;
 
+    [SerializeField] [FoldoutGroup("Game Start")] GameObject startObject;
+    [SerializeField] [FoldoutGroup("Game Start")] TextMeshPro startDataText;
+
     [Tooltip("Starting time the player has to get ready before being monitored")]
     public float startTime;
 
     [Tooltip("During warmup the player will not be measured or penalised")]
-    private static bool warmup = true;
+    private static bool warmup = false;
 
     [SerializeField]
     [Tooltip("Time in seconds it takes for the transition to occur")]
@@ -58,12 +61,12 @@ public class WaveScore : MonoBehaviour
     void Awake()
     {
         State = GameState.Playing;
-        StartCoroutine(WarmupWaitTime());
         sceneTransition.SetActive(false);
     }
 
     void Start()
     {
+        StartCoroutine(WarmupWaitTime());
         if (waveTransform == null)
             Debug.LogError("Ensure that WaveScore.waveTransform has the wave's transform assigned");
     }
@@ -92,19 +95,23 @@ public class WaveScore : MonoBehaviour
 
     void Update()
     {
-        MovementState moveState = HeadMovement.HeadTiltToState(headTilt);
-        if (moveState == MovementState.Fallen && IsPlaying && !IsWarmup)
+        if (IsPlaying)
         {
-            State = GameState.Lost;
-            StartCoroutine(SplashTransition(warningAmt, warningTime, maxScore)); /* Rest In Peace, ocean man :( */
-        }
+            MovementState moveState = HeadMovement.HeadTiltToState(headTilt);
+            if (moveState == MovementState.Fallen)
+            {
+                State = GameState.Lost;
+                StartCoroutine(SplashTransition(warningAmt, warningTime, maxScore)); /* Rest In Peace, ocean man :( */
+            }
 
-        //Testing code to stop board at any point
-        if (Input.GetKey(KeyCode.I))
-        {
-            board.InputAccepted = false;
-            board.StopImmediately();
+            //Testing code to stop board at any point
+            if (Input.GetKey(KeyCode.I))
+            {
+                board.InputAccepted = false;
+                board.StopImmediately();
+            }
         }
+        
     }
 
     /// <summary>
@@ -114,12 +121,23 @@ public class WaveScore : MonoBehaviour
     IEnumerator WarmupWaitTime()
     {
         float startClock = 0.0f;
+        warmup = true;
+
+        yield return new WaitForSeconds(0.1f);
+        startObject.transform.position = board.transform.position.WithY(n => n + 1.0f);
+        startObject.SetActive(true);
+
+        yield return new WaitForSeconds(0.8f);
 
         while (startClock <= startTime)
         {
             startClock += Time.deltaTime;
+            int countDownClock = (int)(startTime - startClock);
+
+            startDataText.text = countDownClock.ToString();
             yield return null;
         }
+        startObject.SetActive(false);
         warmup = false;
     }
 
@@ -135,6 +153,7 @@ public class WaveScore : MonoBehaviour
         introPoints.transform.RotateAround(introPoints.transform.position, Vector3.up, isRight ? 0.0f : 180.0f);
         winObject.transform.RotateAround(winCollider.transform.position, Vector3.up, isRight ? 0.0f : 180.0f);
         loseObject.transform.RotateAround(winCollider.transform.position, Vector3.up, isRight ? 0.0f : 180.0f);
+        startObject.transform.RotateAround(board.transform.position.WithY(n => n + 1.0f), Vector3.up, isRight ? 0.0f : 180.0f);
     }
 
     void OnScoreControlEvent(ScoreControlEvent e)
@@ -213,8 +232,6 @@ public class WaveScore : MonoBehaviour
 
         int currentScore = FinalScore(warningAmt, warningTime, maxScore);
 
-        print("Warning Amt: " + warningAmt);
-        print("Warning Time: " + warningTime);
         winDataWarningText.text = $"{warningAmt}";
         winDataWarningTimeText.text = warningTime.ToString("F2") + "s";
         // Need to implement dynamic score based on warnings and performance. 

@@ -30,6 +30,10 @@ public class HeadMovement : MonoBehaviour
     private MovementState movementState;
 
     [SerializeField]
+    [Tooltip("Debug | Current position state")]
+    private PositionState positionState;
+
+    [SerializeField]
     [Tooltip("Check if the player has been scored on current state")]
     private bool isScored;
 
@@ -248,4 +252,11 @@ public enum MovementState
     Leaning,
     Warning,
     Fallen
+}
+
+public enum PositionState
+{
+    Prone, // Lying on stomach
+    Standing, // In a good hunched standing position
+    Extended // Standing tall and not hunching over
 }

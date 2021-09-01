@@ -146,77 +146,82 @@ public class Wave : MonoBehaviour, IMoverController
 
     void Update()
     {
-        waveTime += Time.deltaTime;
+        if (!WaveScore.IsWarmup)
+            waveTime += Time.deltaTime;
     }
 
     void FixedUpdate()
     {
-        if (dirty)
-            CalculateCache();
-
-        float arcAngle = Arc * Utils.Tau;
-
-        // This is recalculated each frame in the event we change the radius mid-simulation.
-        // This is the length of the wave arc (circle segment)
-        float circleCircumference = Radius * Utils.Tau;
-        float arcCircumference = (circleCircumference / Utils.Tau) * arcAngle;
-        int piecesPerArc = Mathf.FloorToInt(arcCircumference / wavePartWidth);
-        float anglePerPart = arcAngle / piecesPerArc;
-
-        float piecesPerCircle = Mathf.FloorToInt(circleCircumference / wavePartWidth);
-        // The angle between each piece to form the full circle
-        float fullAnglePerPart = Utils.Tau / piecesPerCircle;
-
-        Vector3 barrelCenter = transform.localPosition + transform.up * Radius;
-        Vector3 adjustedCenter = barrelCenter.WithY(MapHeight(barrelCenter.y));
-
-        int piecesPerLength = Mathf.FloorToInt(barrelLength / wavePartLength);
-
-        if (piecesPerArc == 0)
+        if (!WaveScore.IsWarmup)
         {
-            waveParts.ForEach(n => n.transform.position = unusedPartLocation.transform.position);
-            return;
-        }
+            if (dirty)
+                CalculateCache();
 
-        for (int i = 0; i < waveParts.Count; i++)
-        {
-            GameObject n = waveParts[i];
-            int x = Mathf.FloorToInt(i % piecesPerLength);
-            int y = Mathf.FloorToInt(i / piecesPerLength);
+            float arcAngle = Arc * Utils.Tau;
 
-            if (y > piecesPerArc)
+            // This is recalculated each frame in the event we change the radius mid-simulation.
+            // This is the length of the wave arc (circle segment)
+            float circleCircumference = Radius * Utils.Tau;
+            float arcCircumference = (circleCircumference / Utils.Tau) * arcAngle;
+            int piecesPerArc = Mathf.FloorToInt(arcCircumference / wavePartWidth);
+            float anglePerPart = arcAngle / piecesPerArc;
+
+            float piecesPerCircle = Mathf.FloorToInt(circleCircumference / wavePartWidth);
+            // The angle between each piece to form the full circle
+            float fullAnglePerPart = Utils.Tau / piecesPerCircle;
+
+            Vector3 barrelCenter = transform.localPosition + transform.up * Radius;
+            Vector3 adjustedCenter = barrelCenter.WithY(MapHeight(barrelCenter.y));
+
+            int piecesPerLength = Mathf.FloorToInt(barrelLength / wavePartLength);
+
+            if (piecesPerArc == 0)
             {
-                n.transform.position = unusedPartLocation.transform.position;
-                continue;
+                waveParts.ForEach(n => n.transform.position = unusedPartLocation.transform.position);
+                return;
             }
 
+            for (int i = 0; i < waveParts.Count; i++)
+            {
+                GameObject n = waveParts[i];
+                int x = Mathf.FloorToInt(i % piecesPerLength);
+                int y = Mathf.FloorToInt(i / piecesPerLength);
 
-            Vector3 localPos =
-            (
-                (barrelCenter + -transform.forward * Radius) // Place forward
-                .RotateAround(
-                    barrelCenter,
-                    Quaternion.AngleAxis(
-                        (waveStartAngle.ToRad() + (((y == piecesPerArc) ? anglePerPart : fullAnglePerPart) * y)).ToDeg(),
-                        transform.right
-                    )
-                ) +
-                (transform.right * ((wavePartLength * x) + (wavePieceZOffset * y) + (n.transform.localScale.x * 0.5f))) // Move right
-            );
+                if (y > piecesPerArc)
+                {
+                    n.transform.position = unusedPartLocation.transform.position;
+                    continue;
+                }
 
-            n.transform.localPosition = localPos;
 
-            n.transform.localRotation =
-              Quaternion.FromToRotation(
-                  transform.up,
-                  (barrelCenter.WithX(n.transform.localPosition.x) - n.transform.localPosition).normalized
-              );
+                Vector3 localPos =
+                (
+                    (barrelCenter + -transform.forward * Radius) // Place forward
+                    .RotateAround(
+                        barrelCenter,
+                        Quaternion.AngleAxis(
+                            (waveStartAngle.ToRad() + (((y == piecesPerArc) ? anglePerPart : fullAnglePerPart) * y)).ToDeg(),
+                            transform.right
+                        )
+                    ) +
+                    (transform.right * ((wavePartLength * x) + (wavePieceZOffset * y) + (n.transform.localScale.x * 0.5f))) // Move right
+                );
 
-            n.transform.localPosition = n.transform.localPosition.WithY(MapHeight(n.transform.localPosition.y)); // Squish the barrel's height
+                n.transform.localPosition = localPos;
+
+                n.transform.localRotation =
+                  Quaternion.FromToRotation(
+                      transform.up,
+                      (barrelCenter.WithX(n.transform.localPosition.x) - n.transform.localPosition).normalized
+                  );
+
+                n.transform.localPosition = n.transform.localPosition.WithY(MapHeight(n.transform.localPosition.y)); // Squish the barrel's height
+            }
+
+            if (!foamParticles.gameObject.activeSelf && Arc >= 0.75f)
+                foamParticles.gameObject.SetActive(true);
         }
-
-        if (!foamParticles.gameObject.activeSelf && Arc >= 0.75f)
-            foamParticles.gameObject.SetActive(true);
+        
     }
 
     // Maps altitude to something lower, allowing for a 'squashed' barrel

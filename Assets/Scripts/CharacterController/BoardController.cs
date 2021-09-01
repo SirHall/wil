@@ -19,6 +19,8 @@ public class BoardController : MonoBehaviour, ICharacterController
     BoardInput input = new BoardInput();
     Vector2 cameraRot = Vector2.zero;
 
+    private bool isIntroStarted;
+
     [SerializeField] float waveAccel = 20.0f;
 
     [SerializeField] float moveAccel = 10.0f;
@@ -54,7 +56,12 @@ public class BoardController : MonoBehaviour, ICharacterController
     void Start()
     {
         if (introEnabled)
-            StartCoroutine(Intro());
+        {
+            isIntroStarted = false;
+            inputAccepted = false;
+            Vector3 dir = introEndPos.position - introStartPos.position;
+            motor.SetPositionAndRotation(introStartPos.position, Quaternion.LookRotation(dir, Vector3.up));
+        }
     }
 
     void OnEnable()
@@ -79,6 +86,9 @@ public class BoardController : MonoBehaviour, ICharacterController
 
     void Update()
     {
+        if (WaveScore.IsPlaying && !WaveScore.IsWarmup && !isIntroStarted)
+            StartCoroutine(Intro());
+
         if (!WaveScore.IsPlaying)
             input.dir = Vector2.zero;
     }
@@ -92,8 +102,8 @@ public class BoardController : MonoBehaviour, ICharacterController
 
     IEnumerator Intro()
     {
-        inputAccepted = false;
 
+        isIntroStarted = true;
         // Only run the intro if it is enabled, and all positions are set
         introEnabled = introEnabled && introStartPos != null && introEndPos != null;
 
@@ -102,7 +112,7 @@ public class BoardController : MonoBehaviour, ICharacterController
         {
             Vector3 dir = introEndPos.position - introStartPos.position;
             float introVel = dir.magnitude / introTime;
-            motor.SetPositionAndRotation(introStartPos.position, Quaternion.LookRotation(dir, Vector3.up));
+
             float introClock = 0.0f;
 
             // Allow one frame to pass so the above SetPositionAndRotation takes effect
