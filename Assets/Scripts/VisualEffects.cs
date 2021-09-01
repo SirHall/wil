@@ -88,7 +88,6 @@ public class VisualEffects : MonoBehaviour
         if (postProcessingVolume.profile.TryGet<Vignette>(out var vignette)) vignette.active = !isUnderWater;
         if (postProcessingVolume.profile.TryGet<DepthOfField>(out var dof)) dof.active = isUnderWater;
         if (postProcessingVolume.profile.TryGet<ColorAdjustments>(out var colorAdjust)) colorAdjust.active = isUnderWater;
-        if (postProcessingVolume.profile.TryGet<WhiteBalance>(out var whiteBalance)) whiteBalance.active = isUnderWater;
         if (postProcessingVolume.profile.TryGet<ShadowsMidtonesHighlights>(out var shadows)) shadows.active = isUnderWater;
     }
 }
