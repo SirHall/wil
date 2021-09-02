@@ -19,9 +19,12 @@ public class Wave : MonoBehaviour, IMoverController
     [SerializeField] PhysicsMover mover;
 
     [SerializeField] GameObject wavePartPrefab;
+    [Tooltip("Total number of wave parts that are instantiated in the wavepart pool")]
     [SerializeField] int wavePartCount = 100;
 
+    [Tooltip("The assumed length of the base wavepart")]
     [SerializeField] float wavePartLength = 1.0f;
+    [Tooltip("The assumed width of the base wavepart")]
     [SerializeField] float wavePartWidth = 1.0f;
 
     List<GameObject> waveParts = new List<GameObject>();
@@ -221,7 +224,7 @@ public class Wave : MonoBehaviour, IMoverController
             if (!foamParticles.gameObject.activeSelf && Arc >= 0.75f)
                 foamParticles.gameObject.SetActive(true);
         }
-        
+
     }
 
     // Maps altitude to something lower, allowing for a 'squashed' barrel
