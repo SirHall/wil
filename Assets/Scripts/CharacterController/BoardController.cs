@@ -14,20 +14,20 @@ public class BoardController : MonoBehaviour, ICharacterController
 
     [SerializeField] KinematicCharacterMotor motor;
     public KinematicCharacterMotor Motor { get => motor; }
-    [SerializeField] float sensitivity = 1.0f;
 
     BoardInput input = new BoardInput();
     Vector2 cameraRot = Vector2.zero;
 
     private bool isIntroStarted;
 
-    [SerializeField] float waveAccel = 20.0f;
-
-    [SerializeField] float moveAccel = 10.0f;
     [SerializeField] float rotateAccel = 15.0f;
+    [Tooltip("Drag applied to the board")]
     [SerializeField] float drag = 0.1f;
+    [Tooltip("Gravity applied to the board pulling it down")]
     [SerializeField] float waveGravity = 15.0f;
+    [Tooltip("Force applied to the board pulling it upwards when parallel to the barrel")]
     [SerializeField] float wavePullUpAccel = 8.0f;
+    [Tooltip("As the board angles downwards this forward force is applied")]
     [SerializeField] float waveForwardAccel = 20f;
     [Tooltip("How far from being parallel to the barrel the board must be for the player to fall, 1 = parallel, 0 = perpendicular")]
     [SerializeField] [Range(0.0f, 1.0f)] float boardDirDotFallThreshold = 0.5f;
@@ -184,8 +184,6 @@ public class BoardController : MonoBehaviour, ICharacterController
 
         if (motor.GroundingStatus.IsStableOnGround)
         {
-            // currentVelocity += transform.forward * (input.dir.y * 1.1f) * moveAccel * deltaTime;
-
             Collider col = motor.GroundingStatus.GroundCollider;
 
             if (col.name == "WavePart") // Wave force
