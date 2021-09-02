@@ -29,7 +29,10 @@ public class BoardController : MonoBehaviour, ICharacterController
     [SerializeField] float waveGravity = 15.0f;
     [SerializeField] float wavePullUpAccel = 8.0f;
     [SerializeField] float waveForwardAccel = 20f;
-
+    [Tooltip("How far from being parallel to the barrel the board must be for the player to fall, 1 = parallel, 0 = perpendicular")]
+    [SerializeField] [Range(0.0f, 1.0f)] float boardDirDotFallThreshold = 0.5f;
+    [Tooltip("When the incline below the player goes above this angle, the player will fall off")]
+    [SerializeField] [Range(0.0f, 90.0f)] float maxGroundAngle = 60.0f;
 
     [SerializeField] bool introEnabled = true;
     [SerializeField] [ShowIfGroup("introEnabled")] [FoldoutGroup("introEnabled/Intro")] Transform introStartPos;
@@ -91,6 +94,9 @@ public class BoardController : MonoBehaviour, ICharacterController
 
         if (!WaveScore.IsPlaying)
             input.dir = Vector2.zero;
+
+        if (WaveScore.IsPlaying && !WaveScore.IsWarmup)
+            CheckBoardStability();
     }
 
     // A controller has announced new data
@@ -213,6 +219,25 @@ public class BoardController : MonoBehaviour, ICharacterController
             // Debug.DrawRay(transform.position, motor.GroundingStatus.GroundNormal, Color.green, 0.1f, false);
             // Debug.DrawRay(transform.position, wallGravity, Color.red, 0.1f, false);
         }
+    }
+
+    // This will check that the board is not too high up the wave, and that it
+    // is not *too* perpendicular to the wave force direction,
+    // otherwise it will trigger the GameLost event.
+    void CheckBoardStability()
+    {
+        // Wave goes along x axis, use dot product to find whether we are parallel or perpedicular to the x axis
+        float dirDot = Mathf.Abs(Vector3.Dot(Vector3.right, Motor.CharacterForward));
+        if (dirDot < boardDirDotFallThreshold)
+            using (var e = GameLost.Get())
+                e.cause = "Board perpendicular to barrel direction";
+
+        // Ensure that the board's ground normal isn't too steep
+        // Easiest way to do this is to find the angle between the normal and the up vector
+        float groundAngle = Vector3.Angle(Vector3.up, Motor.GroundingStatus.GroundNormal);
+        if (groundAngle > maxGroundAngle)
+            using (var e = GameLost.Get())
+                e.cause = "Water beneath board too steep";
     }
 
     #endregion
