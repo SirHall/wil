@@ -260,7 +260,7 @@ public class WaveScore : MonoBehaviour
 
     void OnGameLost(GameLost e)
     {
-        if (!IsPlaying)
+        if (!IsPlaying || IsWarmup)
             return;
         State = GameState.Lost;
         StartCoroutine(SplashTransition(warningAmt, warningTime, maxScore, e.cause)); /* Rest In Peace, ocean man :( */
