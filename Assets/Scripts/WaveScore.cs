@@ -28,9 +28,10 @@ public class WaveScore : MonoBehaviour
     [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro winDataScoreText;
 
     [SerializeField] [FoldoutGroup("Game Lost")] GameObject loseObject;
-    [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro loseDataWarningText;
-    [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro loseDataWarningTimeText;
-    [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro loseDataScoreText;
+    [SerializeField] [FoldoutGroup("Game Lost")] TextMeshPro loseDataWarningText;
+    [SerializeField] [FoldoutGroup("Game Lost")] TextMeshPro loseDataWarningTimeText;
+    [SerializeField] [FoldoutGroup("Game Lost")] TextMeshPro loseDataScoreText;
+    [SerializeField] [FoldoutGroup("Game Lost")] TextMeshPro loseDataCauseText;
 
     [SerializeField] [FoldoutGroup("Game Start")] GameObject startObject;
     [SerializeField] [FoldoutGroup("Game Start")] TextMeshPro startDataText;
@@ -97,13 +98,6 @@ public class WaveScore : MonoBehaviour
     {
         if (IsPlaying)
         {
-            MovementState moveState = HeadMovement.HeadTiltToState(headTilt);
-            if (moveState == MovementState.Fallen)
-            {
-                State = GameState.Lost;
-                StartCoroutine(SplashTransition(warningAmt, warningTime, maxScore)); /* Rest In Peace, ocean man :( */
-            }
-
             //Testing code to stop board at any point
             if (Input.GetKey(KeyCode.I))
             {
@@ -111,7 +105,7 @@ public class WaveScore : MonoBehaviour
                 board.StopImmediately();
             }
         }
-        
+
     }
 
     /// <summary>
@@ -181,7 +175,7 @@ public class WaveScore : MonoBehaviour
         }
     }
 
-    IEnumerator SplashTransition(int warningAmt, float warningTime, int maxScore)
+    IEnumerator SplashTransition(int warningAmt, float warningTime, int maxScore, string causeOfFall)
     {
         sceneTransition.SetActive(true);
         sceneTransition.GetComponentInChildren<Canvas>().worldCamera = Camera.main;
@@ -197,12 +191,16 @@ public class WaveScore : MonoBehaviour
 
         loseDataWarningText.text = $"{warningAmt}";
         loseDataWarningTimeText.text = warningTime.ToString("F2") + "s";
+        loseDataCauseText.text = causeOfFall;
 
         board.StopImmediately();
         board.InputAccepted = false;
 
         // We have lost so load scene & teleport player
-        using (var e = GameLost.Get()) { /* Rest In Peace, ocean man :( */ }
+        loseObject.transform.position = board.transform.position.WithY(n => n + 1.0f);
+        loseObject.SetActive(true);
+        board.StopImmediately();
+        board.InputAccepted = false;
 
         // Wait
         yield return new WaitForSeconds(0.5f);
@@ -236,7 +234,7 @@ public class WaveScore : MonoBehaviour
         winDataWarningTimeText.text = warningTime.ToString("F2") + "s";
         // Need to implement dynamic score based on warnings and performance. 
         // Ideas: Max score of 1000. All errors reduce current score (starts at max score). Essentially a surf without any errors will result in the max score. 
-        winDataScoreText.text = $"{currentScore}"; 
+        winDataScoreText.text = $"{currentScore}";
         board.StopImmediately();
         board.InputAccepted = false;
 
@@ -262,11 +260,10 @@ public class WaveScore : MonoBehaviour
 
     void OnGameLost(GameLost e)
     {
-        loseObject.transform.position = board.transform.position.WithY(n => n + 1.0f);
-        loseObject.SetActive(true);
-
-        board.StopImmediately();
-        board.InputAccepted = false;
+        if (!IsPlaying)
+            return;
+        State = GameState.Lost;
+        StartCoroutine(SplashTransition(warningAmt, warningTime, maxScore, e.cause)); /* Rest In Peace, ocean man :( */
     }
 
 

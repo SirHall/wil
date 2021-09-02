@@ -85,6 +85,13 @@ public class HeadMovement : MonoBehaviour
         HeadScoring();
         CallGlobalEvents();
 
+        // Check if head's moved to far, if so then trigger the GameLost event
+
+        MovementState moveState = HeadMovement.HeadTiltToState(headPosRel.WithY(mainCamera.transform.position.y));
+        if (moveState == MovementState.Fallen)
+            using (var e = GameLost.Get())
+                e.cause = "Leaned head too far";
+
     }
 
     /// <summary>
@@ -96,12 +103,12 @@ public class HeadMovement : MonoBehaviour
             startCoordinate = Camera.main.transform.localPosition;
     }
 
-    private void CallGlobalEvents() 
+    private void CallGlobalEvents()
     {
         using (var e = BoardControlEvent.Get())
             e.input.dir = HeadPosToBoardInput(headPosRel);
 
-        using (var e = ScoreControlEvent.Get()) 
+        using (var e = ScoreControlEvent.Get())
         {
             e.warningAmt = totalWarnings;
             e.warningTime = timeInWarning;
@@ -117,7 +124,7 @@ public class HeadMovement : MonoBehaviour
         {
             e.headInput.dir = headPosRel;
             e.headInput.dir.y = mainCamera.transform.position.y;
-        } 
+        }
     }
 
     /// <summary>
@@ -144,7 +151,7 @@ public class HeadMovement : MonoBehaviour
 
         if (value < 0)
             scaledValue = -scaledValue;
-        
+
         return scaledValue;
     }
 
