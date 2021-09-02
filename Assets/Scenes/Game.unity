@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 8900000, guid: 100289f8d54c41148bdc00aeee75e5db, type: 2}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.028646585, g: 0.037464865, b: 0.0584019, a: 1}
+  m_IndirectSpecularColor: {r: 0.02874518, g: 0.037528813, b: 0.05845123, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1952,6 +1952,10 @@ PrefabInstance:
       propertyPath: winDataScoreText
       value: 
       objectReference: {fileID: 599064451}
+    - target: {fileID: 7501596812986962732, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
+      propertyPath: loseDataCauseText
+      value: 
+      objectReference: {fileID: 7154862949902103262}
     - target: {fileID: 7501596812986962732, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
       propertyPath: loseDataScoreText
       value: 
