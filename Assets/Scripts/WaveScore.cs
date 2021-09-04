@@ -20,19 +20,21 @@ public class WaveScore : MonoBehaviour
 
     [SerializeField] BoardController board;
 
+    // Win UI Content
     [SerializeField] [FoldoutGroup("Game Won")] GameObject winObject;
     [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro winDataText;
-
     [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro winDataWarningText;
     [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro winDataWarningTimeText;
     [SerializeField] [FoldoutGroup("Game Won")] TextMeshPro winDataScoreText;
 
+    // Lose UI Content
     [SerializeField] [FoldoutGroup("Game Lost")] GameObject loseObject;
     [SerializeField] [FoldoutGroup("Game Lost")] TextMeshPro loseDataWarningText;
     [SerializeField] [FoldoutGroup("Game Lost")] TextMeshPro loseDataWarningTimeText;
     [SerializeField] [FoldoutGroup("Game Lost")] TextMeshPro loseDataScoreText;
     [SerializeField] [FoldoutGroup("Game Lost")] TextMeshPro loseDataCauseText;
 
+    // Start UI Content
     [SerializeField] [FoldoutGroup("Game Start")] GameObject startObject;
     [SerializeField] [FoldoutGroup("Game Start")] TextMeshPro startDataText;
 
@@ -105,7 +107,6 @@ public class WaveScore : MonoBehaviour
                 board.StopImmediately();
             }
         }
-
     }
 
     /// <summary>
@@ -117,17 +118,19 @@ public class WaveScore : MonoBehaviour
         float startClock = 0.0f;
         warmup = true;
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.1f); // Slightly wait before setting Start UI position
+
         startObject.transform.position = board.transform.position.WithY(n => n + 1.0f);
         startObject.SetActive(true);
 
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(0.8f); // Wait before starting timer (Take a little bit for VR to initialise)
 
         while (startClock <= startTime)
         {
             startClock += Time.deltaTime;
             int countDownClock = (int)(startTime - startClock);
 
+            // Set Timer UI Text to current time remaining
             startDataText.text = countDownClock.ToString();
             yield return null;
         }

@@ -11,12 +11,6 @@ public class InteractionManager : MonoBehaviour
 {
     private Interactables leftInteractableType;
     private Interactables rightInteractableType;
-    //private bool isInteractable;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
@@ -38,23 +32,17 @@ public class InteractionManager : MonoBehaviour
 
         if(collision.gameObject.layer == (int)LayerId.Interactable || collision.GetComponent<InteractionType>() != null) 
         {
-
             if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.left)
                 leftInteractableType = collision.GetComponent<InteractionType>().interactable;
 
             if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.right)
                 rightInteractableType = collision.GetComponent<InteractionType>().interactable;
-
-            //print("I'm interacting with hands");
-            //isInteractable = true;
-            
-           
         }
     }
 
     void OnTriggerExit(Collider collision) {
-        if (collision.gameObject.layer == (int)LayerId.Interactable) {
-
+        if (collision.gameObject.layer == (int)LayerId.Interactable) 
+        {
             if (collision.GetComponent<InteractionType>() != null)
             {
                 if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.left)
@@ -62,9 +50,6 @@ public class InteractionManager : MonoBehaviour
 
                 if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.right)
                     rightInteractableType = Interactables.None;
-
-                //print("I'm interacting with hands");
-                //isInteractable = false;
             }
         }
     }

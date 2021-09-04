@@ -38,6 +38,10 @@ public class SoundManager : MonoBehaviour{
 
     private bool isFallen = false;
 
+    //for board
+    public BoardController boardcontroller;
+    float Total_Velocity = 0;
+
     void OnEnable() {
         SoundControlEvent.RegisterListener(SoundEvent);
         GripInteraction.RegisterListener(GrabSound);
@@ -85,33 +89,19 @@ public class SoundManager : MonoBehaviour{
         PlaySound(Splash, 0.5f);
     }      
 
-    //wave stuff
-    int range = 4;
-    Vector3 Wavepos;
-    Vector3 Boardpos;
-
-    //for board
-    public BoardController boardcontroller;
-    float Total_Velocity = 0;
-
     void Update()
     {
         Total_Velocity = Mathf.Abs(boardcontroller.Motor.BaseVelocity.x) + Mathf.Abs(boardcontroller.Motor.BaseVelocity.z);
         //set velocity to set range between 1-10
         if (Total_Velocity > 10)
-        {
             Total_Velocity = 10;
-        }
+        
         else if (Total_Velocity < 1)
-        {
             Total_Velocity = 0;
-        }
+
         Total_Velocity = (int)Total_Velocity;
 
         //Playsound here
-
-        bool playingMusic;
-
 
         if (WaterStateChanged())
         {
@@ -161,6 +151,10 @@ public class SoundManager : MonoBehaviour{
         }
     }
 
+    /// <summary>
+    /// When triggered will play the grab sound effect once
+    /// </summary>
+    /// <param name="e"></param>
     private void GrabSound(GripInteraction e)
     {
         grabSource.clip = Grab;
@@ -168,6 +162,9 @@ public class SoundManager : MonoBehaviour{
         grabSource.Play();
     }
 
+    /// <summary>
+    /// Plays the fall sound effect once
+    /// </summary>
     private void FallenSound()
     {
         if (WaveScore.IsPlaying)

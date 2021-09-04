@@ -71,7 +71,7 @@ public class VisualEffects : MonoBehaviour
     /// </summary>
     private void UnderwaterEffect()
     {
-        bool isUnderWater = false;
+        bool isUnderWater;
         // Check if players position is below the water
         if (headPos.y <= 0)
         {
