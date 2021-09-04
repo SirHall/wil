@@ -128,16 +128,6 @@ public class HeadMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Return true if a number is between a min and max value
-    /// </summary>
-    /// <param name="direction"></param>
-    /// <param name="minValue"></param>
-    /// <param name="maxValue"></param>
-    /// <returns>Bool value based on if a number is between a min and max value</returns>
-    private bool checkBetween(float direction, float minValue, float maxValue) =>
-        direction >= minValue && direction < maxValue;
-
-    /// <summary>
     /// Return positive value that is scaled between 0 and a given max value
     /// </summary>
     /// <param name="value">Difference value based off current position - Starting position</param>
@@ -146,13 +136,7 @@ public class HeadMovement : MonoBehaviour
     private float DirectionScale(float value, float maxValue)
     {
         // Clamp and scale positive value based off given maxValue
-        float scaledValue;
-        scaledValue = Mathf.Clamp(Mathf.Abs(value), 0, maxValue) / maxValue;
-
-        if (value < 0)
-            scaledValue = -scaledValue;
-
-        return scaledValue;
+        return Mathf.Clamp(Mathf.Abs(value), 0, maxValue) / maxValue;
     }
 
     /// <summary>
@@ -195,8 +179,15 @@ public class HeadMovement : MonoBehaviour
         float sidePos = diff.x; // Left, Right
 
         // Assign variable values based on the direction the player is leaning / standing
-        headPosRel.z = DirectionScale(forwardPos, maxForward); // Positive
-        headPosRel.x = DirectionScale(sidePos, maxLeft); // Positive
+        if(diff.z > 0)
+            headPosRel.z = DirectionScale(forwardPos, maxForward); // Positive
+        else
+            headPosRel.z = -DirectionScale(forwardPos, maxBack); // Negative
+
+        if (diff.x > 0)
+            headPosRel.x = DirectionScale(sidePos, maxLeft); // Positive
+        else
+            headPosRel.x = -DirectionScale(sidePos, maxRight); // Negative
     }
 
     /// <summary>

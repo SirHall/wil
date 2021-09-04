@@ -14,7 +14,7 @@ public class RightInteractablesEvent : GlobalEvent<RightInteractablesEvent>, Sys
 // A much better alternative to using 'floating strings'.
 public enum Interactables
 {
-    None, // A simple default value, will print a reminder to the log to set the interactables value (TODO)
+    None, // A simple default value
     Surfboard, // Surfboard interactables to control it using the hands
-
+    Water,
 }

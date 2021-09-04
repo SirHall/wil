@@ -9,13 +9,18 @@ using UnityEngine.Serialization;
 public class PovChange : MonoBehaviour
 {
     [FormerlySerializedAs("gameObj1")]
-    public GameObject keyboardRig;
-    [FormerlySerializedAs("gameObj2")]
-    public GameObject vrRig;
+    public GameObject keyboard_Rig;
 
+    [FormerlySerializedAs("gameObj2")]
+    public GameObject vr_Rig;
+
+    [Tooltip("Devices found which match a set of characteristics")]
     private List<InputDevice> headsetDevices = new List<InputDevice>();
+
+    [Tooltip("Primary device found within list of devices")]
     private InputDevice activeHeadset;
 
+    [Tooltip("Timer")]
     float timePassed = 0;
     // Start is called before the first frame update
     void Awake()
@@ -27,19 +32,20 @@ public class PovChange : MonoBehaviour
     {
         InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.HeadMounted, headsetDevices);
 
-        if (headsetDevices.Count > 0) activeHeadset = headsetDevices[0];
+        if (headsetDevices.Count > 0) 
+            activeHeadset = headsetDevices[0];
 
         if (activeHeadset.isValid)
         {
             // Debug.Log("Detected VR");
-            keyboardRig.SetActive(false);
-            vrRig.SetActive(true);
+            keyboard_Rig.SetActive(false);
+            vr_Rig.SetActive(true);
         }
         else
         {
             // Debug.Log("Not detected VR");
-            keyboardRig.SetActive(true);
-            vrRig.SetActive(false);
+            keyboard_Rig.SetActive(true);
+            vr_Rig.SetActive(false);
         }
     }
 

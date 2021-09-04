@@ -36,19 +36,18 @@ public class InteractionManager : MonoBehaviour
     void OnTriggerEnter(Collider collision) 
     {
 
-        if(collision.gameObject.layer == (int)LayerId.Interactable) 
+        if(collision.gameObject.layer == (int)LayerId.Interactable || collision.GetComponent<InteractionType>() != null) 
         {
-            if (collision.GetComponent<InteractionType>() != null)
-            {
-                if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.left)
-                    leftInteractableType = collision.GetComponent<InteractionType>().interactable;
 
-                if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.right)
-                    rightInteractableType = collision.GetComponent<InteractionType>().interactable;
+            if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.left)
+                leftInteractableType = collision.GetComponent<InteractionType>().interactable;
 
-                //print("I'm interacting with hands");
-                //isInteractable = true;
-            }
+            if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.right)
+                rightInteractableType = collision.GetComponent<InteractionType>().interactable;
+
+            //print("I'm interacting with hands");
+            //isInteractable = true;
+            
            
         }
     }

@@ -12,12 +12,6 @@ public class HandManager : MonoBehaviour
     [Tooltip("Contains the visible hand model that the user can see")]
     private GameObject visibleHandModel;
 
-    public enum HandType
-    {
-        left,
-        right
-    }
-
     [SerializeField]
     [Tooltip("Determines if the hand is the left or right controller")]
     public HandType handType;
@@ -25,18 +19,20 @@ public class HandManager : MonoBehaviour
     [Tooltip("Characteristics of current gameobject device you want to get")]
     public InputDeviceCharacteristics deviceCharacteristics;
 
+    [Tooltip("Devices that are found with set characteristics")]
     private List<InputDevice> devices = new List<InputDevice>();
+
+    [Tooltip("Primary device found within list of devices")]
     private InputDevice currentDevice;
 
+    [Tooltip("Animator to play hand movements such as gripping")]
     private Animator handAnimator;
 
-    private bool isInteracting = false;
+    [Tooltip("Is current hand interacting with any object while gripping")]
+    private bool isGripInteracting = false;
 
-    private bool isLeftInteracting = false;
-    private bool isRightInteracting = false;
-
-    Interactables leftInteraction = new Interactables();
-    Interactables rightInteraction = new Interactables();
+    [Tooltip("Get which interactable either the left or right hand is interacting with")]
+    Interactables leftInteraction, rightInteraction = new Interactables();
 
     [Tooltip("The max unit values the player can move in specified direction")]
     public float maxUp, maxDown;
@@ -45,10 +41,14 @@ public class HandManager : MonoBehaviour
     [Tooltip("Starting local Cooridnate of the player")]
     private Vector3 startCoordinate;
 
-    /// <summary>
-    /// The player's hand position relative to the starting hand position
-    /// </summary>
+    [Tooltip("The player's hand position relative to the starting hand position")]
     private Vector3 handPosRel = Vector3.zero;
+
+    public enum HandType
+    {
+        left,
+        right
+    }
 
     void OnEnable() {
         LeftInteractablesEvent.RegisterListener(OnLeftGripControlEvent);
@@ -59,27 +59,21 @@ public class HandManager : MonoBehaviour
         LeftInteractablesEvent.UnregisterListener(OnLeftGripControlEvent);
         RightInteractablesEvent.RegisterListener(OnRightGripControlEvent);
     }
+
     // A controller has announced new data
     void OnLeftGripControlEvent(LeftInteractablesEvent e) {
         leftInteraction = e.leftInteractable;
     }
+
     // A controller has announced new data
     void OnRightGripControlEvent(RightInteractablesEvent e)
     {
         rightInteraction = e.rightInteractable;
     }
+
     private void CallGlobalEvents()
     {
-        if (handType == HandType.left)
-        {
-            using (var e = LeftGrabbingEvent.Get()) 
-                e.grabLeftInput.isLeftGrabbing = isLeftInteracting;
-        }
-        if (handType == HandType.right)
-        {
-            using (var e = RightGrabbingEvent.Get())
-                e.grabRightInput.isRightGrabbing = isRightInteracting;
-        }
+        
     }
 
     // Start is called before the first frame update
@@ -88,7 +82,6 @@ public class HandManager : MonoBehaviour
         InitialiseHands();
     }
 
-    
     // Update is called once per frame
     void Update()
     {
@@ -103,31 +96,31 @@ public class HandManager : MonoBehaviour
 
         // Toggle Active
         if (!visibleHandModel.activeSelf) 
-        {
             visibleHandModel.SetActive(true);
-        }
-
-        // Run Animations
+        
         HandAnimation();
         InteractableGripping();
-
         CallGlobalEvents();
     }
 
+    /// <summary>
+    /// Converts hand positional movements into board input with either left or right input. 
+    /// </summary>
+    /// <param name="handPos">Vector3 of clamped hand position value between 0 and 1</param>
+    /// <returns>Vector3 direction value to be used rotate the board based on hand movements</returns>
     private Vector3 HandPosToBoardInput(Vector3 handPos)
     {
         Vector3 dir = Vector3.zero;
 
-        // Apply forward movement if the player leans 40% or greater based on the max forward value.
-        // and use 30% on the sides
-
-        // Cutoff values determin when the head position values should be ignored and returned as a 0 value (Essentially making the surfboard stationary)
-        // Or when they should return their true values which will be used by the surfboard to move it. 
+        // Cutoff values determin when the hand position values should be ignored and returned as a 0 value 
         float heightCutoff = 0.05f;
 
+        float leftMovementValue = -handPos.y + heightCutoff;
+        float rightMovementValue = Mathf.Abs(handPos.y + heightCutoff);
+
         // Moving
-        if (handPos.y >= heightCutoff) { dir.x = -handPos.y + heightCutoff; } //Left
-        if (handPos.y <= -heightCutoff) { dir.x = Mathf.Abs(handPos.y + heightCutoff); } //Right
+        if (handPos.y >= heightCutoff) { dir.x = leftMovementValue; } //Left
+        if (handPos.y <= -heightCutoff) { dir.x = rightMovementValue; } //Right
 
         // Stationary
         if (handPos.y < heightCutoff && handPos.y > -heightCutoff) { dir.x = 0; } // Side
@@ -149,7 +142,6 @@ public class HandManager : MonoBehaviour
 
             handAnimator = visibleHandModel.GetComponent<Animator>();
         }
-
     }
 
     /// <summary>
@@ -171,43 +163,41 @@ public class HandManager : MonoBehaviour
         else
             handAnimator.SetFloat("Grip", 0);
     }
+
     /// <summary>
     /// Conditions to check if player is gripping while in contact with an interactable object. 
     /// </summary>
     private void InteractableGripping() 
     {
-        bool previousInteractionState = isInteracting;
+        bool previousInteractionState = isGripInteracting;
+
         if (devices[0].TryGetFeatureValue(CommonUsages.grip, out float gripvalue))
         {
             if (gripvalue == 1)
             {
+                // Is either hand interacting / gripping with the surfboard
                 if (leftInteraction == Interactables.Surfboard || rightInteraction == Interactables.Surfboard)
-                {
-                    if (handType == HandType.left) isLeftInteracting = true;
-                    if (handType == HandType.right) isRightInteracting = true;
-                    isInteracting = true;
-                }
+                    isGripInteracting = true;
             }
             else
-            {
-                if (handType == HandType.left) isLeftInteracting = false;
-                if (handType == HandType.right) isRightInteracting = false;
-                isInteracting = false;
-            }
-            
+                isGripInteracting = false;
         }
-        //print("Interactable: " + interaction);
-        if (isInteracting)
+        
+        if (isGripInteracting)
         {
-            if (previousInteractionState != isInteracting)
+            // Run once when player starts interacting
+            if (previousInteractionState != isGripInteracting)
+            {
                 startCoordinate = transform.localPosition;
+
+                // Trigger GripInteraction event
+                using (var e = GripInteraction.Get()); 
+            }
             
             CheckHandPosition();
             using (var e = BoardControlEvent.Get())
                 e.input.dir = HandPosToBoardInput(handPosRel);
         }
-        
-        
     }
 
     /// <summary>
@@ -237,6 +227,5 @@ public class HandManager : MonoBehaviour
             else
                 handPosRel.y = -DirectionScale(diff.y, maxDown); // Negative
         }
-        
     }
 }

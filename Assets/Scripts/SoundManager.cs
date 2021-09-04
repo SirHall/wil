@@ -36,39 +36,22 @@ public class SoundManager : MonoBehaviour{
 
     private Vector3 headPos = new Vector3();
 
-    private bool isLeftGrabbing;
-    private bool isRightGrabbing;
-    private bool isGrabSound;
-
     private bool isFallen = false;
 
     void OnEnable() {
         SoundControlEvent.RegisterListener(SoundEvent);
-        LeftGrabbingEvent.RegisterListener(LeftGrabEvent);
-        RightGrabbingEvent.RegisterListener(RightGrabEvent);
+        GripInteraction.RegisterListener(GrabSound);
     }
 
     void OnDisable() {
         SoundControlEvent.UnregisterListener(SoundEvent);
-        LeftGrabbingEvent.RegisterListener(LeftGrabEvent);
-        RightGrabbingEvent.RegisterListener(RightGrabEvent);
+        GripInteraction.RegisterListener(GrabSound);
     }
 
     // A controller has announced new data
     void SoundEvent(SoundControlEvent e) 
     {
         headPos = e.headInput.dir;
-    }
-
-    // A controller has announced new data
-    void LeftGrabEvent(LeftGrabbingEvent e)
-    {
-        isLeftGrabbing = e.grabLeftInput.isLeftGrabbing;
-    }
-    // A controller has announced new data
-    void RightGrabEvent(RightGrabbingEvent e)
-    {
-        isRightGrabbing = e.grabRightInput.isRightGrabbing;
     }
 
     //A class that is called upon from any other file
@@ -150,7 +133,6 @@ public class SoundManager : MonoBehaviour{
 
         LeanWarningSound();
         FallenSound();
-        GrabSound();
     }
     /// <summary>
     /// Handles the Lean warning sound which plays when the user is too far off the board
@@ -179,19 +161,11 @@ public class SoundManager : MonoBehaviour{
         }
     }
 
-    private void GrabSound()
+    private void GrabSound(GripInteraction e)
     {
-        bool previousGrabState = isGrabSound;
-
-        if (isLeftGrabbing || isRightGrabbing) isGrabSound = true;
-        else isGrabSound = false;
-
-        if (previousGrabState != isGrabSound && (isLeftGrabbing || isRightGrabbing))
-        {
-            grabSource.clip = Grab;
-            grabSource.volume = 100f;
-            grabSource.Play();
-        }
+        grabSource.clip = Grab;
+        grabSource.volume = 100f;
+        grabSource.Play();
     }
 
     private void FallenSound()
