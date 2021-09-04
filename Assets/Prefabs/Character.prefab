@@ -829,14 +829,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   motor: {fileID: 5555672468506556106}
-  sensitivity: 1
-  waveAccel: 20
-  moveAccel: 30
   rotateAccel: 50
   drag: 3
   waveGravity: 15
   wavePullUpAccel: 8
   waveForwardAccel: 20
+  boardDirDotFallThreshold: 0.5
+  maxGroundAngle: 60
   introEnabled: 1
   introStartPos: {fileID: 0}
   introEndPos: {fileID: 0}
@@ -861,6 +860,7 @@ MonoBehaviour:
   leftBoundary: {fileID: 931832695377570278}
   rightBoundary: {fileID: 222408121415534213}
   movementState: 0
+  positionState: 0
   isScored: 0
   totalWarnings: 0
   timeInWarning: 0
@@ -877,8 +877,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f67650aa8161f9438361b55a5b9087c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyboardRig: {fileID: 5555672467671455817}
-  vrRig: {fileID: 5555672469118418112}
+  keyboard_Rig: {fileID: 5555672467671455817}
+  vr_Rig: {fileID: 5555672469118418112}
 --- !u!114 &5555672468506556102
 MonoBehaviour:
   m_ObjectHideFlags: 0
