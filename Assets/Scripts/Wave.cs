@@ -187,15 +187,35 @@ public class Wave : MonoBehaviour, IMoverController
             for (int i = 0; i < waveParts.Count; i++)
             {
                 GameObject n = waveParts[i];
+                Transform nt = n.transform;
                 int x = Mathf.FloorToInt(i % piecesPerLength);
                 int y = Mathf.FloorToInt(i / piecesPerLength);
 
                 if (y > piecesPerArc)
                 {
-                    n.transform.position = unusedPartLocation.transform.position;
+                    // Attempt to place on barrel ends
+                    nt.rotation = Quaternion.identity; //Firstly clear all previous rotation
+                    // TODO: This probably has atleast one off-by-one bug
+                    int connectPieceIndex = i - piecesPerArc;
+                    if (connectPieceIndex >= piecesPerArc)
+                    {
+                        n.transform.position = unusedPartLocation.transform.position;
+                        continue;
+                    }
+                    Transform connect = waveParts[connectPieceIndex].transform;
+
+                    nt.position = connect.position + new Vector3(barrelLength, 0.0f, 0.0f);
+                    nt.rotation = connect.rotation;
+
+                    Vector3 rotPos = barrelCenter + new Vector3(barrelLength, 0.0f, 0.0f);
+                    Vector3 rotAxis = nt.up;
+
+                    nt.RotateAround(rotPos, rotAxis, 15.0f);
+
+                    Debug.DrawRay(rotPos, rotAxis * wavePartWidth, Color.red, 0.1f, false);
+
                     continue;
                 }
-
 
                 Vector3 localPos =
                 (
