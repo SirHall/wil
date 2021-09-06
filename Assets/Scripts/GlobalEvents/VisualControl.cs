@@ -6,3 +6,7 @@ public class VisualControlEvent : GlobalEvent<VisualControlEvent>, System.IDispo
 {
     public Vector3 dir;
 }
+public class WaterScreenEvent : GlobalEvent<WaterScreenEvent>, System.IDisposable
+{
+    public float alphaValue;
+}

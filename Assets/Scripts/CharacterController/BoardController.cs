@@ -113,7 +113,6 @@ public class BoardController : MonoBehaviour, ICharacterController
         // Only run the intro if it is enabled, and all positions are set
         introEnabled = introEnabled && introStartPos != null && introEndPos != null;
 
-
         if (introEnabled)
         {
             Vector3 dir = introEndPos.position - introStartPos.position;
@@ -123,17 +122,23 @@ public class BoardController : MonoBehaviour, ICharacterController
 
             // Allow one frame to pass so the above SetPositionAndRotation takes effect
             yield return null;
-
             while (introClock <= introTime)
             {
                 introClock += Time.deltaTime;
                 // float dist = Mathf.Min(dir.magnitude, introVel * Time.deltaTime);
                 // motor.pos(motor.TransientPosition + dir.normalized * dist);
                 // dir = introEndPos.position - motor.TransientPosition;
-                Motor.BaseVelocity = (introEndPos.position - introStartPos.position) / introTime;
+
+                if (WaveScore.IsPlaying)
+                    Motor.BaseVelocity = (introEndPos.position - introStartPos.position) / introTime;
+                else
+                {
+                    Motor.BaseVelocity = Vector3.zero;
+                    break;
+                }
+
                 yield return null;
             }
-
             Motor.BaseVelocity += (introEndPos.position - introStartPos.position) / introTime;
 
             inputAccepted = true;

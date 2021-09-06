@@ -1157,11 +1157,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 945258961}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!20 &992073090 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 576255697668831354, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
-  m_PrefabInstance: {fileID: 5555672468495459279}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1002101231
 GameObject:
   m_ObjectHideFlags: 0
@@ -2851,6 +2846,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1808740145}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1904956564 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 166641054421066629, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
+  m_PrefabInstance: {fileID: 5555672468495459279}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1952893987
 GameObject:
   m_ObjectHideFlags: 0
@@ -3610,6 +3616,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 166641054421066649, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5014809547904436924, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -3621,7 +3631,7 @@ PrefabInstance:
     - target: {fileID: 5555672468236251081, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 992073090}
+      objectReference: {fileID: 0}
     - target: {fileID: 5555672468236251082, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 0
@@ -4047,6 +4057,10 @@ PrefabInstance:
       propertyPath: volume
       value: 
       objectReference: {fileID: 1441122647}
+    - target: {fileID: 7501596812986962733, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
+      propertyPath: waterScreenEffect
+      value: 
+      objectReference: {fileID: 1904956564}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
 --- !u!1001 &8357168046834876424

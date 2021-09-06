@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class VisualEffects : MonoBehaviour
 {
@@ -14,7 +15,13 @@ public class VisualEffects : MonoBehaviour
     [Tooltip("Water Gameobject")]
     private GameObject water;
 
+    [SerializeField]
+    [Tooltip("Water Screen Effect Image")]
+    private Image waterScreenEffect;
+
     private Volume postProcessingVolume;
+
+    float test = 0;
 
     // Players head position
     Vector3 headPos = new Vector3();
@@ -22,11 +29,13 @@ public class VisualEffects : MonoBehaviour
     void OnEnable()
     {
         VisualControlEvent.RegisterListener(OnMoveControlEvent);
+        WaterScreenEvent.RegisterListener(HeadWaterEffect);
     }
 
     void OnDisable()
     {
         VisualControlEvent.UnregisterListener(OnMoveControlEvent);
+        WaterScreenEvent.UnregisterListener(HeadWaterEffect);
     }
 
     // A controller has announced new data
@@ -47,6 +56,17 @@ public class VisualEffects : MonoBehaviour
         LeaningEffect();
         UnderwaterEffect();
     }
+
+    private void HeadWaterEffect(WaterScreenEvent e)
+    {
+        print("ALPHA: " + e.alphaValue);
+        waterScreenEffect.gameObject.SetActive(e.alphaValue > 0);
+
+        Color waterColor = waterScreenEffect.color;
+        waterColor.a = e.alphaValue;
+        waterScreenEffect.color = waterColor;
+    }
+
     /// <summary>
     /// Enables the leaning effects when the players head is detected leaning from the center of the board
     /// </summary>

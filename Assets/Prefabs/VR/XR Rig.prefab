@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 612938262074447093}
   - component: {fileID: 612938262058545879}
   - component: {fileID: 612938262058545878}
-  - component: {fileID: 612938262058545873}
   m_Layer: 0
   m_Name: XR Rig
   m_TagString: Untagged
@@ -67,29 +66,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ActionAssets:
   - {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
---- !u!114 &612938262058545873
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 612938262058545872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0841598c8120094429946223b96f156c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraGameObjects: []
-  startCoordinate: {x: 0, y: 0, z: 0}
-  currentCoordinate: {x: 0, y: 0, z: 0}
-  forwardBoundary: {fileID: 0}
-  backBoundary: {fileID: 0}
-  leftBoundary: {fileID: 0}
-  rightBoundary: {fileID: 0}
-  movementState: 0
-  isScored: 0
-  totalWarnings: 0
-  timeInWarning: 0
 --- !u!1 &612938262396231214
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,7 +113,7 @@ GameObject:
   - component: {fileID: 612938263532401159}
   - component: {fileID: 612938263532401158}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: Camera_VR
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -298,6 +274,8 @@ GameObject:
   - component: {fileID: 5397268574884282568}
   - component: {fileID: 6953876109788477416}
   - component: {fileID: 5397268574884282567}
+  - component: {fileID: 3694419556275985764}
+  - component: {fileID: 1772567963593571164}
   m_Layer: 7
   m_Name: RightHand Controller
   m_TagString: Untagged
@@ -516,6 +494,37 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3694419556275985764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5397268574884282561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 748ca81b82358c645a5a89e42d09e3f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1772567963593571164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5397268574884282561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cbb2a9f4a6f3714386e81f60c382804, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handPrefab: {fileID: 5686134208185362930, guid: 1fd3a7c43c8190f4d8c167ebde694364, type: 3}
+  visibleHandModel: {fileID: 0}
+  handType: 1
+  deviceCharacteristics: 516
+  maxUp: 1
+  maxDown: 1
+  startCoordinate: {x: 0, y: 0, z: 0}
 --- !u!1 &5397268574884282563
 GameObject:
   m_ObjectHideFlags: 0
@@ -528,6 +537,8 @@ GameObject:
   - component: {fileID: 5397268574884282572}
   - component: {fileID: 5397268574884282575}
   - component: {fileID: 5397268574884282574}
+  - component: {fileID: 2775358296930382157}
+  - component: {fileID: 2839209200512568702}
   m_Layer: 7
   m_Name: LeftHand Controller
   m_TagString: Untagged
@@ -746,3 +757,34 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2775358296930382157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5397268574884282563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 748ca81b82358c645a5a89e42d09e3f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2839209200512568702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5397268574884282563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cbb2a9f4a6f3714386e81f60c382804, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handPrefab: {fileID: 109434732395284509, guid: 65847589f926b734d9eaed6e25f0046b, type: 3}
+  visibleHandModel: {fileID: 0}
+  handType: 0
+  deviceCharacteristics: 260
+  maxUp: 1
+  maxDown: 1
+  startCoordinate: {x: 0, y: 0, z: 0}
