@@ -78,6 +78,32 @@ public class Wave : MonoBehaviour, IMoverController
     [SerializeField] float arc = 1.0f;
     public float BarrelArc { get => arc; set => arc = value; }
 
+
+    #region Barrel Generated Data
+
+    // Pure functions that calculate new needed information regarding the barrel
+    float ArcAngle => Arc * Utils.Tau;
+
+    float CircleCircumference => Radius * Utils.Tau;
+    float ArcCircumference => (CircleCircumference / Utils.Tau) * ArcAngle;
+    int PiecesPerArc => Mathf.FloorToInt(ArcCircumference / wavePartWidth);
+    float AnglePerPart => ArcAngle / PiecesPerArc;
+
+    float PiecesPerCircle => Mathf.FloorToInt(CircleCircumference / wavePartWidth);
+    // The angle between each piece to form the full circle
+    float FullAnglePerPart => Utils.Tau / PiecesPerCircle;
+
+    Vector3 BarrelCenter => transform.localPosition + transform.up * Radius;
+    Vector3 AdjustedCenter => BarrelCenter.WithY(MapHeight(BarrelCenter.y));
+
+    int PiecesPerLength => Mathf.FloorToInt(barrelLength / wavePartLength);
+
+    int PieceX(int index) => Mathf.FloorToInt(index % PiecesPerLength);
+    int PieceY(int index) => Mathf.FloorToInt(index / PiecesPerLength);
+
+    #endregion
+
+
     // This is set to true if some field that affects whether or not cached bookkeeping values need to be recalculated
     bool dirty = true;
 
@@ -160,25 +186,10 @@ public class Wave : MonoBehaviour, IMoverController
             if (dirty)
                 CalculateCache();
 
-            float arcAngle = Arc * Utils.Tau;
-
             // This is recalculated each frame in the event we change the radius mid-simulation.
             // This is the length of the wave arc (circle segment)
-            float circleCircumference = Radius * Utils.Tau;
-            float arcCircumference = (circleCircumference / Utils.Tau) * arcAngle;
-            int piecesPerArc = Mathf.FloorToInt(arcCircumference / wavePartWidth);
-            float anglePerPart = arcAngle / piecesPerArc;
 
-            float piecesPerCircle = Mathf.FloorToInt(circleCircumference / wavePartWidth);
-            // The angle between each piece to form the full circle
-            float fullAnglePerPart = Utils.Tau / piecesPerCircle;
-
-            Vector3 barrelCenter = transform.localPosition + transform.up * Radius;
-            Vector3 adjustedCenter = barrelCenter.WithY(MapHeight(barrelCenter.y));
-
-            int piecesPerLength = Mathf.FloorToInt(barrelLength / wavePartLength);
-
-            if (piecesPerArc == 0)
+            if (PiecesPerArc == 0)
             {
                 waveParts.ForEach(n => n.transform.position = unusedPartLocation.transform.position);
                 return;
@@ -186,59 +197,16 @@ public class Wave : MonoBehaviour, IMoverController
 
             for (int i = 0; i < waveParts.Count; i++)
             {
-                GameObject n = waveParts[i];
-                Transform nt = n.transform;
-                int x = Mathf.FloorToInt(i % piecesPerLength);
-                int y = Mathf.FloorToInt(i / piecesPerLength);
-
-                if (y > piecesPerArc)
+                // To understand the quadrant system used please refer to 'Assets/Textures/documentation/barrel_quads.png'
+                switch (Quadrant(i))
                 {
-                    // Attempt to place on barrel ends
-                    nt.rotation = Quaternion.identity; //Firstly clear all previous rotation
-                    // TODO: This probably has atleast one off-by-one bug
-                    int connectPieceIndex = i - piecesPerArc;
-                    if (connectPieceIndex >= piecesPerArc)
-                    {
-                        n.transform.position = unusedPartLocation.transform.position;
-                        continue;
-                    }
-                    Transform connect = waveParts[connectPieceIndex].transform;
-
-                    nt.position = connect.position + new Vector3(barrelLength, 0.0f, 0.0f);
-                    nt.rotation = connect.rotation;
-
-                    Vector3 rotPos = barrelCenter + new Vector3(barrelLength, 0.0f, 0.0f);
-                    Vector3 rotAxis = nt.up;
-
-                    nt.RotateAround(rotPos, rotAxis, 15.0f);
-
-                    Debug.DrawRay(rotPos, rotAxis * wavePartWidth, Color.red, 0.1f, false);
-
-                    continue;
+                    case BarrelQuadrant.Rise: GenerateRise(i, waveParts[i].transform); break;
+                    case BarrelQuadrant.RiseCeil: GenerateRiseCeiling(i, waveParts[i].transform); break;
+                    case BarrelQuadrant.FallCeil: GenerateFallCeiling(i, waveParts[i].transform); break;
+                    case BarrelQuadrant.Fall: GenerateFall(i, waveParts[i].transform); break;
+                    case BarrelQuadrant.Excess: GenerateExcess(i, waveParts[i].transform); break;
+                    default: Debug.LogError($"Piece index {i} did not fall into any quadrants"); break;
                 }
-
-                Vector3 localPos =
-                (
-                    (barrelCenter + -transform.forward * Radius) // Place forward
-                    .RotateAround(
-                        barrelCenter,
-                        Quaternion.AngleAxis(
-                            (waveStartAngle.ToRad() + (((y == piecesPerArc) ? anglePerPart : fullAnglePerPart) * y)).ToDeg(),
-                            transform.right
-                        )
-                    ) +
-                    (transform.right * ((wavePartLength * x) + (wavePieceZOffset * y) + (n.transform.localScale.x * 0.5f))) // Move right
-                );
-
-                n.transform.localPosition = localPos;
-
-                n.transform.localRotation =
-                  Quaternion.FromToRotation(
-                      transform.up,
-                      (barrelCenter.WithX(n.transform.localPosition.x) - n.transform.localPosition).normalized
-                  );
-
-                n.transform.localPosition = n.transform.localPosition.WithY(MapHeight(n.transform.localPosition.y)); // Squish the barrel's height
             }
 
             if (!foamParticles.gameObject.activeSelf && Arc >= 0.75f)
@@ -246,6 +214,78 @@ public class Wave : MonoBehaviour, IMoverController
         }
 
     }
+
+    #region Wave Part Placers
+
+    // The old part-placing method, places pieces in a squashed circular shape
+    void GenerateOld(int i, Transform part)
+    {
+        int x = PieceX(i); // This is mostly useless now
+        int y = PieceY(i);
+
+        Vector3 localPos =
+                (BarrelCenter + -transform.forward * Radius) // Place forward
+                .RotateAround(
+                    BarrelCenter,
+                    Quaternion.AngleAxis(
+                        (waveStartAngle.ToRad() + (((y == PiecesPerArc) ? AnglePerPart : FullAnglePerPart) * y)).ToDeg(),
+                        transform.right
+                    )
+                ) +
+                (transform.right * ((wavePartLength * x) + (wavePieceZOffset * y) + (part.transform.localScale.x * 0.5f)));// Move right
+
+        part.localPosition = localPos;
+
+        part.localRotation =
+          Quaternion.FromToRotation(
+              transform.up,
+              (BarrelCenter.WithX(part.localPosition.x) - part.localPosition).normalized
+          );
+
+        part.localPosition = part.localPosition.WithY(MapHeight(part.localPosition.y)); // Squish the barrel's height
+    }
+
+    void GenerateRise(int i, Transform part) => GenerateOld(i, part);
+
+    void GenerateRiseCeiling(int i, Transform part) => GenerateOld(i, part);
+
+    void GenerateFallCeiling(int i, Transform part) => GenerateOld(i, part);
+
+    void GenerateFall(int i, Transform part) => GenerateOld(i, part);
+
+    // These are excess pieces not part of the initial barrel
+    void GenerateExcess(int i, Transform part)
+    {
+        int connectPieceIndex = i - PiecesPerArc;
+        // Some pieces need to go to generating the end ramps, the rest should go to the pool
+        if (connectPieceIndex < PiecesPerArc)
+            GenerateRamps(i, part, waveParts[connectPieceIndex].transform);
+        else
+            GeneratePool(i, part);
+    }
+
+    #region Excess Piece Usage
+
+    void GenerateRamps(int i, Transform part, Transform connect)
+    {
+        // Attempt to place on barrel ends
+        part.position = connect.position + new Vector3(barrelLength, 0.0f, 0.0f);
+        part.rotation = connect.rotation;
+
+        Vector3 rotPos = part.position + (-part.right * (barrelLength * 0.5f)); //barrelCenter.WithY(MapHeight) + new Vector3(barrelLength, 0.0f, 0.0f);
+        Vector3 rotAxis = part.forward;
+
+        part.RotateAround(rotPos, rotAxis, -15.0f);
+    }
+
+    void GeneratePool(int i, Transform part)
+    {
+        part.transform.position = unusedPartLocation.transform.position;
+    }
+
+    #endregion
+
+    #endregion
 
     // Maps altitude to something lower, allowing for a 'squashed' barrel
     float MapHeight(float h) => h / 2.0f;
@@ -277,4 +317,26 @@ public class Wave : MonoBehaviour, IMoverController
         ShapeModule sh = foamParticles.shape;
         sh.scale = new Vector3(barrelLength, 1.0f, 1.0f);
     }
+
+    BarrelQuadrant Quadrant(int i)
+    {
+        int y = PieceY(i);
+        if (y < 0) return BarrelQuadrant.Err; // A negative index?
+        if (y <= PiecesPerArc / 4) return BarrelQuadrant.Rise;
+        if (y <= PiecesPerArc / 2) return BarrelQuadrant.RiseCeil;
+        if (y <= 3 * (PiecesPerArc / 4)) return BarrelQuadrant.FallCeil;
+        if (y <= PiecesPerArc) return BarrelQuadrant.Fall;
+        return BarrelQuadrant.Excess; // Evaluated to none of the above
+    }
+}
+
+public enum BarrelQuadrant
+{
+    Rise, // This quarter of the barrel is the part the player should be surfing on
+    RiseCeil, // This is the barrel ceiling, on the rising end
+    FallCeil, // This is the barrel ceiling, on the falling end
+    Fall, // This is the last part of the barrel, and should be falling vertically
+
+    Err, // This value should never show up in the rest of the program
+    Excess, // This piece is an excess piece
 }
