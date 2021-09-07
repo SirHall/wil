@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO: Test and implement into the game
+
+// This class is unfinished and untested, however this class is supopsed to
+// manage recording the player state repeatedly every few frames then replay
+// the player's movements back to them highlighting their errors and should
+// give helpful input regarding how they can improve.
+
 public class InstantReplay : MonoBehaviour
 {
 
