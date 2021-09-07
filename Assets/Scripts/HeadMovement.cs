@@ -37,14 +37,6 @@ public class HeadMovement : MonoBehaviour
     [Tooltip("Check if the player has been scored on current state")]
     private bool isScored;
 
-    [SerializeField]
-    [Tooltip("Total number of times the player has entered the warning state")]
-    private int totalWarnings;
-
-    [SerializeField]
-    [Tooltip("Time in seconds the player has remained in warning state")]
-    private float timeInWarning;
-
     #region Bookkeeping
 
     /// <summary>
@@ -86,12 +78,10 @@ public class HeadMovement : MonoBehaviour
         CallGlobalEvents();
 
         // Check if head's moved to far, if so then trigger the GameLost event
-
         MovementState moveState = HeadMovement.HeadTiltToState(headPosRel.WithY(mainCamera.transform.position.y));
         if (moveState == MovementState.Fallen)
             using (var e = GameLost.Get())
                 e.cause = "Leaned head too far";
-
     }
 
     /// <summary>
@@ -107,12 +97,6 @@ public class HeadMovement : MonoBehaviour
     {
         using (var e = BoardControlEvent.Get())
             e.input.dir = HeadPosToBoardInput(headPosRel);
-
-        using (var e = ScoreControlEvent.Get())
-        {
-            e.warningAmt = totalWarnings;
-            e.warningTime = timeInWarning;
-        }
 
         using (var e = VisualControlEvent.Get())
         {
@@ -235,10 +219,10 @@ public class HeadMovement : MonoBehaviour
                 // Check if warning state has already been scored
                 if (!isScored)
                 {
-                    totalWarnings += 1;
+                    WaveScore.WarningAmt += 1;
                     isScored = true;
                 }
-                timeInWarning += Time.deltaTime;
+                WaveScore.WarningTime += Time.deltaTime;
                 break;
         }
     }
