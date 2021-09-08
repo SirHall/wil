@@ -204,6 +204,8 @@ public class Wave : MonoBehaviour, IMoverController
                     case BarrelQuadrant.RiseCeil: GenerateRiseCeiling(i, waveParts[i].transform); break;
                     case BarrelQuadrant.FallCeil: GenerateFallCeiling(i, waveParts[i].transform); break;
                     case BarrelQuadrant.Fall: GenerateFall(i, waveParts[i].transform); break;
+                    case BarrelQuadrant.RampRight: GenerateRamps(i, waveParts[i].transform, true); break;
+                    case BarrelQuadrant.RampLeft: GenerateRamps(i, waveParts[i].transform, false); break;
                     case BarrelQuadrant.Excess: GenerateExcess(i, waveParts[i].transform); break;
                     default: Debug.LogError($"Piece index {i} did not fall into any quadrants"); break;
                 }
@@ -253,30 +255,25 @@ public class Wave : MonoBehaviour, IMoverController
 
     void GenerateFall(int i, Transform part) => GenerateOld(i, part);
 
-    // These are excess pieces not part of the initial barrel
-    void GenerateExcess(int i, Transform part)
+    void GenerateRamps(int i, Transform part, bool right = true)
     {
-        int connectPieceIndex = i - PiecesPerArc;
-        // Some pieces need to go to generating the end ramps, the rest should go to the pool
-        if (connectPieceIndex < PiecesPerArc)
-            GenerateRamps(i, part, waveParts[connectPieceIndex].transform);
-        else
-            GeneratePool(i, part);
-    }
+        Transform connect = waveParts[i - PiecesPerArc - (right ? 0 : PiecesPerArc / 4)].transform;
+        float dir = right ? 1.0f : -1.0f;
 
-    #region Excess Piece Usage
-
-    void GenerateRamps(int i, Transform part, Transform connect)
-    {
         // Attempt to place on barrel ends
-        part.position = connect.position + new Vector3(barrelLength, 0.0f, 0.0f);
+        part.position = connect.position + new Vector3(dir * barrelLength, 0.0f, 0.0f);
         part.rotation = connect.rotation;
 
-        Vector3 rotPos = part.position + (-part.right * (barrelLength * 0.5f)); //barrelCenter.WithY(MapHeight) + new Vector3(barrelLength, 0.0f, 0.0f);
+        Vector3 rotPos = part.position + (dir * part.right * (barrelLength * 0.5f)); //barrelCenter.WithY(MapHeight) + new Vector3(barrelLength, 0.0f, 0.0f);
         Vector3 rotAxis = part.forward;
 
         part.RotateAround(rotPos, rotAxis, -15.0f);
     }
+
+    // These are excess pieces not part of the initial barrel
+    void GenerateExcess(int i, Transform part) => GeneratePool(i, part);
+
+    #region Excess Piece Usage
 
     void GeneratePool(int i, Transform part)
     {
@@ -326,6 +323,8 @@ public class Wave : MonoBehaviour, IMoverController
         if (y <= PiecesPerArc / 2) return BarrelQuadrant.RiseCeil;
         if (y <= 3 * (PiecesPerArc / 4)) return BarrelQuadrant.FallCeil;
         if (y <= PiecesPerArc) return BarrelQuadrant.Fall;
+        if (y <= PiecesPerArc + (PiecesPerArc / 4)) return BarrelQuadrant.RampRight;
+        if (y <= PiecesPerArc + (PiecesPerArc / 2)) return BarrelQuadrant.RampLeft;
         return BarrelQuadrant.Excess; // Evaluated to none of the above
     }
 }
@@ -336,6 +335,8 @@ public enum BarrelQuadrant
     RiseCeil, // This is the barrel ceiling, on the rising end
     FallCeil, // This is the barrel ceiling, on the falling end
     Fall, // This is the last part of the barrel, and should be falling vertically
+    RampRight, // This piece is a right-side ramp piece
+    RampLeft, // This piece is a left-side ramp piece
 
     Err, // This value should never show up in the rest of the program
     Excess, // This piece is an excess piece
