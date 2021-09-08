@@ -13,6 +13,7 @@ public class SoundManager : MonoBehaviour{
     [SerializeField] private AudioClip Inwave;
     [SerializeField] private AudioClip Woah;
     [SerializeField] private AudioClip Grab;
+    [SerializeField] private AudioClip BarrelTouch;
 
     [SerializeField]
     private SoundLevelMode currentSoundLevelState;
@@ -33,6 +34,7 @@ public class SoundManager : MonoBehaviour{
     [SerializeField] AudioSource leanWarningSource;
     
     private AudioSource grabSource;
+    private AudioSource barrelTouchSource;
 
     private Vector3 headPos = new Vector3();
 
@@ -45,11 +47,13 @@ public class SoundManager : MonoBehaviour{
     void OnEnable() {
         SoundControlEvent.RegisterListener(SoundEvent);
         GripInteraction.RegisterListener(GrabSound);
+        WaveInteraction.RegisterListener(BarrelTouchSound);
     }
 
     void OnDisable() {
         SoundControlEvent.UnregisterListener(SoundEvent);
-        GripInteraction.RegisterListener(GrabSound);
+        GripInteraction.UnregisterListener(GrabSound);
+        WaveInteraction.UnregisterListener(BarrelTouchSound);
     }
 
     // A controller has announced new data
@@ -80,6 +84,7 @@ public class SoundManager : MonoBehaviour{
         backgroundsource2 = gameObject.AddComponent<AudioSource>();
         leanWarningSource = gameObject.AddComponent<AudioSource>();
         grabSource = gameObject.AddComponent<AudioSource>();
+        barrelTouchSource = gameObject.AddComponent<AudioSource>();
 
         boardcontroller = GameObject.FindObjectOfType<BoardController>();
     }
@@ -124,6 +129,21 @@ public class SoundManager : MonoBehaviour{
         LeanWarningSound();
         FallenSound();
     }
+
+    private void BarrelTouchSound(WaveInteraction e)
+    {
+        if(e.isTouching && !barrelTouchSource.isPlaying)
+        { 
+            barrelTouchSource.clip = BarrelTouch;
+            barrelTouchSource.loop = true;
+            barrelTouchSource.Play();
+        }
+        else if (!e.isTouching && barrelTouchSource.isPlaying)
+        {
+            barrelTouchSource.Stop();
+        }
+    }
+
     /// <summary>
     /// Handles the Lean warning sound which plays when the user is too far off the board
     /// </summary>

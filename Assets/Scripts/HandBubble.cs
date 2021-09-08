@@ -14,6 +14,8 @@ public class HandBubble : MonoBehaviour
 
     void OnTriggerStay(Collider c)
     {
+        if (c.GetComponent<InteractionType>() == null) return;
+
         if (c.GetComponent<InteractionType>().interactable == Interactables.Water)
         {
             if (!particle.gameObject.activeInHierarchy)
@@ -23,6 +25,8 @@ public class HandBubble : MonoBehaviour
     }
     void OnTriggerExit(Collider c)
     {
+        if (c.GetComponent<InteractionType>() == null) return;
+
         if (c.GetComponent<InteractionType>().interactable == Interactables.Water)
             particle.gameObject.SetActive(false);
     }

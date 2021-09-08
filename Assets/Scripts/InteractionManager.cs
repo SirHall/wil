@@ -29,28 +29,25 @@ public class InteractionManager : MonoBehaviour
 
     void OnTriggerEnter(Collider collision) 
     {
+        if (collision.GetComponent<InteractionType>() == null) return;
 
-        if(collision.gameObject.layer == (int)LayerId.Interactable || collision.GetComponent<InteractionType>() != null) 
-        {
-            if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.left)
-                leftInteractableType = collision.GetComponent<InteractionType>().interactable;
+        if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.left)
+            leftInteractableType = collision.GetComponent<InteractionType>().interactable;
 
-            if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.right)
-                rightInteractableType = collision.GetComponent<InteractionType>().interactable;
-        }
+        if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.right)
+            rightInteractableType = collision.GetComponent<InteractionType>().interactable;
+        
     }
 
-    void OnTriggerExit(Collider collision) {
-        if (collision.gameObject.layer == (int)LayerId.Interactable) 
-        {
-            if (collision.GetComponent<InteractionType>() != null)
-            {
-                if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.left)
-                    leftInteractableType = Interactables.None;
+    void OnTriggerExit(Collider collision) 
+    {
+        if (collision.GetComponent<InteractionType>() == null) return;
 
-                if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.right)
-                    rightInteractableType = Interactables.None;
-            }
-        }
+        if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.left)
+            leftInteractableType = Interactables.None;
+
+        if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.right)
+            rightInteractableType = Interactables.None;
+        
     }
 }

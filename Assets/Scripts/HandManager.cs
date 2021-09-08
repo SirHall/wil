@@ -107,6 +107,7 @@ public class HandManager : MonoBehaviour
             visibleHandModel.SetActive(true);
         
         HandAnimation();
+        WaterTouching();
         SurfboardGripping();
         CallGlobalEvents();
     }
@@ -212,6 +213,16 @@ public class HandManager : MonoBehaviour
             using (var e = BoardControlEvent.Get())
                 e.input.dir = HandPosToBoardInput(handPosRel);
         }
+    }
+
+    private void WaterTouching()
+    {
+        bool isTouching = false;
+        if (handInteraction == Interactables.Water)
+            isTouching = true;
+
+        using (var e = WaveInteraction.Get()) 
+            e.isTouching = isTouching;
     }
 
     /// <summary>
