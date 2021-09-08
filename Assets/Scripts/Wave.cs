@@ -199,6 +199,8 @@ public class Wave : MonoBehaviour, IMoverController
             for (int i = 0; i < waveParts.Count; i++)
             {
                 // To understand the quadrant system used please refer to 'Assets/Textures/documentation/barrel_quads.png'
+                // You might be wondering, why call them quadrants if there are more than four?
+                // Well you see, at first there *were* only four quadrants
                 switch (Quadrant(i))
                 {
                     case BarrelQuadrant.Rise: GenerateRise(i, waveParts[i].transform); break;
@@ -254,16 +256,32 @@ public class Wave : MonoBehaviour, IMoverController
 
     void GenerateFallCeiling(int i, Transform part) => GenerateOld(i, part);
 
-    void GenerateFall(int i, Transform part) => GenerateOld(i, part);
-    // {
-    //     part.localPosition = new Vector3(BarrelLength, Radius - ((i - (3 * (PiecesPerArc / 4))) * wavePartWidth), Radius);
-    //     part.localPosition = part.localPosition.WithY(MapHeight(part.localPosition.y)); // Squish the barrel's height
+    void GenerateFall(int i, Transform part) // => GenerateOld(i, part);
+    {
+        int x = PieceX(i); // This is mostly useless now
+        int y = PieceY(i);
+        Vector3 localPos =
+              (BarrelCenter + -transform.forward * Radius) // Place forward
+              .RotateAround(
+                  BarrelCenter,
+                  Quaternion.AngleAxis(
+                      (waveStartAngle.ToRad() + (((y == PiecesPerArc) ? AnglePerPart : FullAnglePerPart) * y)).ToDeg(),
+                      transform.right
+                  )
+              ) +
+              (transform.right * ((wavePartLength * x) + (wavePieceZOffset * y) + (part.transform.localScale.x * 0.5f)));// Move right
 
-    //     part.rotation = Quaternion.FromToRotation(Vector3.up, Vector3.back);
-    // }
+        localPos.z = Radius; // Clip this to the side so as to form a vertical wall
+
+        part.localPosition = localPos.WithY(MapHeight); // Squish the barrel's height
+
+        part.rotation = Quaternion.FromToRotation(Vector3.up, Vector3.back);
+    }
 
     void GenerateRamps(int i, Transform part, bool right = true)
     {
+        // GeneratePool(i, part); return;
+
         Transform connect = waveParts[i - PiecesPerArc - (right ? 0 : PiecesPerArc / 4)].transform;
         float dir = right ? 1.0f : -1.0f;
 
@@ -325,14 +343,16 @@ public class Wave : MonoBehaviour, IMoverController
     BarrelQuadrant Quadrant(int i)
     {
         int y = PieceY(i);
+        if (y > PiecesPerArc)
+            return BarrelQuadrant.Excess; // Evaluated to none of the above
         if (y < 0) return BarrelQuadrant.Err; // A negative index?
-        if (y <= PiecesPerArc / 4) return BarrelQuadrant.Rise;
-        if (y <= PiecesPerArc / 2) return BarrelQuadrant.RiseCeil;
-        if (y <= 3 * (PiecesPerArc / 4)) return BarrelQuadrant.FallCeil;
-        if (y <= PiecesPerArc) return BarrelQuadrant.Fall;
-        if (y <= PiecesPerArc + (PiecesPerArc / 4)) return BarrelQuadrant.RampRight;
-        if (y <= PiecesPerArc + (PiecesPerArc / 2)) return BarrelQuadrant.RampLeft;
-        return BarrelQuadrant.Excess; // Evaluated to none of the above
+        if (y <= PiecesPerCircle / 4) return BarrelQuadrant.Rise;
+        if (y <= PiecesPerCircle / 2) return BarrelQuadrant.RiseCeil;
+        if (y <= 3 * (PiecesPerCircle / 4)) return BarrelQuadrant.FallCeil;
+        if (y <= PiecesPerCircle) return BarrelQuadrant.Fall;
+        if (y <= PiecesPerCircle + (PiecesPerCircle / 4)) return BarrelQuadrant.RampRight;
+        if (y <= PiecesPerCircle + (PiecesPerCircle / 2)) return BarrelQuadrant.RampLeft;
+        return BarrelQuadrant.Err;
     }
 }
 
