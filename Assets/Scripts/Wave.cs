@@ -133,6 +133,7 @@ public class Wave : MonoBehaviour, IMoverController
         int piecesPerLength = Mathf.FloorToInt(barrelLength / wavePartLength);
         float circleCircumference = barrelRadius * Utils.Tau;
         wavePartCount = Mathf.CeilToInt(circleCircumference / wavePartWidth) * piecesPerLength;
+        wavePartCount += wavePartCount / 2;
 
         for (int i = waveParts.Count; i < wavePartCount; i++)
         {
@@ -254,6 +255,12 @@ public class Wave : MonoBehaviour, IMoverController
     void GenerateFallCeiling(int i, Transform part) => GenerateOld(i, part);
 
     void GenerateFall(int i, Transform part) => GenerateOld(i, part);
+    // {
+    //     part.localPosition = new Vector3(BarrelLength, Radius - ((i - (3 * (PiecesPerArc / 4))) * wavePartWidth), Radius);
+    //     part.localPosition = part.localPosition.WithY(MapHeight(part.localPosition.y)); // Squish the barrel's height
+
+    //     part.rotation = Quaternion.FromToRotation(Vector3.up, Vector3.back);
+    // }
 
     void GenerateRamps(int i, Transform part, bool right = true)
     {
@@ -261,13 +268,13 @@ public class Wave : MonoBehaviour, IMoverController
         float dir = right ? 1.0f : -1.0f;
 
         // Attempt to place on barrel ends
-        part.position = connect.position + new Vector3(dir * barrelLength, 0.0f, 0.0f);
+        part.position = connect.position + new Vector3(dir * -barrelLength, 0.0f, 0.0f);
         part.rotation = connect.rotation;
 
         Vector3 rotPos = part.position + (dir * part.right * (barrelLength * 0.5f)); //barrelCenter.WithY(MapHeight) + new Vector3(barrelLength, 0.0f, 0.0f);
-        Vector3 rotAxis = part.forward;
+        Vector3 rotAxis = part.forward * dir;
 
-        part.RotateAround(rotPos, rotAxis, -15.0f);
+        part.RotateAround(rotPos, rotAxis, 5.0f);
     }
 
     // These are excess pieces not part of the initial barrel
