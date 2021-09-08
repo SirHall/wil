@@ -469,7 +469,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 14000
   field of view: 60
   orthographic: 0
@@ -802,9 +802,6 @@ MonoBehaviour:
   movementState: 0
   positionState: 0
   isScored: 0
-  totalWarnings: 0
-  timeInWarning: 0
-  totalWarnings2: 0
   headPosRel: {x: 0, y: 0, z: 0}
 --- !u!114 &3714751076576851054
 MonoBehaviour:
@@ -818,11 +815,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf3a6774f1b2ca94fa54183722d9a41d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement: {fileID: 5897028898131737942}
-  headColliderRadius: 0.7
+  headColliderRadius: 0.8
   headState: 0
   isScored: 0
-  timeInWarning: 0
 --- !u!114 &5555672468506556101
 MonoBehaviour:
   m_ObjectHideFlags: 0

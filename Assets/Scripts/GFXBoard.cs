@@ -38,6 +38,9 @@ public class GFXBoard : MonoBehaviour
     [SerializeField] float posInterp = 3.0f;
     [SerializeField] float rotInterp = 3.0f;
 
+    [Tooltip("Toggle if the surfboard is bobbing on the water or stationary")]
+    public bool isBobbing;
+
     void FixedUpdate()
     {
         // Make the board track the player character
@@ -62,7 +65,10 @@ public class GFXBoard : MonoBehaviour
         Vector3 normal = useMotor ? motorNormal : bobNormal;
         Vector3 pos = useMotor ? motorPos : bobPos;
 
-        transform.position = Vector3.Lerp(transform.position, pos, 1.0f);
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(board.Motor.CharacterForward, normal), 1.0f);
+        if (isBobbing)
+        {
+            transform.position = Vector3.Lerp(transform.position, pos, 1.0f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(board.Motor.CharacterForward, normal), 1.0f);
+        }
     }
 }

@@ -128,6 +128,7 @@ MonoBehaviour:
   waterBobRearLeftPoint: {fileID: 4290934393870539418}
   posInterp: 3
   rotInterp: 3
+  isBobbing: 1
 --- !u!1 &4290934393429659464
 GameObject:
   m_ObjectHideFlags: 0

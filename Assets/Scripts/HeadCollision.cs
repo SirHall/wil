@@ -39,6 +39,7 @@ public class HeadCollision : MonoBehaviour
         }
 
         shortestDistance = ClosestDistance(collidedObjects, mainCamera, headColliderRadius);
+
         HeadToWaterDistance(shortestDistance);
         HeadCollisionState(shortestDistance);
         HeadScoring();
@@ -107,7 +108,7 @@ public class HeadCollision : MonoBehaviour
     /// <param name="distance"></param>
     void HeadCollisionState(float distance)
     {
-        if (distance <= 0.1f) // Fallen
+        if (distance <= 0.15f) // Fallen
         {
             using (var e = GameLost.Get())
                 e.cause = "Head collided with barrel";

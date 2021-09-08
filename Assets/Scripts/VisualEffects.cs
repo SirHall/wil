@@ -60,7 +60,7 @@ public class VisualEffects : MonoBehaviour
         if (visualEffects.GetComponentInChildren<Canvas>().worldCamera != Camera.main)
         {
             visualEffects.GetComponentInChildren<Canvas>().worldCamera = Camera.main;
-            visualEffects.GetComponentInChildren<Canvas>().planeDistance = 0.35f;
+            visualEffects.GetComponentInChildren<Canvas>().planeDistance = 0.15f;
         }
 
         LeaningEffect();

@@ -1,23 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityConstantsGenerator;
 using UnityEngine;
 
 public class HandBubble : MonoBehaviour
 {
     [SerializeField] ParticleSystem particle;
 
-    int activate = 0;
-
-    void Update()
+    void Start()
     {
-        particle.gameObject.SetActive(activate > 0);
-        if (activate > 0)
-            activate--;
+        particle.gameObject.SetActive(false);
     }
 
     void OnTriggerStay(Collider c)
     {
-        if (c.name == "WavePart" || c.name == "Water")
-            activate = 3;
+        if (c.GetComponent<InteractionType>().interactable == Interactables.Water)
+        {
+            if (!particle.gameObject.activeInHierarchy)
+                particle.gameObject.SetActive(true);
+        }
+            
     }
+    void OnTriggerExit(Collider c)
+    {
+        if (c.GetComponent<InteractionType>().interactable == Interactables.Water)
+            particle.gameObject.SetActive(false);
+    }
+
 }

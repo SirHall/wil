@@ -34,6 +34,9 @@ public class HandManager : MonoBehaviour
     [Tooltip("Get which interactable either the left or right hand is interacting with")]
     Interactables leftInteraction, rightInteraction = new Interactables();
 
+    [Tooltip("")]
+    Interactables handInteraction = new Interactables();
+
     [Tooltip("The max unit values the player can move in specified direction")]
     public float maxUp, maxDown;
 
@@ -80,6 +83,8 @@ public class HandManager : MonoBehaviour
     void Start()
     {
         InitialiseHands();
+
+        
     }
 
     // Update is called once per frame
@@ -94,12 +99,15 @@ public class HandManager : MonoBehaviour
 
         // Controller hand has been found
 
+        // Set current Hand
+        handInteraction = handType == HandType.left ? leftInteraction : rightInteraction;
+
         // Toggle Active
         if (!visibleHandModel.activeSelf) 
             visibleHandModel.SetActive(true);
         
         HandAnimation();
-        InteractableGripping();
+        SurfboardGripping();
         CallGlobalEvents();
     }
 
@@ -163,26 +171,32 @@ public class HandManager : MonoBehaviour
         else
             handAnimator.SetFloat("Grip", 0);
     }
+    /// <summary>
+    /// Returns a bool value depending of if the player is gripping which interacting with a given type. 
+    /// </summary>
+    /// <param name="device"></param>
+    /// <param name="leftHand"></param>
+    /// <param name="rightHand"></param>
+    /// <param name="type"></param>
+    /// <returns>Bool value depending of if player is gripping while either hand is interacting with type</returns>
+    private bool IsGripping(InputDevice device, Interactables currentHand, Interactables type)
+    {
+        if (device.TryGetFeatureValue(CommonUsages.grip, out float gripvalue))
+            if (gripvalue == 1) 
+                if(currentHand == type)
+                    return true;
+        
+        return false;
+    }
 
     /// <summary>
-    /// Conditions to check if player is gripping while in contact with an interactable object. 
+    /// Conditions to check if player is gripping while in contact with the surfboard gripping areas. 
     /// </summary>
-    private void InteractableGripping() 
+    private void SurfboardGripping() 
     {
         bool previousInteractionState = isGripInteracting;
+        isGripInteracting = IsGripping(devices[0], handInteraction, Interactables.Surfboard);
 
-        if (devices[0].TryGetFeatureValue(CommonUsages.grip, out float gripvalue))
-        {
-            if (gripvalue == 1)
-            {
-                // Is either hand interacting / gripping with the surfboard
-                if (leftInteraction == Interactables.Surfboard || rightInteraction == Interactables.Surfboard)
-                    isGripInteracting = true;
-            }
-            else
-                isGripInteracting = false;
-        }
-        
         if (isGripInteracting)
         {
             // Run once when player starts interacting

@@ -6,8 +6,8 @@ public class SwellMovement : MonoBehaviour
 {
     public float speed = 1.0F;
 
-    private Vector3 startPos;
-    private Vector3 endPos;
+    public Vector3 startPos;
+    public Vector3 endPos;
 
     // Time when the movement started.
     private float startTime;
@@ -18,9 +18,6 @@ public class SwellMovement : MonoBehaviour
     void Start()
     {
         startTime = Time.time;
-
-        startPos = new Vector3(0, -3.5f, -90f);
-        endPos = new Vector3(0, 0f, -6.59f);
 
         // Calculate the journey length.
         journeyLength = Vector3.Distance(startPos, endPos);

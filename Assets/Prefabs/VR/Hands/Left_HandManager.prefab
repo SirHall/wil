@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3379499606036186405}
   - component: {fileID: 5171044613718438448}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Left_HandManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handPrefab: {fileID: 109434732395284509, guid: 65847589f926b734d9eaed6e25f0046b, type: 3}
   visibleHandModel: {fileID: 0}
+  handType: 0
   deviceCharacteristics: 260
   maxUp: 2
   maxDown: 2
