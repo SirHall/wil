@@ -52,9 +52,13 @@ public class WaveScore : MonoBehaviour
     [Tooltip("Gameobject which contains the position for the player to teleport too when fallen")]
     private GameObject failureLocation;
 
-    int warningAmt;
-    float warningTime;
     Vector3 headTilt;
+
+    [SerializeField] private static int warningAmt;
+    public static int WarningAmt { get => warningAmt; set => warningAmt = value; }
+
+    [SerializeField] private static float warningTime;
+    public static float WarningTime { get => warningTime; set => warningTime = value; }
 
     public static GameState State { get; private set; }
 
@@ -78,7 +82,6 @@ public class WaveScore : MonoBehaviour
     {
         WaveSettingEvent.RegisterListener(OnWaveSettingsEvent);
         WaveEndEvent.RegisterListener(OnWaveEndEvent);
-        ScoreControlEvent.RegisterListener(OnScoreControlEvent);
         VisualControlEvent.RegisterListener(OnVisualControlEvent);
         GameWon.RegisterListener(OnGameWon);
         GameLost.RegisterListener(OnGameLost);
@@ -89,7 +92,6 @@ public class WaveScore : MonoBehaviour
     {
         WaveSettingEvent.UnregisterListener(OnWaveSettingsEvent);
         WaveEndEvent.UnregisterListener(OnWaveEndEvent);
-        ScoreControlEvent.UnregisterListener(OnScoreControlEvent);
         VisualControlEvent.UnregisterListener(OnVisualControlEvent);
         GameWon.UnregisterListener(OnGameWon);
         GameLost.UnregisterListener(OnGameLost);
@@ -152,13 +154,6 @@ public class WaveScore : MonoBehaviour
         loseObject.transform.RotateAround(winCollider.transform.position, Vector3.up, isRight ? 0.0f : 180.0f);
         startObject.transform.RotateAround(board.transform.position.WithY(n => n + 1.0f), Vector3.up, isRight ? 0.0f : 180.0f);
     }
-
-    void OnScoreControlEvent(ScoreControlEvent e)
-    {
-        warningAmt = e.warningAmt;
-        warningTime = e.warningTime;
-    }
-
     void OnVisualControlEvent(VisualControlEvent e) => headTilt = e.dir;
 
     void OnWaveEndEvent(WaveEndEvent e)

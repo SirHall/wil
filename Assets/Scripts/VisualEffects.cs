@@ -16,6 +16,10 @@ public class VisualEffects : MonoBehaviour
     private GameObject water;
 
     [SerializeField]
+    [Tooltip("The gameobject for visual effect images to be displayed over screen")]
+    private GameObject visualEffects;
+
+    [SerializeField]
     [Tooltip("Water Screen Effect Image")]
     private Image waterScreenEffect;
 
@@ -53,17 +57,27 @@ public class VisualEffects : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (visualEffects.GetComponentInChildren<Canvas>().worldCamera != Camera.main)
+        {
+            visualEffects.GetComponentInChildren<Canvas>().worldCamera = Camera.main;
+            visualEffects.GetComponentInChildren<Canvas>().planeDistance = 0.35f;
+        }
+
         LeaningEffect();
         UnderwaterEffect();
     }
-
+    /// <summary>
+    /// Water screen splash effect when players head gets too close to the barrel wave
+    /// </summary>
+    /// <param name="e"></param>
     private void HeadWaterEffect(WaterScreenEvent e)
     {
-        print("ALPHA: " + e.alphaValue);
         waterScreenEffect.gameObject.SetActive(e.alphaValue > 0);
 
+        float clampedValue = Mathf.Clamp(e.alphaValue, 0, 0.8f);
+
         Color waterColor = waterScreenEffect.color;
-        waterColor.a = e.alphaValue;
+        waterColor.a = clampedValue;
         waterScreenEffect.color = waterColor;
     }
 
@@ -74,7 +88,7 @@ public class VisualEffects : MonoBehaviour
     {
         if (postProcessingVolume.profile.TryGet<Vignette>(out var vignette))
         {
-            if (!WaveScore.IsPlaying)
+            if (!WaveScore.IsPlaying || WaveScore.IsWarmup)
             {
                 vignette.intensity.value = 0;
                 return;

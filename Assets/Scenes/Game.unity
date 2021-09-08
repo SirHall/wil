@@ -1776,6 +1776,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1258834379}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1264126220 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 166641052578380554, guid: 731f7f729d3b595458fb78a7e178ed1b, type: 3}
+  m_PrefabInstance: {fileID: 5555672468495459279}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1307283554
 GameObject:
   m_ObjectHideFlags: 0
@@ -4057,6 +4062,10 @@ PrefabInstance:
       propertyPath: volume
       value: 
       objectReference: {fileID: 1441122647}
+    - target: {fileID: 7501596812986962733, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
+      propertyPath: visualEffects
+      value: 
+      objectReference: {fileID: 1264126220}
     - target: {fileID: 7501596812986962733, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
       propertyPath: waterScreenEffect
       value: 
