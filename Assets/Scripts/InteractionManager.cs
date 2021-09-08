@@ -27,7 +27,7 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider collision) 
+    void OnTriggerStay(Collider collision) 
     {
         if (collision.GetComponent<InteractionType>() == null) return;
 
