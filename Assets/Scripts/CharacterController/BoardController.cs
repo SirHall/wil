@@ -142,8 +142,9 @@ public class BoardController : MonoBehaviour, ICharacterController
             Motor.BaseVelocity += (introEndPos.position - introStartPos.position) / introTime;
 
             inputAccepted = true;
-
         }
+
+        InstantReplay.StartRecord();
     }
 
     #region ICharacterController

@@ -27,4 +27,6 @@ public enum VRButtons
     Retry, // Re-attempt the current barrel
 
     SurfDir, // Toggle the surfing direction
+
+    Replay, // Replay our last surfing run on the corresponding screen
 }

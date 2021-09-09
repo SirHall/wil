@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 // TODO: Test and implement into the game
 
@@ -11,6 +12,7 @@ using UnityEngine;
 
 public class InstantReplay : MonoBehaviour
 {
+    public static InstantReplay Instance { get; private set; }
 
     [Tooltip("How many times per second a snapshot will be taken, this will cap out at the total physics ticks per second")]
     [SerializeField]
@@ -19,12 +21,14 @@ public class InstantReplay : MonoBehaviour
     int SnapshotsPerSecond => Mathf.Clamp(snapshotsPerSecond, 1, (int)(1.0f / Time.fixedDeltaTime));
 
     // TODO: This should probably account for some currently unexplored edge cases
-    bool ShouldRecord => BoardController.Instance.InputAccepted;
+    // bool ShouldRecord => BoardController.Instance.InputAccepted;
 
     // Set these to anything
     // TODO: Clean this up to be a little more 'proper'
-    Transform fakeHead;
-    Transform fakeBoard;
+    [SerializeField] Transform fakeHead;
+    [SerializeField] Transform fakeBoard;
+
+    [SerializeField] RenderTexture replayTex;
 
     #region Bookkeeping
 
@@ -38,19 +42,49 @@ public class InstantReplay : MonoBehaviour
 
     Vector2 headPos;
 
+    bool recording = false;
+
     #endregion
 
-    void OnEnable() => VisualControlEvent.RegisterListener(OnVisualControlEvent);
-    void OnDisable() => VisualControlEvent.UnregisterListener(OnVisualControlEvent);
+    void OnEnable()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        VisualControlEvent.RegisterListener(OnVisualControlEvent);
+        WaveEndEvent.RegisterListener(OnWaveEndEvent);
+        GameLost.RegisterListener(OnGameLost);
+        VRButtonEvent.RegisterListener(OnVRButtonEvent);
+    }
+
+    void OnDisable()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+            // These will only be registered to, if we were the singleton instance
+            VisualControlEvent.UnregisterListener(OnVisualControlEvent);
+            WaveEndEvent.UnregisterListener(OnWaveEndEvent);
+            GameLost.UnregisterListener(OnGameLost);
+            VRButtonEvent.UnregisterListener(OnVRButtonEvent);
+        }
+    }
 
     void Start()
     {
         // The reason I'm caching this value is that it is *paramount* that it not be modified in the inspector during runtime
         snapDelta = 1.0f / SnapshotsPerSecond;
+        fakeBoard.gameObject.SetActive(false);
+        fakeHead.gameObject.SetActive(false);
     }
 
     void FixedUpdate()
     {
+        if (!recording)
+            return;
 
         snapClock += Time.fixedDeltaTime;
 
@@ -62,6 +96,11 @@ public class InstantReplay : MonoBehaviour
         }
     }
 
+    public static void StartRecord() => Instance.recording = true;
+    public static void StopRecord() => Instance.recording = false;
+    [Button]
+    public static void StartReplay() => Instance.StartCoroutine(Instance.Replay());
+
     InstantReplayDat Snapshot() => new InstantReplayDat
     {
         time = Time.timeSinceLevelLoad,
@@ -72,9 +111,17 @@ public class InstantReplay : MonoBehaviour
 
     void OnVisualControlEvent(VisualControlEvent e) => headPos = e.dir;
 
+    void OnWaveEndEvent(WaveEndEvent e) => InstantReplay.StopRecord();
+    void OnGameLost(GameLost e) => InstantReplay.StopRecord();
+
+    void OnVRButtonEvent(VRButtonEvent e) => InstantReplay.StartReplay();
+
     // I will not do this using recursive coroutines, as much as I am tempted from the linked list iteration
     IEnumerator Replay()
     {
+        fakeBoard.gameObject.SetActive(true);
+        fakeHead.gameObject.SetActive(true);
+
         float initTime = Time.timeSinceLevelLoad;
         float animInitTime = replay.First.Value.time;
 
@@ -82,6 +129,9 @@ public class InstantReplay : MonoBehaviour
 
         while (current != null)
         {
+            if (current?.Next is null)
+                break;
+
             float time = Time.timeSinceLevelLoad - initTime;
             float animTime = current.Value.time - animInitTime;
 
@@ -95,17 +145,26 @@ public class InstantReplay : MonoBehaviour
             float snapTimeLeft = animTime - time;
 
             // Move head/board to their new position/rotation over time
-            float boardPosVel = (snap.boardPos - fakeBoard.position).magnitude / snapTimeLeft;
-            float boardRotVel = Quaternion.Angle(fakeBoard.rotation, fakeBoard.rotation) / snapTimeLeft;
-            float headPosVel = (snap.headPos - fakeHead.position).magnitude / snapTimeLeft;
+            // float boardPosVel = (snap.boardPos - fakeBoard.position).magnitude / snapTimeLeft;
+            // float boardRotVel = Quaternion.Angle(fakeBoard.rotation, fakeBoard.rotation) / snapTimeLeft;
+            // float headPosVel = (snap.headPos - fakeHead.localPosition).magnitude / snapTimeLeft;
 
-            // Move everything towards their correct position/rotation using the appropriate velocities
-            fakeBoard.position = Vector3.MoveTowards(fakeBoard.position, snap.boardPos, Time.deltaTime * boardPosVel);
-            fakeBoard.rotation = Quaternion.RotateTowards(fakeBoard.rotation, snap.boardRot, Time.deltaTime * boardRotVel);
-            fakeHead.position = Vector3.MoveTowards(fakeHead.position, snap.headPos, Time.deltaTime * headPosVel);
+            // // Move everything towards their correct position/rotation using the appropriate velocities
+            // fakeBoard.position = Vector3.MoveTowards(fakeBoard.position, snap.boardPos, Time.deltaTime * boardPosVel);
+            // fakeBoard.rotation = Quaternion.RotateTowards(fakeBoard.rotation, snap.boardRot, Time.deltaTime * boardRotVel);
+            // fakeHead.localPosition = Vector3.MoveTowards(fakeHead.localPosition, snap.headPos, Time.deltaTime * headPosVel);
+
+            fakeBoard.position = snap.boardPos;
+            fakeBoard.rotation = snap.boardRot;
+            fakeHead.localPosition = snap.headPos;
+
 
             yield return null;
         }
+
+        fakeBoard.gameObject.SetActive(false);
+        fakeHead.gameObject.SetActive(false);
+        replayTex.DiscardContents();
     }
 }
 
