@@ -776,6 +776,8 @@ MonoBehaviour:
   waveForwardAccel: 20
   boardDirDotFallThreshold: 0.5
   maxGroundAngle: 60
+  headForwardSpeedGain: 4
+  headBackwardSpeedLoss: 3
   introEnabled: 1
   introStartPos: {fileID: 0}
   introEndPos: {fileID: 0}

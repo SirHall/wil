@@ -34,6 +34,12 @@ public class BoardController : MonoBehaviour, ICharacterController
     [Tooltip("When the incline below the player goes above this angle, the player will fall off")]
     [SerializeField] [Range(0.0f, 90.0f)] float maxGroundAngle = 60.0f;
 
+    [Tooltip("Speed gain when head is moved fully forward")]
+    [SerializeField] float headForwardSpeedGain = 1.0f;
+    [Tooltip("Speed loss when head is moved fully backward")]
+    [SerializeField] float headBackwardSpeedLoss = 1.0f;
+
+
     [SerializeField] bool introEnabled = true;
     [SerializeField] [ShowIfGroup("introEnabled")] [FoldoutGroup("introEnabled/Intro")] Transform introStartPos;
     [SerializeField] [ShowIfGroup("introEnabled")] [FoldoutGroup("introEnabled/Intro")] Transform introEndPos;
@@ -147,6 +153,8 @@ public class BoardController : MonoBehaviour, ICharacterController
         InstantReplay.StartRecord();
     }
 
+    float ForwardLeanAccel => (input.dir.y >= 0) ? input.dir.y * headForwardSpeedGain : input.dir.y * headBackwardSpeedLoss;
+
     #region ICharacterController
 
     void ICharacterController.AfterCharacterUpdate(float deltaTime) { }
@@ -202,7 +210,7 @@ public class BoardController : MonoBehaviour, ICharacterController
                             Vector3.Lerp(
                                 col.transform.right * ((BarrelSettings.Instance.SurfDir == RightLeft.Right) ? 1.0f : -1.0f),
                                 Motor.CharacterForward,
-                                0.5f) * waveForwardAccel
+                                0.5f) * (waveForwardAccel + ForwardLeanAccel)
                        ) * deltaTime,
                        Vector3.up
                    );
