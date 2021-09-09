@@ -55,9 +55,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9220103043079106698}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.035, z: -0.074}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 9220103043521898652}
   - {fileID: 9220103044505229700}
   m_Father: {fileID: 9220103043202786904}
   m_RootOrder: 1
@@ -120,16 +121,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9220103043521898653}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.51}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.024219614}
+  m_LocalScale: {x: 0.59666306, y: 0.30738175, z: -0.049999986}
   m_Children: []
-  m_Father: {fileID: 9220103044505229700}
+  m_Father: {fileID: 9220103043079106701}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.26699996}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!33 &9220103043521898624
@@ -248,11 +249,10 @@ Transform:
   m_GameObject: {fileID: 9220103044505229701}
   m_LocalRotation: {x: -0, y: 0.000000029802315, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.267, z: -0.049719464}
-  m_LocalScale: {x: 0.74582875, y: 0.3842272, z: -0.049999982}
-  m_Children:
-  - {fileID: 9220103043521898652}
+  m_LocalScale: {x: 0.65870583, y: 0.36440107, z: -0.049999982}
+  m_Children: []
   m_Father: {fileID: 9220103043079106701}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 140, z: 0}
 --- !u!33 &9220103044505229702
 MeshFilter:
@@ -417,7 +417,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1152624865079271472, guid: 4033b05b9403ea24f9c75b49037cd3ae, type: 3}
       propertyPath: depressDist
-      value: 0.04
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 1152624865079271472, guid: 4033b05b9403ea24f9c75b49037cd3ae, type: 3}
       propertyPath: buttonColor.b

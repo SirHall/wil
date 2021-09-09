@@ -107,8 +107,8 @@ public class HandManager : MonoBehaviour
             visibleHandModel.SetActive(true);
         
         HandAnimation();
-        WaterTouching();
         SurfboardGripping();
+        WaterTouching();
         CallGlobalEvents();
     }
 
@@ -180,11 +180,11 @@ public class HandManager : MonoBehaviour
     /// <param name="rightHand"></param>
     /// <param name="type"></param>
     /// <returns>Bool value depending of if player is gripping while either hand is interacting with type</returns>
-    private bool IsGripping(InputDevice device, Interactables currentHand, Interactables type)
+    private bool IsGripping(InputDevice device, Interactables type)
     {
         if (device.TryGetFeatureValue(CommonUsages.grip, out float gripvalue))
             if (gripvalue == 1) 
-                if(currentHand == type)
+                if(leftInteraction == type || rightInteraction == type)
                     return true;
         
         return false;
@@ -196,7 +196,7 @@ public class HandManager : MonoBehaviour
     private void SurfboardGripping() 
     {
         bool previousInteractionState = isGripInteracting;
-        isGripInteracting = IsGripping(devices[0], handInteraction, Interactables.Surfboard);
+        isGripInteracting = IsGripping(devices[0], Interactables.Surfboard);
 
         if (isGripInteracting)
         {
@@ -204,7 +204,7 @@ public class HandManager : MonoBehaviour
             if (previousInteractionState != isGripInteracting)
             {
                 startCoordinate = transform.localPosition;
-
+                //print("1: Run Once");
                 // Trigger GripInteraction event
                 using (var e = GripInteraction.Get()); 
             }
@@ -218,11 +218,16 @@ public class HandManager : MonoBehaviour
     private void WaterTouching()
     {
         bool isTouching = false;
-        if (handInteraction == Interactables.Water)
+        if (IsHandsTouching(Interactables.Water))
             isTouching = true;
 
         using (var e = WaveInteraction.Get()) 
             e.isTouching = isTouching;
+    }
+
+    private bool IsHandsTouching(Interactables type)
+    {
+        return leftInteraction == type || rightInteraction == type;
     }
 
     /// <summary>

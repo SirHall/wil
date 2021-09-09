@@ -6736,7 +6736,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9220103043202786904, guid: 1272fd40e22cb60439f45a3035f375c8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.562
+      value: 0.53
       objectReference: {fileID: 0}
     - target: {fileID: 9220103043202786904, guid: 1272fd40e22cb60439f45a3035f375c8, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6744,7 +6744,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9220103043202786904, guid: 1272fd40e22cb60439f45a3035f375c8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.208
+      value: 0.186
       objectReference: {fileID: 0}
     - target: {fileID: 9220103043202786904, guid: 1272fd40e22cb60439f45a3035f375c8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6777,6 +6777,14 @@ PrefabInstance:
     - target: {fileID: 9220103043202786905, guid: 1272fd40e22cb60439f45a3035f375c8, type: 3}
       propertyPath: m_Name
       value: Replay UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 9220103043202786905, guid: 1272fd40e22cb60439f45a3035f375c8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9220103043611414235, guid: 1272fd40e22cb60439f45a3035f375c8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1272fd40e22cb60439f45a3035f375c8, type: 3}
