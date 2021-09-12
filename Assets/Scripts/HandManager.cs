@@ -41,6 +41,7 @@ public class HandManager : MonoBehaviour
     [Tooltip("Starting local Cooridnate of the player")]
     private Vector3 startCoordinate;
 
+    [SerializeField]
     [Tooltip("The player's hand position relative to the starting hand position")]
     private Vector3 handPosRel = Vector3.zero;
 
@@ -234,31 +235,17 @@ public class HandManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Return positive value that is scaled between 0 and a given max value
-    /// </summary>
-    /// <param name="value">Difference value based off current position - Starting position</param>
-    /// <param name="maxValue">Max difference value for given direction</param>
-    /// <returns>Positive float scaled between 0 and given max value</returns>
-    private float DirectionScale(float value, float maxValue)
-    {
-        // Clamp and scale positive value based off given maxValue
-        return Mathf.Clamp(Mathf.Abs(value), 0, maxValue) / maxValue;
-    }
-
-    /// <summary>
-    /// Manages head position values based on current coordinates from start coordinates
+    /// Scales in percentage hand position values based on the starting coordinate, current coordinate and max height coordinate. 
     /// </summary>
     void CheckHandPosition()
     {
         if (startCoordinate != Vector3.zero)
         {
-            Vector3 diff = transform.localPosition - startCoordinate;
-
             // Assign variable values based on the direction the player is leaning / standing
-            if (diff.y > 0)
-                handPosRel.y = DirectionScale(diff.y, maxUp); // Positive
+            if (transform.localPosition.y > startCoordinate.y)
+                handPosRel.y = Mathf.InverseLerp(startCoordinate.y, startCoordinate.y + maxUp, transform.localPosition.y); // Positive
             else
-                handPosRel.y = -DirectionScale(diff.y, maxDown); // Negative
+                handPosRel.y = -Mathf.InverseLerp(startCoordinate.y, startCoordinate.y + maxDown, transform.localPosition.y); // Negative
         }
     }
 }

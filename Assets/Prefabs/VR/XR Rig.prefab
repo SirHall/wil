@@ -523,8 +523,9 @@ MonoBehaviour:
   handType: 1
   deviceCharacteristics: 516
   maxUp: 1
-  maxDown: 1
+  maxDown: -1
   startCoordinate: {x: 0, y: 0, z: 0}
+  handPosRel: {x: 0, y: 0, z: 0}
 --- !u!1 &5397268574884282563
 GameObject:
   m_ObjectHideFlags: 0
@@ -785,6 +786,7 @@ MonoBehaviour:
   visibleHandModel: {fileID: 0}
   handType: 0
   deviceCharacteristics: 260
-  maxUp: 0.5
-  maxDown: 0.5
+  maxUp: 1
+  maxDown: -1
   startCoordinate: {x: 0, y: 0, z: 0}
+  handPosRel: {x: 0, y: 0, z: 0}
