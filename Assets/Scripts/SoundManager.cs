@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,20 +6,27 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour{
 
     //Sounds
-    [SerializeField] private AudioClip Splash;
-    [SerializeField] private AudioClip Underwater;
-    [SerializeField] private AudioClip Idle;
-    [SerializeField] private AudioClip Background;
-    [SerializeField] private AudioClip Moving;
-    [SerializeField] private AudioClip Inwave;
-    [SerializeField] private AudioClip Woah;
-    [SerializeField] private AudioClip Grab;
-    [SerializeField] private AudioClip BarrelTouch;
+    [Tooltip("Splashing into the ocean")]
+    [SerializeField] [FoldoutGroup("Game Sounds")] private AudioClip Splash;
+    [Tooltip("Underwater ambience")]
+    [SerializeField] [FoldoutGroup("Game Sounds")] private AudioClip Underwater;
+    [Tooltip("Above water ambience")]
+    [SerializeField] [FoldoutGroup("Game Sounds")] private AudioClip Background;
+    [Tooltip("Surfboard moving")]
+    [SerializeField] [FoldoutGroup("Game Sounds")] private AudioClip Moving;
+    [Tooltip("In barrel ambience")]
+    [SerializeField] [FoldoutGroup("Game Sounds")] private AudioClip Inwave;
+    [Tooltip("Falling off warning")]
+    [SerializeField] [FoldoutGroup("Game Sounds")] private AudioClip Woah;
+    [Tooltip("Grabbing the board")]
+    [SerializeField] [FoldoutGroup("Game Sounds")] private AudioClip Grab;
+    [Tooltip("Touching the barrel wave")]
+    [SerializeField] [FoldoutGroup("Game Sounds")] private AudioClip BarrelTouch;
 
-    [SerializeField]
+    [Tooltip("Current audio level state the sounds should be played in")]
     private SoundLevelMode currentSoundLevelState;
 
-    [SerializeField]
+    [Tooltip("Current environment the player is in")]
     private EnvironmentMode currentEnvironmentState;
 
     //Creating an instance for other files control
@@ -28,11 +36,11 @@ public class SoundManager : MonoBehaviour{
 
     //settings
     [Range(10,100)]
-    [SerializeField] public int MovementMaxVolume = 100;
-    [SerializeField] AudioSource backgroundsource1;
-    [SerializeField] AudioSource backgroundsource2;
-    [SerializeField] AudioSource leanWarningSource;
-    
+    public int MovementMaxVolume = 100;
+
+    private AudioSource backgroundsource1;
+    private AudioSource backgroundsource2;
+    private AudioSource leanWarningSource;
     private AudioSource grabSource;
     private AudioSource barrelTouchSource;
 
@@ -198,7 +206,6 @@ public class SoundManager : MonoBehaviour{
             PlaySound(Splash, 0.5f);
             isFallen = true;
         }
-
     }
 
     /// <summary>

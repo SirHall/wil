@@ -12,7 +12,7 @@ public class HandBubble : MonoBehaviour
         particle.gameObject.SetActive(false);
     }
 
-    void OnTriggerStay(Collider c)
+    void OnTriggerEnter(Collider c)
     {
         if (c.GetComponent<InteractionType>() == null) return;
 

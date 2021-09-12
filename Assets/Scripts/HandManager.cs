@@ -34,9 +34,6 @@ public class HandManager : MonoBehaviour
     [Tooltip("Get which interactable either the left or right hand is interacting with")]
     Interactables leftInteraction, rightInteraction = new Interactables();
 
-    [Tooltip("")]
-    Interactables handInteraction = new Interactables();
-
     [Tooltip("The max unit values the player can move in specified direction")]
     public float maxUp, maxDown;
 
@@ -60,7 +57,7 @@ public class HandManager : MonoBehaviour
 
     void OnDisable() {
         LeftInteractablesEvent.UnregisterListener(OnLeftGripControlEvent);
-        RightInteractablesEvent.RegisterListener(OnRightGripControlEvent);
+        RightInteractablesEvent.UnregisterListener(OnRightGripControlEvent);
     }
 
     // A controller has announced new data
@@ -74,17 +71,10 @@ public class HandManager : MonoBehaviour
         rightInteraction = e.rightInteractable;
     }
 
-    private void CallGlobalEvents()
-    {
-        
-    }
-
     // Start is called before the first frame update
     void Start()
     {
         InitialiseHands();
-
-        
     }
 
     // Update is called once per frame
@@ -99,9 +89,6 @@ public class HandManager : MonoBehaviour
 
         // Controller hand has been found
 
-        // Set current Hand
-        handInteraction = handType == HandType.left ? leftInteraction : rightInteraction;
-
         // Toggle Active
         if (!visibleHandModel.activeSelf) 
             visibleHandModel.SetActive(true);
@@ -109,7 +96,6 @@ public class HandManager : MonoBehaviour
         HandAnimation();
         SurfboardGripping();
         WaterTouching();
-        CallGlobalEvents();
     }
 
     /// <summary>
@@ -183,10 +169,13 @@ public class HandManager : MonoBehaviour
     private bool IsGripping(InputDevice device, Interactables type)
     {
         if (device.TryGetFeatureValue(CommonUsages.grip, out float gripvalue))
-            if (gripvalue == 1) 
-                if(leftInteraction == type || rightInteraction == type)
+        {
+            if (gripvalue == 1)
+            {
+                if (leftInteraction == type || rightInteraction == type)
                     return true;
-        
+            }
+        }
         return false;
     }
 
@@ -197,6 +186,7 @@ public class HandManager : MonoBehaviour
     {
         bool previousInteractionState = isGripInteracting;
         isGripInteracting = IsGripping(devices[0], Interactables.Surfboard);
+        Vector3 boardInput;
 
         if (isGripInteracting)
         {
@@ -204,17 +194,25 @@ public class HandManager : MonoBehaviour
             if (previousInteractionState != isGripInteracting)
             {
                 startCoordinate = transform.localPosition;
-                //print("1: Run Once");
+
                 // Trigger GripInteraction event
                 using (var e = GripInteraction.Get()); 
             }
-            
             CheckHandPosition();
-            using (var e = BoardControlEvent.Get())
-                e.input.dir = HandPosToBoardInput(handPosRel);
+            boardInput = HandPosToBoardInput(handPosRel);
         }
+        else
+        {
+            boardInput = Vector3.zero;
+        }
+
+        using (var e = BoardControlGripEvent.Get())
+            e.gripInput.dir = boardInput;
     }
 
+    /// <summary>
+    /// Continues to check and send out event if either left or right hand is touching the interactable type "Water"
+    /// </summary>
     private void WaterTouching()
     {
         bool isTouching = false;
@@ -225,6 +223,11 @@ public class HandManager : MonoBehaviour
             e.isTouching = isTouching;
     }
 
+    /// <summary>
+    /// Returns true if either the left or right hand is touching the given interactable type
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns>Bool value depending on if either hand is interacting with given type</returns>
     private bool IsHandsTouching(Interactables type)
     {
         return leftInteraction == type || rightInteraction == type;

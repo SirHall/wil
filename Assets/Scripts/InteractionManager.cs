@@ -15,6 +15,8 @@ public class InteractionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (gameObject.GetComponent<HandManager>() == null) return;
+
         if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.left)
         {
             using (var e = LeftInteractablesEvent.Get())
@@ -27,27 +29,25 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
-    void OnTriggerStay(Collider collision) 
+    void OnTriggerEnter(Collider collision) 
     {
-        if (collision.GetComponent<InteractionType>() == null) return;
+        if (collision.GetComponent<InteractionType>() == null || gameObject.GetComponent<HandManager>() == null) return;
 
         if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.left)
             leftInteractableType = collision.GetComponent<InteractionType>().interactable;
 
         if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.right)
             rightInteractableType = collision.GetComponent<InteractionType>().interactable;
-        
     }
 
     void OnTriggerExit(Collider collision) 
     {
-        if (collision.GetComponent<InteractionType>() == null) return;
+        if (collision.GetComponent<InteractionType>() == null || gameObject.GetComponent<HandManager>() == null) return;
 
         if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.left)
             leftInteractableType = Interactables.None;
 
         if (gameObject.GetComponent<HandManager>().handType == HandManager.HandType.right)
             rightInteractableType = Interactables.None;
-        
     }
 }

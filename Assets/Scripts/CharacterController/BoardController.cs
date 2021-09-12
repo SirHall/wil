@@ -16,6 +16,8 @@ public class BoardController : MonoBehaviour, ICharacterController
     public KinematicCharacterMotor Motor { get => motor; }
 
     BoardInput input = new BoardInput();
+    BoardInput gripInput = new BoardInput();
+
     Vector2 cameraRot = Vector2.zero;
 
     private bool isIntroStarted;
@@ -76,6 +78,7 @@ public class BoardController : MonoBehaviour, ICharacterController
     void OnEnable()
     {
         BoardControlEvent.RegisterListener(OnBoardControlEvent);
+        BoardControlGripEvent.RegisterListener(OnBoardControlGripEvent);
 
         if (Instance != null)
         {
@@ -88,6 +91,7 @@ public class BoardController : MonoBehaviour, ICharacterController
     void OnDisable()
     {
         BoardControlEvent.UnregisterListener(OnBoardControlEvent);
+        BoardControlGripEvent.UnregisterListener(OnBoardControlGripEvent);
 
         if (Instance == this)
             Instance = null;
@@ -110,6 +114,12 @@ public class BoardController : MonoBehaviour, ICharacterController
     {
         if (WaveScore.IsPlaying)
             input = e.input;
+    }
+    // A controller has announced new data
+    void OnBoardControlGripEvent(BoardControlGripEvent e)
+    {
+        if (WaveScore.IsPlaying)
+            gripInput = e.gripInput;
     }
 
     IEnumerator Intro()
@@ -179,8 +189,14 @@ public class BoardController : MonoBehaviour, ICharacterController
     {
         if (!inputAccepted)
             return;
+
+        float inputs = input.dir.x + (gripInput.dir.x / 2);
+
+        // During rotation board gripping will also move motor sideways (Closer and further from the barrel) 
+        motor.BaseVelocity += new Vector3(0,0, (-gripInput.dir.x / 3));
+
         // Inputs direction X value is multiplied to make greater head movements apply a large value in comparison to smaller values. 
-        currentRotation *= Quaternion.AngleAxis((input.dir.x * 2.4f) * rotateAccel * deltaTime, transform.up);
+        currentRotation *= Quaternion.AngleAxis((inputs * 2.4f) * rotateAccel * deltaTime, transform.up);
     }
 
     void ICharacterController.UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
@@ -199,7 +215,6 @@ public class BoardController : MonoBehaviour, ICharacterController
         if (motor.GroundingStatus.IsStableOnGround)
         {
             Collider col = motor.GroundingStatus.GroundCollider;
-
             if (col.name == "WavePart") // Wave force
             {
                 // TODO: Leaning forward/backward increases speed/drag
