@@ -49,10 +49,10 @@ public class HeadMovement : MonoBehaviour
     private void Start()
     {
         // Assign MaxValues based on boundry gameobjects coordinates
-        maxForward = Mathf.Abs(Mathf.Round(forwardBoundary.transform.localPosition.z * 100f) / 100f);
-        maxBack = Mathf.Abs(Mathf.Round(backBoundary.transform.localPosition.z * 100f) / 100f);
-        maxLeft = Mathf.Abs(Mathf.Round(leftBoundary.transform.localPosition.x * 100f) / 100f);
-        maxRight = Mathf.Abs(Mathf.Round(rightBoundary.transform.localPosition.x * 100f) / 100f);
+        maxForward = forwardBoundary.transform.localPosition.z;
+        maxBack = backBoundary.transform.localPosition.z;
+        maxLeft = leftBoundary.transform.localPosition.x;
+        maxRight = rightBoundary.transform.localPosition.x;
     }
 
     void Update()
@@ -72,13 +72,13 @@ public class HeadMovement : MonoBehaviour
         currentCoordinate = mainCamera.transform.localPosition;
 
         CheckStartingPos();
-        CheckPlayerStability();
+        ScalePlayerStability();
         SetState();
         HeadScoring();
         CallGlobalEvents();
 
         // Check if head's moved to far, if so then trigger the GameLost event
-        MovementState moveState = HeadMovement.HeadTiltToState(headPosRel.WithY(mainCamera.transform.position.y));
+        MovementState moveState = HeadMovement.HeadMovementState(headPosRel.WithY(mainCamera.transform.position.y));
         if (moveState == MovementState.Fallen)
             using (var e = GameLost.Get())
                 e.cause = "Leaned head too far";
@@ -112,18 +112,6 @@ public class HeadMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Return positive value that is scaled between 0 and a given max value
-    /// </summary>
-    /// <param name="value">Difference value based off current position - Starting position</param>
-    /// <param name="maxValue">Max difference value for given direction</param>
-    /// <returns>Positive float scaled between 0 and given max value</returns>
-    private float DirectionScale(float value, float maxValue)
-    {
-        // Clamp and scale positive value based off given maxValue
-        return Mathf.Clamp(Mathf.Abs(value), 0, maxValue) / maxValue;
-    }
-
-    /// <summary>
     /// Gets the current head position and coverts its coordinates to the board controllers coordinates so the board can be rotated / moved. 
     /// </summary>
     /// <param name="headPos"></param>
@@ -153,36 +141,37 @@ public class HeadMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Manages head position values based on current coordinates from start coordinates
+    /// Scales head coordinates to between -1 to 0 (Left, Back) OR 0 to 1 (Right, Forward) depending on percentage away from starting position to boundary
     /// </summary>
-    void CheckPlayerStability()
+    void ScalePlayerStability()
     {
-        Vector3 diff = mainCamera.transform.localPosition - startCoordinate;
-
-        float forwardPos = diff.z; // Forward, Back
-        float sidePos = diff.x; // Left, Right
+        float forwardPos = mainCamera.transform.localPosition.z; // Forward, Back
+        float sidePos = mainCamera.transform.localPosition.x; // Left, Right
+        float heightPos = mainCamera.transform.localPosition.y; // Up, Down
 
         // Assign variable values based on the direction the player is leaning / standing
-        if(diff.z > 0)
-            headPosRel.z = DirectionScale(forwardPos, maxForward); // Positive
+        if (forwardPos > 0)
+            headPosRel.z = Mathf.InverseLerp(0, maxForward, forwardPos); // Positive
         else
-            headPosRel.z = -DirectionScale(forwardPos, maxBack); // Negative
+            headPosRel.z = -Mathf.InverseLerp(0, maxBack, forwardPos); // Negative
 
-        if (diff.x > 0)
-            headPosRel.x = DirectionScale(sidePos, maxLeft); // Positive
+        if (sidePos > 0)
+            headPosRel.x = Mathf.InverseLerp(0, maxRight, sidePos); // Positive
         else
-            headPosRel.x = -DirectionScale(sidePos, maxRight); // Negative
+            headPosRel.x = -Mathf.InverseLerp(0, maxLeft, sidePos); // Negative
+
+        headPosRel.y = Mathf.InverseLerp(0, startCoordinate.y, heightPos); 
     }
 
     /// <summary>
     /// Takes in the head tilt and returns a movement state
     /// </summary>
-    /// <param name="headTilt"></param>
+    /// <param name="headLean"></param>
     /// <returns>Enum movement state depending on head tilt</returns>
-    public static MovementState HeadTiltToState(Vector3 headTilt)
+    public static MovementState HeadMovementState(Vector3 headLean)
     {
         // The scalar euclidean distance the head has moved from its original position 
-        float headPosDist = Mathf.Max(Mathf.Abs(headTilt.x), Mathf.Abs(headTilt.z));
+        float headPosDist = Mathf.Max(Mathf.Abs(headLean.x), Mathf.Abs(headLean.z));
 
         if (headPosDist >= 1.0f) // Fallen criteria
             return MovementState.Fallen;
@@ -194,7 +183,23 @@ public class HeadMovement : MonoBehaviour
             return MovementState.Stationary;
 
     }
+    /// <summary>
+    /// Takes in the head tilt and returns a movement state
+    /// </summary>
+    /// <param name="headTilt"></param>
+    /// <returns>Enum movement state depending on head tilt</returns>
+    public static PositionState HeadPositionState(Vector3 headHeight)
+    {
+        // The scalar euclidean distance the head has moved from its original position 
 
+        if (headHeight.y <= 0.3f) // Fallen criteria
+            return PositionState.Prone;
+        else if (headHeight.y <= 0.8) // Warning criteria
+            return PositionState.Crouched;
+        else
+            return PositionState.Standing;
+
+    }
     /// <summary>
     /// Sets the movement state of the player based on the heads distance from the center of the board
     /// </summary>
@@ -202,7 +207,8 @@ public class HeadMovement : MonoBehaviour
     {
         MovementState previousState = movementState;
 
-        movementState = HeadTiltToState(headPosRel);
+        movementState = HeadMovementState(headPosRel);
+        positionState = HeadPositionState(headPosRel);
 
         // Reset isScored if movement state has changed
         if (previousState != movementState)
@@ -239,6 +245,6 @@ public enum MovementState
 public enum PositionState
 {
     Prone, // Lying on stomach
-    Standing, // In a good hunched standing position
-    Extended // Standing tall and not hunching over
+    Crouched, // In a good riding position
+    Standing // Standing tall and not hunching over
 }

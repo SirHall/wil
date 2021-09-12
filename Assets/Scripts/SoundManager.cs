@@ -157,7 +157,7 @@ public class SoundManager : MonoBehaviour{
     /// </summary>
     private void LeanWarningSound() 
     {
-        if (!WaveScore.IsPlaying) return;
+        if (!WaveScore.IsPlaying || WaveScore.IsWarmup) return;
 
         if (LeanStateChanged()) 
         {
