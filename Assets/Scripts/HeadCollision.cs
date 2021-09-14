@@ -27,6 +27,9 @@ public class HeadCollision : MonoBehaviour
 
     void Update()
     {
+        if (BoardController.Instance is null || Camera.main is null)
+            return;
+
         if (mainCamera != Camera.main.gameObject)
         {
             mainCamera = Camera.main.gameObject;
@@ -67,7 +70,7 @@ public class HeadCollision : MonoBehaviour
         }
         else
             shortDistance = maxRadius;
-        
+
 
         return shortDistance;
     }

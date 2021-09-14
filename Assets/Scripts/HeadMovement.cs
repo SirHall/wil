@@ -57,6 +57,9 @@ public class HeadMovement : MonoBehaviour
 
     void Update()
     {
+        if (Camera.main is null)
+            return;
+
         if (mainCamera != Camera.main.gameObject)
         {
             startCoordinate = Camera.main.transform.localPosition;
@@ -160,7 +163,7 @@ public class HeadMovement : MonoBehaviour
         else
             headPosRel.x = -Mathf.InverseLerp(0, maxLeft, sidePos); // Negative
 
-        headPosRel.y = Mathf.InverseLerp(0, startCoordinate.y, heightPos); 
+        headPosRel.y = Mathf.InverseLerp(0, startCoordinate.y, heightPos);
     }
 
     /// <summary>

@@ -71,7 +71,8 @@ public class WaveScore : MonoBehaviour
         sceneTransition.SetActive(false);
     }
 
-    void Start()
+    // This is essentially the the 'Start' method now
+    void OnPlayerReadyEvent(PlayerReadyEvent e)
     {
         StartCoroutine(WarmupWaitTime());
         if (waveTransform == null)
@@ -86,6 +87,7 @@ public class WaveScore : MonoBehaviour
         GameWon.RegisterListener(OnGameWon);
         GameLost.RegisterListener(OnGameLost);
         VRButtonEvent.RegisterListener(OnVRButtonEvent);
+        PlayerReadyEvent.RegisterListener(OnPlayerReadyEvent);
     }
 
     void OnDisable()
@@ -96,6 +98,7 @@ public class WaveScore : MonoBehaviour
         GameWon.UnregisterListener(OnGameWon);
         GameLost.UnregisterListener(OnGameLost);
         VRButtonEvent.UnregisterListener(OnVRButtonEvent);
+        PlayerReadyEvent.UnregisterListener(OnPlayerReadyEvent);
     }
 
     void Update()

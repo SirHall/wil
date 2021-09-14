@@ -6,11 +6,6 @@ using Excessives.Unity;
 
 public class GFXBoard : MonoBehaviour
 {
-
-
-    [TitleGroup("References")] [SerializeField] BoardController board;
-    [TitleGroup("References")] [SerializeField] Rigidbody rb;
-
     // [Title("Animation")]
     [Tooltip("The velocity of the board at which the sway animation will stop entirely")]
     [SerializeField] float animUpperStopVel = 5.0f;
@@ -41,11 +36,16 @@ public class GFXBoard : MonoBehaviour
     [Tooltip("Toggle if the surfboard is bobbing on the water or stationary")]
     public bool isBobbing;
 
+    BoardController Board => BoardController.Instance;
+
     void FixedUpdate()
     {
+        if (Board is null)
+            return;
+
         // Make the board track the player character
-        transform.position = board.Motor.TransientPosition;
-        transform.rotation = board.Motor.TransientRotation;
+        transform.position = Board.Motor.TransientPosition;
+        transform.rotation = Board.Motor.TransientRotation;
 
         Vector3 forwardBob = waterBobForwardPoint.position.WithY(v => WaterData.Instance.EvalAtWorldPos(v));
         Vector3 rearLeftBob = waterBobRearLeftPoint.position.WithY(v => WaterData.Instance.EvalAtWorldPos(v));
@@ -56,8 +56,8 @@ public class GFXBoard : MonoBehaviour
         Vector3 bobPos = UnityExcessives.MeanPos(forwardBob, rearLeftBob, rearRighhtBob);
 
         // Position/rotation from floor/barrel
-        Vector3 motorNormal = board.Motor.GroundingStatus.GroundNormal;
-        Vector3 motorPos = board.Motor.TransientPosition;
+        Vector3 motorNormal = Board.Motor.GroundingStatus.GroundNormal;
+        Vector3 motorPos = Board.Motor.TransientPosition;
 
         // We select between using bobbing information versus motor info, based on which water level is higher
         bool useMotor = motorPos.y > bobPos.y;
@@ -68,7 +68,7 @@ public class GFXBoard : MonoBehaviour
         if (isBobbing)
         {
             transform.position = Vector3.Lerp(transform.position, pos, 1.0f);
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(board.Motor.CharacterForward, normal), 1.0f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Board.Motor.CharacterForward, normal), 1.0f);
         }
     }
 }

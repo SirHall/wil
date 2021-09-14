@@ -27,7 +27,8 @@ public class KeyboardInput : MonoBehaviour
     [Tooltip("Sensitivity of the camera in steer mode")]
     [SerializeField] [TitleGroup("Head")] float mouseSteerSensitivity = 1.0f;
 
-    [SerializeField] BoardController board;
+    // [SerializeField] BoardController board;
+    BoardController Board => BoardController.Instance;
 
     void OnEnable()
     {
@@ -63,7 +64,7 @@ public class KeyboardInput : MonoBehaviour
     void Update()
     {
         if (autoHeadMode)
-            headMode = (board.InputAccepted ? KeyboardHeadMode.Steer : KeyboardHeadMode.View);
+            headMode = (Board.InputAccepted ? KeyboardHeadMode.Steer : KeyboardHeadMode.View);
 
         // Handle switching between headmodes
         if (headMode == KeyboardHeadMode.View)
