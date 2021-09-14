@@ -955,6 +955,10 @@ PrefabInstance:
       propertyPath: instantiatePrefabs
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7974663015130649755, guid: bbaca297d6ac3a044a9392c5076d66ca, type: 3}
+      propertyPath: spawnCharacterInRealBoard
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bbaca297d6ac3a044a9392c5076d66ca, type: 3}
 --- !u!1 &1729758897
