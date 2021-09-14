@@ -34,9 +34,13 @@ public class GFXBoard : MonoBehaviour
     [SerializeField] float rotInterp = 3.0f;
 
     [Tooltip("Toggle if the surfboard is bobbing on the water or stationary")]
-    public bool isBobbing;
+    private bool isBobbing;
 
     BoardController Board => BoardController.Instance;
+
+    void OnEnable() { GameplaySettingEvent.RegisterListener(OnGameplaySettingEvent); }
+
+    void OnDisable() { GameplaySettingEvent.UnregisterListener(OnGameplaySettingEvent); }
 
     void FixedUpdate()
     {
@@ -70,5 +74,10 @@ public class GFXBoard : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, pos, 1.0f);
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Board.Motor.CharacterForward, normal), 1.0f);
         }
+    }
+
+    void OnGameplaySettingEvent(GameplaySettingEvent e)
+    {
+        isBobbing = e.settings.bobbing;
     }
 }

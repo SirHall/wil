@@ -79,6 +79,7 @@ public class BoardController : MonoBehaviour, ICharacterController
     {
         BoardControlEvent.RegisterListener(OnBoardControlEvent);
         BoardControlGripEvent.RegisterListener(OnBoardControlGripEvent);
+        GameplaySettingEvent.RegisterListener(OnGameplaySettingEvent);
 
         if (Instance != null)
         {
@@ -92,6 +93,7 @@ public class BoardController : MonoBehaviour, ICharacterController
     {
         BoardControlEvent.UnregisterListener(OnBoardControlEvent);
         BoardControlGripEvent.UnregisterListener(OnBoardControlGripEvent);
+        GameplaySettingEvent.UnregisterListener(OnGameplaySettingEvent);
 
         if (Instance == this)
             Instance = null;
@@ -107,6 +109,11 @@ public class BoardController : MonoBehaviour, ICharacterController
 
         if (WaveScore.IsPlaying && !WaveScore.IsWarmup)
             CheckBoardStability();
+    }
+
+    void OnGameplaySettingEvent(GameplaySettingEvent e)
+    {
+        introEnabled = e.settings.introStart;
     }
 
     // A controller has announced new data

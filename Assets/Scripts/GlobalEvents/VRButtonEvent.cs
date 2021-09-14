@@ -23,6 +23,11 @@ public enum VRButtons
     Designer_Longer, // Increase the length of the barrel
     Designer_Shorter, // Decrease the length of the barrel
 
+    Options_Bobbing, // Toggle if the player and waves are bobbing
+    Options_IncreaseWarmup, // Increase warmup time
+    Options_DecreaseWarmup, // Decrease warmup time
+    Options_IntroStart, // Toggle if the player will experience the intro
+
     MainMenu, // Go back to the main menu
     Retry, // Re-attempt the current barrel
 

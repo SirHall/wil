@@ -18,6 +18,8 @@ public class WaterData : MonoBehaviour
     [SerializeField] Vector2 center = Vector2.zero;
     [SerializeField] float displacement = 0.7f;
 
+    [SerializeField] Material waterMat;
+
     // The side length of the plane mesh we're using is 20m
     const float sideLength = 10;
 
@@ -41,12 +43,16 @@ public class WaterData : MonoBehaviour
     {
         if (Instance == null)
             Instance = this;
+
+        GameplaySettingEvent.RegisterListener(OnGameplaySettingEvent);
     }
 
     void OnDisable()
     {
         if (Instance == this)
             Instance = null;
+
+        GameplaySettingEvent.UnregisterListener(OnGameplaySettingEvent);
     }
 
     // The world position of the water plane's UV origin
@@ -74,5 +80,11 @@ public class WaterData : MonoBehaviour
 
         return (tRead as Texture2D).GetPixelBilinear(uv.x, uv.y).r;
         // return height;
+    }
+    void OnGameplaySettingEvent(GameplaySettingEvent e)
+    {
+        displacement = e.settings.bobbing ? displacement : 0.2f;
+        print("Water Displacement: " + waterMat.GetFloat("_Displacement"));
+        waterMat.SetFloat("_Displacement", displacement);
     }
 }
