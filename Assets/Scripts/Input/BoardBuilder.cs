@@ -57,7 +57,7 @@ public class BoardBuilder : MonoBehaviour
         GameObject board = instantiatePrefabs ? Instantiate(boardPrefab) : boardPrefab;
         GameObject gfxBoard = instantiatePrefabs ? (instantiateGFXBoard ? Instantiate(gfxBoardPrefab) : null) : gfxBoardPrefab;
         Transform charParent = spawnCharacterInRealBoard ? board.transform : (gfxBoard?.transform ?? board.transform);
-        GameObject character = Instantiate(def.character, Vector3.zero, Quaternion.identity, charParent); // Now where to place this character
+        GameObject character = Instantiate(def.character, charParent.position, charParent.rotation, charParent); // Now where to place this character
 
         using (var e = PlayerReadyEvent.Get()) { }
     }
