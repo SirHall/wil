@@ -64,7 +64,7 @@ public class KeyboardInput : MonoBehaviour
     void Update()
     {
         if (autoHeadMode)
-            headMode = (Board.InputAccepted ? KeyboardHeadMode.Steer : KeyboardHeadMode.View);
+            headMode = ((Board is null) ? KeyboardHeadMode.View : (Board.InputAccepted ? KeyboardHeadMode.Steer : KeyboardHeadMode.View));
 
         // Handle switching between headmodes
         if (headMode == KeyboardHeadMode.View)
