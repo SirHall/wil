@@ -42,7 +42,7 @@ public class WaveScore : MonoBehaviour
     public float startTime;
 
     [Tooltip("During warmup the player will not be measured or penalised")]
-    private static bool warmup = false;
+    private static bool warmup = true; // This should start as true
 
     [SerializeField]
     [Tooltip("Time in seconds it takes for the transition to occur")]
@@ -62,8 +62,8 @@ public class WaveScore : MonoBehaviour
 
     public static GameState State { get; private set; }
 
-    public static bool IsPlaying { get => WaveScore.State == GameState.Playing; }
-    public static bool IsWarmup { get => WaveScore.warmup == true; }
+    public static bool IsPlaying => WaveScore.State == GameState.Playing;
+    public static bool IsWarmup => WaveScore.warmup;
 
     void Awake()
     {

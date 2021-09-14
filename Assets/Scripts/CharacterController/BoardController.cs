@@ -193,7 +193,7 @@ public class BoardController : MonoBehaviour, ICharacterController
         float inputs = input.dir.x + (gripInput.dir.x / 2);
 
         // During rotation board gripping will also move motor sideways (Closer and further from the barrel) 
-        motor.BaseVelocity += new Vector3(0,0, (-gripInput.dir.x / 3));
+        motor.BaseVelocity += new Vector3(0, 0, (-gripInput.dir.x / 3));
 
         // Inputs direction X value is multiplied to make greater head movements apply a large value in comparison to smaller values. 
         currentRotation *= Quaternion.AngleAxis((inputs * 2.4f) * rotateAccel * deltaTime, transform.up);
