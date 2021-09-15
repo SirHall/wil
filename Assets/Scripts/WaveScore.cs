@@ -100,7 +100,7 @@ public class WaveScore : MonoBehaviour
         GameLost.RegisterListener(OnGameLost);
         VRButtonEvent.RegisterListener(OnVRButtonEvent);
         PlayerReadyEvent.RegisterListener(OnPlayerReadyEvent);
-        GameplaySettingEvent.RegisterListener(OnGameplaySettingEvent);
+        GameSettingsEvent.RegisterListener(OnGameplaySettingEvent);
     }
 
     void OnDisable()
@@ -112,7 +112,7 @@ public class WaveScore : MonoBehaviour
         GameLost.UnregisterListener(OnGameLost);
         VRButtonEvent.UnregisterListener(OnVRButtonEvent);
         PlayerReadyEvent.UnregisterListener(OnPlayerReadyEvent);
-        GameplaySettingEvent.UnregisterListener(OnGameplaySettingEvent);
+        GameSettingsEvent.UnregisterListener(OnGameplaySettingEvent);
     }
 
     void Update()
@@ -156,10 +156,10 @@ public class WaveScore : MonoBehaviour
         startObject.SetActive(false);
         warmup = false;
     }
-    void OnGameplaySettingEvent(GameplaySettingEvent e)
+    void OnGameplaySettingEvent(GameSettingsEvent e)
     {
-        if(e.settings.warmupTime != startTime)
-            startTime = e.settings.warmupTime;
+        if(e.gameplaySettings.warmupTime != startTime)
+            startTime = e.gameplaySettings.warmupTime;
 
         startDataText.text = startTime.ToString();
     }

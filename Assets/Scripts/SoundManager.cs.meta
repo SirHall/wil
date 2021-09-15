@@ -6,14 +6,12 @@ MonoImporter:
   defaultReferences:
   - Splash: {fileID: 8300000, guid: 2f9a6b82f628427489f2431743b474cf, type: 3}
   - Underwater: {fileID: 8300000, guid: 732606f1124f92f458f0527c4c6b0fda, type: 3}
-  - Idle: {fileID: 8300000, guid: 5f1fc3e9f524b864eaecd15d9cfa374b, type: 3}
   - Background: {fileID: 8300000, guid: 5c2a69648fc379f4aa636f6c07589ddb, type: 3}
   - Moving: {fileID: 8300000, guid: a3d0b83a54d8aa940b775aab24c4c44d, type: 3}
   - Inwave: {fileID: 8300000, guid: db084e7be4cbcf54ebe0baa505e06647, type: 3}
   - Woah: {fileID: 8300000, guid: 69b1ffcc617ecd34e9905bb72d041774, type: 3}
-  - backgroundsource1: {instanceID: 0}
-  - backgroundsource2: {instanceID: 0}
-  - leanWarningSource: {instanceID: 0}
+  - Grab: {fileID: 8300000, guid: 065a00cf43007534bb9dacfd3b7a8c8f, type: 3}
+  - BarrelTouch: {fileID: 8300000, guid: 4e302665549bf5c46befbd1d13511b72, type: 3}
   - boardcontroller: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}

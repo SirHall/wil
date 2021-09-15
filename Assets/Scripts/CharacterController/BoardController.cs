@@ -79,7 +79,7 @@ public class BoardController : MonoBehaviour, ICharacterController
     {
         BoardControlEvent.RegisterListener(OnBoardControlEvent);
         BoardControlGripEvent.RegisterListener(OnBoardControlGripEvent);
-        GameplaySettingEvent.RegisterListener(OnGameplaySettingEvent);
+        GameSettingsEvent.RegisterListener(OnGameplaySettingEvent);
 
         if (Instance != null)
         {
@@ -93,7 +93,7 @@ public class BoardController : MonoBehaviour, ICharacterController
     {
         BoardControlEvent.UnregisterListener(OnBoardControlEvent);
         BoardControlGripEvent.UnregisterListener(OnBoardControlGripEvent);
-        GameplaySettingEvent.UnregisterListener(OnGameplaySettingEvent);
+        GameSettingsEvent.UnregisterListener(OnGameplaySettingEvent);
 
         if (Instance == this)
             Instance = null;
@@ -111,9 +111,9 @@ public class BoardController : MonoBehaviour, ICharacterController
             CheckBoardStability();
     }
 
-    void OnGameplaySettingEvent(GameplaySettingEvent e)
+    void OnGameplaySettingEvent(GameSettingsEvent e)
     {
-        introEnabled = e.settings.introStart;
+        introEnabled = e.gameplaySettings.introStart;
     }
 
     // A controller has announced new data

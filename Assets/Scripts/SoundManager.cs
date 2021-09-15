@@ -23,6 +23,10 @@ public class SoundManager : MonoBehaviour{
     [Tooltip("Touching the barrel wave")]
     [SerializeField] [FoldoutGroup("Game Sounds")] private AudioClip BarrelTouch;
 
+    [SerializeField]
+    [Tooltip("Master volume which controls all sounds within the application")]
+    private float masterVolume = 1;
+
     [Tooltip("Current audio level state the sounds should be played in")]
     private SoundLevelMode currentSoundLevelState;
 
@@ -56,12 +60,14 @@ public class SoundManager : MonoBehaviour{
         SoundControlEvent.RegisterListener(SoundEvent);
         GripInteraction.RegisterListener(GrabSound);
         WaveInteraction.RegisterListener(BarrelTouchSound);
+        GameSettingsEvent.RegisterListener(OnGameplaySettingEvent);
     }
 
     void OnDisable() {
         SoundControlEvent.UnregisterListener(SoundEvent);
         GripInteraction.UnregisterListener(GrabSound);
         WaveInteraction.UnregisterListener(BarrelTouchSound);
+        GameSettingsEvent.UnregisterListener(OnGameplaySettingEvent);
     }
 
     // A controller has announced new data
@@ -74,6 +80,16 @@ public class SoundManager : MonoBehaviour{
     //Example of referencing in other parts of the code
     //SoundManager.Playsound(SoundManager.instance.splash);
     //it plays all of the sound and doesn't stop
+    void OnGameplaySettingEvent(GameSettingsEvent e)
+    {
+        masterVolume = e.audioSettings.audioLevel;
+    }
+
+    void MasterAudioVolume()
+    {
+        if (AudioListener.volume != masterVolume)
+            AudioListener.volume = Mathf.Clamp(Mathf.InverseLerp(0, 100, masterVolume), 0, 1);
+    }
 
     public static void PlaySound(AudioClip sound, float volume)
     {
@@ -133,7 +149,7 @@ public class SoundManager : MonoBehaviour{
         }
 
         backgroundsource2.volume = (Total_Velocity * Mathf.Sin(Mathf.PI / 2) / 10)/100 * MovementMaxVolume;
-
+        MasterAudioVolume();
         LeanWarningSound();
         FallenSound();
     }

@@ -23,7 +23,6 @@ public class WaterData : MonoBehaviour
     // The side length of the plane mesh we're using is 20m
     const float sideLength = 10;
 
-
     [SerializeField] bool debugMode = false;
     [SerializeField] [ShowIf("@debugMode")] MeshRenderer debugRenderer;
 
@@ -44,7 +43,7 @@ public class WaterData : MonoBehaviour
         if (Instance == null)
             Instance = this;
 
-        GameplaySettingEvent.RegisterListener(OnGameplaySettingEvent);
+        GameSettingsEvent.RegisterListener(OnGameplaySettingEvent);
     }
 
     void OnDisable()
@@ -52,7 +51,7 @@ public class WaterData : MonoBehaviour
         if (Instance == this)
             Instance = null;
 
-        GameplaySettingEvent.UnregisterListener(OnGameplaySettingEvent);
+        GameSettingsEvent.UnregisterListener(OnGameplaySettingEvent);
     }
 
     // The world position of the water plane's UV origin
@@ -81,10 +80,22 @@ public class WaterData : MonoBehaviour
         return (tRead as Texture2D).GetPixelBilinear(uv.x, uv.y).r;
         // return height;
     }
-    void OnGameplaySettingEvent(GameplaySettingEvent e)
+    void OnGameplaySettingEvent(GameSettingsEvent e)
     {
-        displacement = e.settings.bobbing ? displacement : 0.2f;
-        print("Water Displacement: " + waterMat.GetFloat("_Displacement"));
+        // Water Displacement
+        displacement = e.gameplaySettings.bobbing ? displacement : 0.2f;
         waterMat.SetFloat("_Displacement", displacement);
+
+        // Water Transparency
+        Color waterColor;
+        switch (e.gameplaySettings.coralVisibility)
+        {
+            case CoralVisibility.Low: waterColor = new Color(0.039f, 0.098f, 0.27f, 0.90f); break;
+            case CoralVisibility.Medium: waterColor = new Color(0.039f, 0.098f, 0.27f, 0.70f); break;
+            case CoralVisibility.High: waterColor = new Color(0.039f, 0.098f, 0.27f, 0.40f); break;
+            default: waterColor = new Color(0.039f, 0.098f, 0.27f, 0.70f); break;
+        }
+        waterMat.SetColor("_DeepColor", waterColor);
+
     }
 }

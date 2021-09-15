@@ -38,9 +38,9 @@ public class GFXBoard : MonoBehaviour
 
     BoardController Board => BoardController.Instance;
 
-    void OnEnable() { GameplaySettingEvent.RegisterListener(OnGameplaySettingEvent); }
+    void OnEnable() { GameSettingsEvent.RegisterListener(OnGameplaySettingEvent); }
 
-    void OnDisable() { GameplaySettingEvent.UnregisterListener(OnGameplaySettingEvent); }
+    void OnDisable() { GameSettingsEvent.UnregisterListener(OnGameplaySettingEvent); }
 
     void FixedUpdate()
     {
@@ -76,8 +76,8 @@ public class GFXBoard : MonoBehaviour
         }
     }
 
-    void OnGameplaySettingEvent(GameplaySettingEvent e)
+    void OnGameplaySettingEvent(GameSettingsEvent e)
     {
-        isBobbing = e.settings.bobbing;
+        isBobbing = e.gameplaySettings.bobbing;
     }
 }

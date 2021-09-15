@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         BarrelSettings.EmitBarrelSettings();
-        GameplaySettings.EmitGameplaySettings();
+        GameSettings.EmitGameSettings();
     }
 
     void OnEnable()

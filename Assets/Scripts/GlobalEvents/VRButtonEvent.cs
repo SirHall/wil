@@ -23,15 +23,30 @@ public enum VRButtons
     Designer_Longer, // Increase the length of the barrel
     Designer_Shorter, // Decrease the length of the barrel
 
-    Options_Bobbing, // Toggle if the player and waves are bobbing
-    Options_IncreaseWarmup, // Increase warmup time
-    Options_DecreaseWarmup, // Decrease warmup time
-    Options_IntroStart, // Toggle if the player will experience the intro
-
     MainMenu, // Go back to the main menu
     Retry, // Re-attempt the current barrel
 
     SurfDir, // Toggle the surfing direction
 
     Replay, // Replay our last surfing run on the corresponding screen
+
+    Options_Gameplay_Bobbing, // Toggle if the player and waves are bobbing
+    Options_Gameplay_IncreaseWarmup, // Increase warmup time
+    Options_Gameplay_DecreaseWarmup, // Decrease warmup time
+    Options_Gameplay_IntroStart, // Toggle if the player will experience the intro
+
+    Options_Audio_Min,
+    Options_Audio_Max,
+    Options_Audio_DecreaseVolume,
+    Options_Audio_IncreaseVolume,
+
+    Options_GameplaySwitch,
+    Options_AudioSwitch,
+    Options_PerformanceSwitch,
+
+    Options_Gameplay_IncreaseCoral,
+    Options_Gameplay_DecreaseCoral,
+
+    Options_Performance_Terrain,
+    Options_Performance_Coral
 }

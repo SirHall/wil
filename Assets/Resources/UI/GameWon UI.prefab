@@ -6420,7 +6420,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1152624865079271472, guid: 4033b05b9403ea24f9c75b49037cd3ae, type: 3}
       propertyPath: button
-      value: 14
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1152624865079271472, guid: 4033b05b9403ea24f9c75b49037cd3ae, type: 3}
       propertyPath: clickDist
@@ -6732,7 +6732,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8073424622368092612, guid: 1272fd40e22cb60439f45a3035f375c8, type: 3}
       propertyPath: button
-      value: 17
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 9220103043202786904, guid: 1272fd40e22cb60439f45a3035f375c8, type: 3}
       propertyPath: m_RootOrder
@@ -6822,7 +6822,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1152624865079271472, guid: 4033b05b9403ea24f9c75b49037cd3ae, type: 3}
       propertyPath: button
-      value: 15
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1152624865079271472, guid: 4033b05b9403ea24f9c75b49037cd3ae, type: 3}
       propertyPath: clickDist
