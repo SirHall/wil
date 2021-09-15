@@ -60,13 +60,14 @@ public class OptionsUI : MonoBehaviour
         isTerrain = GameSettings.Instance.Terrain;
         isCoral = GameSettings.Instance.Coral;
 
+        button_TerrainText.text = isTerrain ? "On" : "Off";
+        button_CoralText.text = isCoral ? "On" : "Off";
+
         button_bobbingText.text = isBobbing ? "On" : "Off";
         panel_warmupText.text = warmupTime.ToString() + " Seconds";
         button_introText.text = isIntro ? "On" : "Off";
         panel_AudioText.text = gameVolume.ToString() + " %";
         panel_coralText.text = coralVisibility.ToString();
-        button_TerrainText.text = isTerrain ? "On" : "Off";
-        button_CoralText.text = isCoral ? "On" : "Off";
     }
 
     void UpdateBobbing()

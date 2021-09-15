@@ -11,14 +11,14 @@ public class GameSettings : MonoBehaviour
     [ShowInInspector] public bool Bobbing { get; set; } = true; //Enables the board bobbing
     [ShowInInspector] public float WarmupTime { get; set; } = 5f; //Sets the length of time the warmup will last for
     [ShowInInspector] public bool IntroStart { get; set; } = true; //Enables or disables the starting intro
-    [ShowInInspector] public CoralVisibility CoralMode { get; set; } = CoralVisibility.Medium; //Sets the coral visibility level (1 - Low, 2 - Medium, 3 - High)
+    [ShowInInspector] public CoralVisibility CoralMode { get; set; } = CoralVisibility.Medium; // Sets the coral visibility level (1 - Low, 2 - Medium, 3 - High)
 
     // Audio Settings
-    [ShowInInspector] public float AudioLevel { get; set; } = 100f; //Sets the volume percentage for the overall game audio level
+    [ShowInInspector] public float AudioLevel { get; set; } = 100f; // Sets the volume percentage for the overall game audio level
 
     // Performance Settings
-    [ShowInInspector] public bool Terrain { get; set; } = true; //Sets the volume percentage for the overall game audio level
-    [ShowInInspector] public bool Coral { get; set; } = true; //Sets the volume percentage for the overall game audio level
+    [ShowInInspector] public bool Terrain { get; set; } = true; // Enables or disables terrain
+    [ShowInInspector] public bool Coral { get; set; } = true; // Enables or disables coral
 
 
     void OnEnable()

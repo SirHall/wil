@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7501596812986962723}
   - component: {fileID: 7501596812986962733}
   - component: {fileID: 7501596812986962732}
+  - component: {fileID: 1982287384102733657}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -75,6 +76,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   volume: {fileID: 0}
   water: {fileID: 0}
+  visualEffects: {fileID: 0}
+  waterScreenEffect: {fileID: 0}
 --- !u!114 &7501596812986962732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,6 +94,7 @@ MonoBehaviour:
   introPoints: {fileID: 0}
   waveTransform: {fileID: 0}
   transition: {fileID: 0}
+  maxScore: 1000
   board: {fileID: 0}
   winObject: {fileID: 0}
   winDataText: {fileID: 0}
@@ -98,6 +102,26 @@ MonoBehaviour:
   winDataWarningTimeText: {fileID: 0}
   winDataScoreText: {fileID: 0}
   loseObject: {fileID: 0}
+  loseDataWarningText: {fileID: 0}
+  loseDataWarningTimeText: {fileID: 0}
+  loseDataScoreText: {fileID: 0}
+  loseDataCauseText: {fileID: 0}
+  startObject: {fileID: 0}
+  startDataText: {fileID: 0}
   startTime: 3
   sceneTransition: {fileID: 0}
   failureLocation: {fileID: 0}
+--- !u!114 &1982287384102733657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7501596812986962721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86a09d5ec64d6b64f9ecaf1710568af4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  terrain: {fileID: 0}
+  coral: {fileID: 0}

@@ -12371,6 +12371,8 @@ MonoBehaviour:
   audioHolder: {fileID: 5737915540248468828}
   panel_AudioText: {fileID: 195249345605760129}
   performanceHolder: {fileID: 7464353711189818116}
+  button_TerrainText: {fileID: 5060794323797647865}
+  button_CoralText: {fileID: 8332103702797696712}
 --- !u!1 &6955738402794351355
 GameObject:
   m_ObjectHideFlags: 0
