@@ -112,6 +112,7 @@ MonoBehaviour:
   scale: {x: 200, y: 200}
   center: {x: 0, y: 0}
   displacement: 0.7
+  waterMat: {fileID: 2100000, guid: 8759ec410a6774b4ea13ae32dc2b8d2e, type: 2}
   debugMode: 0
   debugRenderer: {fileID: 0}
   heightRendTex: {fileID: 8600000, guid: 7d987adfb131cc944a0edd0e10a99b59, type: 2}

@@ -39,7 +39,7 @@ public class WaveScore : MonoBehaviour
     [SerializeField] [FoldoutGroup("Game Start")] TextMeshPro startDataText;
 
     [Tooltip("Starting time the player has to get ready before being monitored")]
-    public float startTime;
+    public float startTime = 5f;
 
     [Tooltip("During warmup the player will not be measured or penalised")]
     private static bool warmup = false;
@@ -100,6 +100,7 @@ public class WaveScore : MonoBehaviour
         GameLost.RegisterListener(OnGameLost);
         VRButtonEvent.RegisterListener(OnVRButtonEvent);
         PlayerReadyEvent.RegisterListener(OnPlayerReadyEvent);
+        GameplaySettingEvent.RegisterListener(OnGameplaySettingEvent);
     }
 
     void OnDisable()
@@ -111,6 +112,7 @@ public class WaveScore : MonoBehaviour
         GameLost.UnregisterListener(OnGameLost);
         VRButtonEvent.UnregisterListener(OnVRButtonEvent);
         PlayerReadyEvent.UnregisterListener(OnPlayerReadyEvent);
+        GameplaySettingEvent.UnregisterListener(OnGameplaySettingEvent);
     }
 
     void Update()
@@ -154,7 +156,13 @@ public class WaveScore : MonoBehaviour
         startObject.SetActive(false);
         warmup = false;
     }
+    void OnGameplaySettingEvent(GameplaySettingEvent e)
+    {
+        if(e.settings.warmupTime != startTime)
+            startTime = e.settings.warmupTime;
 
+        startDataText.text = startTime.ToString();
+    }
     void OnWaveSettingsEvent(WaveSettingEvent e)
     {
         Vector3 waveRight = waveTransform.position;
