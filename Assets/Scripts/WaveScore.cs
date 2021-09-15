@@ -65,6 +65,12 @@ public class WaveScore : MonoBehaviour
     public static bool IsPlaying => WaveScore.State == GameState.Playing;
     public static bool IsWarmup => WaveScore.warmup;
 
+    #region Bookkeeping
+
+    bool hasStarted = false;
+
+    #endregion
+
     void Awake()
     {
         warmup = true;
@@ -75,6 +81,11 @@ public class WaveScore : MonoBehaviour
     // This is essentially the the 'Start' method now
     void OnPlayerReadyEvent(PlayerReadyEvent e)
     {
+        // This event may be fired multiple times if the input system changes during gameplay
+        if (hasStarted)
+            return;
+        hasStarted = true;
+
         StartCoroutine(WarmupWaitTime());
         if (waveTransform == null)
             Debug.LogError("Ensure that WaveScore.waveTransform has the wave's transform assigned");
