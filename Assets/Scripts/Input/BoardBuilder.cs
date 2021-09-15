@@ -23,43 +23,49 @@ public class BoardBuilder : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(FindInput());
-    }
-
-    // This instantiates all input availability objects and waits to see which ones *survive*,
-    // after which it will see which remaining input system has the highest priority and build the player
-    // based on that
-    IEnumerator FindInput()
-    {
-        Dictionary<InputSystemDefinition, GameObject> availabilityObjs = new Dictionary<InputSystemDefinition, GameObject>();
-        defList.definitions.ForEach(n => availabilityObjs.Add(n, Instantiate(n.available)));
-
-        yield return null;
-
-        InputSystemDefinition def = availabilityObjs
-            .Where(n => n.Value != null) // Filter out all unavailable input systems
-            ?.Select(n => n.Key) // Select the definitions of all available input systems
-            ?.Maximum(n => n.priority); // Select the input definition with the highest priority
-
-        if (def is null) // Look at me using the newfangled 'is null' check :)
-        {
-            // This will really only ever fire if devs start porting this to console later down the line
-            Debug.LogError("Somehow not a single input definition is available, not even keyboard mode!");
-            yield break;
-        }
-
-        BuildPlayer(def);
-    }
-
-    void BuildPlayer(InputSystemDefinition def)
-    {
-        // Setup character
         GameObject board = instantiatePrefabs ? Instantiate(boardPrefab) : boardPrefab;
         GameObject gfxBoard = instantiatePrefabs ? (instantiateGFXBoard ? Instantiate(gfxBoardPrefab) : null) : gfxBoardPrefab;
         Transform charParent = spawnCharacterInRealBoard ? board.transform : (gfxBoard?.transform ?? board.transform);
-        GameObject character = Instantiate(def.character, charParent.position, charParent.rotation, charParent); // Now where to place this character
 
-        using (var e = PlayerReadyEvent.Get()) { }
+        StartCoroutine(Watch(charParent));
     }
 
+
+    // This coroutine quietly and continuously watches all input systems, waiting for when a new higher priority
+    // input system is detected to pounce!
+    // After which it will utterly destroy the previous input system character system deposing it and stripping it of
+    // its right to rule the board, after which it will then set the newer higher priority input system character upon
+    // the throne until it also inevitibly is unplugged, after which this coroutine will then return authority back
+    // to the input system with the next-highest claim to the throne.
+    // And thus - the cycle continues.
+    IEnumerator Watch(Transform charParent)
+    {
+        Dictionary<InputSystemDefinition, InputAvailability> availabilityObjs = new Dictionary<InputSystemDefinition, InputAvailability>();
+        defList.definitions.ForEach(n => availabilityObjs.Add(n, Instantiate(n.available)?.GetComponent<InputAvailability>()));
+        InputSystemDefinition prevBest = null;
+        GameObject character = null;
+
+        while (true)
+        {
+            yield return null;         // Placing this line right here let's us both wait between each check, and wait one frame after setting up all input systems
+            // C# Linq is very lazily evaluated, the below does not instantiate a table for each method, as iterators are used
+            InputSystemDefinition best = availabilityObjs // How's this for self-documenting code - 'best' :)
+                .Where(n => !(n.Value is null) && n.Value.Available)
+                .Select(n => n.Key)
+                .Maximum(n => n.priority);
+
+            if (best is null)
+                continue;
+
+            // If the best input system has changed
+            if (best != prevBest)
+            {
+                // Destroy the current character and replace it with the input-system appropriate one
+                prevBest = best;
+                Destroy(character);
+                character = Instantiate(best.character, charParent.position, charParent.rotation, charParent);
+                using (var e = PlayerReadyEvent.Get()) { }
+            }
+        }
+    }
 }
