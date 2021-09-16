@@ -94,7 +94,7 @@ public class VRButton : MonoBehaviour
 
     void Start()
     {
-        Orient();
+        // Orient();
         initPos = transform.localPosition;
 
         text.text = label;
@@ -106,6 +106,8 @@ public class VRButton : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!CanCorrect) // Wait for the camera to be created
+            return;
         // Distance the button is from its original position
         float dist = Vector3.Distance(GlobalInitPos, rb.position);
         float unDepressDist = depressDist * 0.1f;
@@ -176,6 +178,9 @@ public class VRButton : MonoBehaviour
     // If this doesn't work - attempt to use a physics callback instead
     public IEnumerator RunLateFixedUpdate()
     {
+        while (!CanCorrect) // Wait for the camera to be created
+            yield return null;
+
         while (true)
         {
             if (enablePositionCorrection && Vector3.Distance(transform.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
