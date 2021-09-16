@@ -72,16 +72,14 @@ public class VRButton : MonoBehaviour
     [Tooltip("Assigns to which buttons the debug gizmos will be drawn on")]
     [SerializeField] DebugGizmoDrawMode gizmoDrawMode = DebugGizmoDrawMode.Disabled;
 
-
-    Vector3 ViewTarget => BoardController.Instance?.transform?.position ?? transform.parent?.position ?? rb.position;
+    bool CanCorrect => !(Camera.main is null);
+    Vector3 ViewTarget => Camera.main.transform.position;
     Vector3 ButtonDir => (ViewTarget - rb.position).normalized;
 
     #region Bookkeeping
 
     Vector3 initPos;
     Vector3 GlobalInitPos => transform.parent != null ? transform.parent.TransformPoint(initPos) : initPos;
-
-    // ButtonState state = ButtonState.Up;
 
     bool pressed = false;
 
@@ -102,6 +100,8 @@ public class VRButton : MonoBehaviour
         text.text = label;
         meshRend.material.color = buttonColor;
         // state = ButtonState.Up; // Just to make sure this is up by default
+
+        StartCoroutine(RunLateFixedUpdate());
     }
 
     void FixedUpdate()
@@ -131,8 +131,8 @@ public class VRButton : MonoBehaviour
             rb.MovePosition(Vector3.MoveTowards(rb.position, GlobalInitPos, Time.deltaTime * buttonLiftVel));
         }
 
-        if (enablePositionCorrection && Vector3.Distance(rb.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
-            rb.position = CorrectedPosition;
+        if (enablePositionCorrection && Vector3.Distance(transform.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
+            transform.position = CorrectedPosition;
 
         if (Touched)
             touch--;
@@ -170,6 +170,19 @@ public class VRButton : MonoBehaviour
         if (orientTowardsOrigin)
             transform.LookAt(ViewTarget, Vector3.up);
         rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
+    }
+
+    // This should ideally run immediately after FixedUpdate()
+    // If this doesn't work - attempt to use a physics callback instead
+    public IEnumerator RunLateFixedUpdate()
+    {
+        while (true)
+        {
+            if (enablePositionCorrection && Vector3.Distance(transform.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
+                transform.position = CorrectedPosition;
+
+            yield return new WaitForFixedUpdate();
+        }
     }
 
     public void OnDrawGizmos()
