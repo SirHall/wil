@@ -96,8 +96,6 @@ public class VRButton : MonoBehaviour
     {
         // Orient();
         initPos = transform.localPosition;
-
-        text.text = label;
         meshRend.material.color = buttonColor;
         // state = ButtonState.Up; // Just to make sure this is up by default
 

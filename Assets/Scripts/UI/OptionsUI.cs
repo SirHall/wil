@@ -21,18 +21,35 @@ public class OptionsUI : MonoBehaviour
     [SerializeField] TextMeshPro button_TerrainText;
     [SerializeField] TextMeshPro button_CoralText;
 
+    [SerializeField]
+    [Tooltip("Player and wave bobbing")]
     private bool isBobbing = true;
 
+    [SerializeField]
+    [Tooltip("Warmup time the player will have before being moved and measured")]
     private float warmupTime = 5;
+
+    [Tooltip("Warmup time incremental value")]
     private float warmupTimeDelta = 5;
+    [Tooltip("Warmup time max value")]
     private float warmupTimeMax = 60;
+    [Tooltip("Warmup time min value")]
     private float warmupTimeMin = 0;
 
+    [SerializeField]
+    [Tooltip("Intro which moves the player towards the barrel")]
     private bool isIntro = true;
 
+    [SerializeField]
+    [Tooltip("Global game volume which changes all sounds")]
     private float gameVolume = 100;
 
+    [SerializeField]
+    [Tooltip("Toggles the terrain being visible")]
     private bool isTerrain = true;
+
+    [SerializeField]
+    [Tooltip("Toggle the LOD coral being visible")]
     private bool isCoral = true;
 
     private CoralVisibility coralVisibility;
@@ -45,6 +62,9 @@ public class OptionsUI : MonoBehaviour
         UpdateStats();
     }
 
+    /// <summary>
+    /// Sets local variables and text based on global settings
+    /// </summary>
     void UpdateStats()
     {
         // Gameplay
@@ -61,6 +81,7 @@ public class OptionsUI : MonoBehaviour
         isCoral = GameSettings.Instance.Coral;
 
         button_TerrainText.text = isTerrain ? "On" : "Off";
+
         button_CoralText.text = isCoral ? "On" : "Off";
 
         button_bobbingText.text = isBobbing ? "On" : "Off";
@@ -70,27 +91,38 @@ public class OptionsUI : MonoBehaviour
         panel_coralText.text = coralVisibility.ToString();
     }
 
+    /// <summary>
+    /// Updates the player bobbing settings
+    /// </summary>
     void UpdateBobbing()
     {
         isBobbing = GameSettings.Instance.Bobbing ? false : true;
         GameSettings.Instance.Bobbing = isBobbing;
         button_bobbingText.text = isBobbing ? "On" : "Off";
     }
-
+    /// <summary>
+    /// Updates the warmup time settings
+    /// </summary>
+    /// <param name="time">Float variable for the warmup time</param>
     void UpdateWarmup(float time)
     {
         warmupTime = Mathf.Clamp(time, warmupTimeMin, warmupTimeMax);
         GameSettings.Instance.WarmupTime = warmupTime;
         panel_warmupText.text = warmupTime.ToString() + " Seconds";
     }
-
+    /// <summary>
+    /// Updates the player surf intro settings
+    /// </summary>
     void UpdateIntro()
     {
         isIntro = GameSettings.Instance.IntroStart ? false : true;
         GameSettings.Instance.IntroStart = isIntro;
         button_introText.text = isIntro ? "On" : "Off";
     }
-
+    /// <summary>
+    /// Updates the global audio volume settings
+    /// </summary>
+    /// <param name="volume">Float value used as the volume</param>
     void UpdateAudio(float volume)
     {
         gameVolume = Mathf.Clamp(volume, 0, 100);
@@ -98,7 +130,10 @@ public class OptionsUI : MonoBehaviour
         AudioListener.volume = Mathf.Clamp(Mathf.InverseLerp(0, 100, gameVolume), 0, 1);
         panel_AudioText.text = gameVolume.ToString() + " %";
     }
-
+    /// <summary>
+    /// Toggle between each options menu
+    /// </summary>
+    /// <param name="active">Gameobject which will be the active option menu</param>
     void ToggleOptions(GameObject active)
     {
         gameplayHolder.SetActive(false);
@@ -107,7 +142,10 @@ public class OptionsUI : MonoBehaviour
 
         active.SetActive(true);
     }
-
+    /// <summary>
+    /// Update the coral visibility through the water
+    /// </summary>
+    /// <param name="coralValue">Int value which corresponds to the coral visibility enum</param>
     void UpdateCoralLevels(int coralValue)
     {
         int coralLevelLength = System.Enum.GetValues(typeof(CoralVisibility)).Length - 1;
@@ -121,14 +159,18 @@ public class OptionsUI : MonoBehaviour
         GameSettings.Instance.CoralMode = coralVisibility;
         panel_coralText.text = coralVisibility.ToString();
     }
-
+    /// <summary>
+    /// Updates the terrain prefab visibility setting
+    /// </summary>
     void UpdateTerrainVisibility()
     {
         isTerrain = GameSettings.Instance.Terrain ? false : true;
         GameSettings.Instance.Terrain = isTerrain;
         button_TerrainText.text = isTerrain ? "On" : "Off";
     }
-
+    /// <summary>
+    /// Updates the LOD coral visibility setting
+    /// </summary>
     void UpdateCoralVisibility()
     {
         isCoral = GameSettings.Instance.Coral ? false : true;
