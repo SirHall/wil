@@ -14,18 +14,25 @@ public class SurfDirButton : MonoBehaviour
     void OnEnable() => VRButtonEvent.RegisterListener(OnVRButtonEvent);
     void OnDisable() => VRButtonEvent.UnregisterListener(OnVRButtonEvent);
 
-    void Start() => UpdateArrow();
+    void Start()
+    {
+        UpdateArrow();
+        UpdateText();
+    }
 
     void OnVRButtonEvent(VRButtonEvent e)
     {
         if (e.button == VRButtons.SurfDir)
             BarrelSettings.Instance.SurfDir = ((BarrelSettings.Instance.SurfDir == RightLeft.Right) ? RightLeft.Left : RightLeft.Right);
 
-        bool isRight = BarrelSettings.Instance.SurfDir == RightLeft.Right;
-
-        buttonText.text = isRight ? "Right" : "Left";
-
+        UpdateText();
         UpdateArrow();
+    }
+
+    void UpdateText()
+    {
+        bool isRight = BarrelSettings.Instance.SurfDir == RightLeft.Right;
+        buttonText.text = isRight ? "Right" : "Left";
     }
 
     void UpdateArrow()

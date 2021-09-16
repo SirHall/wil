@@ -834,7 +834,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4121726964017680770
 Transform:
   m_ObjectHideFlags: 0
@@ -12373,6 +12373,7 @@ MonoBehaviour:
   performanceHolder: {fileID: 7464353711189818116}
   button_TerrainText: {fileID: 5060794323797647865}
   button_CoralText: {fileID: 8332103702797696712}
+  isTerrain: 1
 --- !u!1 &6955738402794351355
 GameObject:
   m_ObjectHideFlags: 0
@@ -13253,7 +13254,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5413587517781397151
 Transform:
   m_ObjectHideFlags: 0
@@ -17330,6 +17331,10 @@ PrefabInstance:
     - target: {fileID: 1152624865079271475, guid: 4033b05b9403ea24f9c75b49037cd3ae, type: 3}
       propertyPath: m_Name
       value: Exit Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 1152624865079271475, guid: 4033b05b9403ea24f9c75b49037cd3ae, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1152624865515205056, guid: 4033b05b9403ea24f9c75b49037cd3ae, type: 3}
       propertyPath: m_text
