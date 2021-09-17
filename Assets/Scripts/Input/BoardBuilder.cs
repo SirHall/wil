@@ -25,7 +25,8 @@ public class BoardBuilder : MonoBehaviour
     {
         GameObject board = instantiatePrefabs ? Instantiate(boardPrefab) : boardPrefab;
         GameObject gfxBoard = instantiatePrefabs ? (instantiateGFXBoard ? Instantiate(gfxBoardPrefab) : null) : gfxBoardPrefab;
-        Transform charParent = spawnCharacterInRealBoard ? board.transform : (gfxBoard?.transform ?? board.transform);
+        // Transform charParent = spawnCharacterInRealBoard ? board.transform : (gfxBoard?.transform ?? board.transform);
+        Transform charParent = SurfPoint.Instance.transform;
 
         StartCoroutine(Watch(charParent));
     }

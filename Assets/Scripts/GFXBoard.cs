@@ -6,6 +6,8 @@ using Excessives.Unity;
 
 public class GFXBoard : MonoBehaviour
 {
+    public static GFXBoard Instance { get; private set; }
+
     // [Title("Animation")]
     [Tooltip("The velocity of the board at which the sway animation will stop entirely")]
     [SerializeField] float animUpperStopVel = 5.0f;
@@ -38,11 +40,33 @@ public class GFXBoard : MonoBehaviour
 
     BoardController Board => BoardController.Instance;
 
-    void OnEnable() { GameSettingsEvent.RegisterListener(OnGameplaySettingEvent); }
+    public static float BoardHeight { get; private set; }
 
-    void OnDisable() { GameSettingsEvent.UnregisterListener(OnGameplaySettingEvent); }
+    void OnEnable()
+    {
+        if (Instance != null)
+        {
+            Debug.LogError("There may only be one instance of SurfPoint at any time");
+            Destroy(gameObject);
+            return;
+        }
 
-    void FixedUpdate()
+        Instance = this;
+
+        GameSettingsEvent.RegisterListener(OnGameplaySettingEvent);
+    }
+
+    void OnDisable()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+            GameSettingsEvent.UnregisterListener(OnGameplaySettingEvent);
+        }
+    }
+
+
+    void LateUpdate()
     {
         if (Board is null)
             return;
