@@ -99,7 +99,7 @@ public class VRButton : MonoBehaviour
         meshRend.material.color = buttonColor;
         // state = ButtonState.Up; // Just to make sure this is up by default
 
-        StartCoroutine(RunLateFixedUpdate());
+        //StartCoroutine(RunLateFixedUpdate());
     }
 
     void FixedUpdate()
@@ -121,18 +121,17 @@ public class VRButton : MonoBehaviour
             pressed = false; // This button has now returned to its original position, and is now 'unpressed'
             OnLift.Invoke();
         }
-
         if (!pressed && dist >= depressDist)
             ButtonPressed();
 
         // We move the button back to it's original position on the frame after it has been fully depressed
         if (momentarySwitch && dist > 0.001f)
         {
-            rb.MovePosition(Vector3.MoveTowards(rb.position, GlobalInitPos, Time.deltaTime * buttonLiftVel));
+            //rb.MovePosition(Vector3.MoveTowards(rb.position, GlobalInitPos, Time.deltaTime * buttonLiftVel));
         }
 
-        if (enablePositionCorrection && Vector3.Distance(transform.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
-            transform.position = CorrectedPosition;
+        //if (enablePositionCorrection && Vector3.Distance(transform.position, CorrectedPosition) >= 0.001f) // Only correct position if it strays from the correct 'path'
+        //    transform.position = CorrectedPosition;
 
         if (Touched)
             touch--;
@@ -140,6 +139,7 @@ public class VRButton : MonoBehaviour
 
     void ButtonPressed()
     {
+        print("Pressing");
         pressed = true;
         manualPress = false;
 
@@ -148,7 +148,7 @@ public class VRButton : MonoBehaviour
             print("Ensure that all VR Button's have their 'button' field set to a button type other than 'None'");
             return; // If this button does nothing, do not call the VRButtonEvent
         }
-
+        print(button);
         using (var e = VRButtonEvent.Get())
             e.button = button;
 
