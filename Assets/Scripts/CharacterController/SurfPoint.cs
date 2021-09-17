@@ -1,4 +1,5 @@
 using System.Collections;
+using Excessives.Unity;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,7 +36,7 @@ public class SurfPoint : MonoBehaviour
             transform.position = GenY(BoardController.Instance.Motor.TransientPosition);
     }
 
-    Vector3 GenY(Vector3 v) => (bobbing && WaveScore.State != GameState.Lost) ? v.WithY(WaterData.Instance.EvalAtWorldPos) : v;
+    Vector3 GenY(Vector3 v) => (bobbing && WaveScore.State != GameState.Lost) ? v.WithY(GFXBoard.Instance.transform.position.y) : v;
 
     void OnGameSettingsEvent(GameSettingsEvent e)
     {
