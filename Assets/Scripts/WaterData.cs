@@ -54,6 +54,11 @@ public class WaterData : MonoBehaviour
         GameSettingsEvent.UnregisterListener(OnGameplaySettingEvent);
     }
 
+    void Update()
+    {
+        if (!WaveScore.IsPlaying) waterMat.SetFloat("_Displacement", 0.2f);
+    }
+
     // The world position of the water plane's UV origin
     Vector2 UVOriginPos { get => (Vector2.one * (sideLength * 0.5f) * scale); }
 
@@ -88,11 +93,11 @@ public class WaterData : MonoBehaviour
 
         // Water Transparency
         Color waterColor;
-        switch (e.gameplaySettings.coralVisibility)
+        switch (e.gameplaySettings.waterVisibility)
         {
-            case CoralVisibility.Low: waterColor = new Color(0.039f, 0.098f, 0.27f, 0.90f); break;
-            case CoralVisibility.Medium: waterColor = new Color(0.039f, 0.098f, 0.27f, 0.70f); break;
-            case CoralVisibility.High: waterColor = new Color(0.039f, 0.098f, 0.27f, 0.40f); break;
+            case WaterVisibility.Low: waterColor = new Color(0.039f, 0.098f, 0.27f, 0.90f); break;
+            case WaterVisibility.Medium: waterColor = new Color(0.039f, 0.098f, 0.27f, 0.70f); break;
+            case WaterVisibility.High: waterColor = new Color(0.039f, 0.098f, 0.27f, 0.40f); break;
             default: waterColor = new Color(0.039f, 0.098f, 0.27f, 0.70f); break;
         }
         waterMat.SetColor("_DeepColor", waterColor);

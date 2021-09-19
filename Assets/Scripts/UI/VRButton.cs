@@ -139,7 +139,6 @@ public class VRButton : MonoBehaviour
 
     void ButtonPressed()
     {
-        print("Pressing");
         pressed = true;
         manualPress = false;
 
@@ -148,7 +147,6 @@ public class VRButton : MonoBehaviour
             print("Ensure that all VR Button's have their 'button' field set to a button type other than 'None'");
             return; // If this button does nothing, do not call the VRButtonEvent
         }
-        print(button);
         using (var e = VRButtonEvent.Get())
             e.button = button;
 

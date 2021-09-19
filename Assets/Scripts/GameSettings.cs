@@ -11,7 +11,7 @@ public class GameSettings : MonoBehaviour
     [ShowInInspector] public bool Bobbing { get; set; } = true; //Enables the board bobbing
     [ShowInInspector] public float WarmupTime { get; set; } = 5f; //Sets the length of time the warmup will last for
     [ShowInInspector] public bool IntroStart { get; set; } = true; //Enables or disables the starting intro
-    [ShowInInspector] public CoralVisibility CoralMode { get; set; } = CoralVisibility.Medium; // Sets the coral visibility level (1 - Low, 2 - Medium, 3 - High)
+    [ShowInInspector] public WaterVisibility WaterMode { get; set; } = WaterVisibility.Medium; // Sets the coral visibility level (1 - Low, 2 - Medium, 3 - High)
 
     // Audio Settings
     [ShowInInspector] public float AudioLevel { get; set; } = 100f; // Sets the volume percentage for the overall game audio level
@@ -47,7 +47,7 @@ public class GameSettings : MonoBehaviour
                 bobbing = Instance.Bobbing,
                 warmupTime = Instance.WarmupTime,
                 introStart = Instance.IntroStart,
-                coralVisibility = Instance.CoralMode
+                waterVisibility = Instance.WaterMode
             };
             e.audioSettings = new AudioSettings
             {
@@ -75,7 +75,7 @@ public class GameSettings : MonoBehaviour
 
     
 }
-public enum CoralVisibility
+public enum WaterVisibility
 {
     Low,
     Medium,

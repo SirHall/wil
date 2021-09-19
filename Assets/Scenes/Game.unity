@@ -1132,7 +1132,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1739013733}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 89.62, y: -4.669, z: -2.897}
+  m_LocalPosition: {x: 89.62, y: -4.669, z: -33.982}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1467,17 +1467,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c26aa9fa9e60c30449d00fbd56ccdb9a, type: 3}
---- !u!114 &3145168696831687383 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4014673274310627525, guid: c26aa9fa9e60c30449d00fbd56ccdb9a, type: 3}
-  m_PrefabInstance: {fileID: 3145168696831687382}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &3599054378460353613
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1906,7 +1895,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6631784376406172074, guid: 0f05a4ba27c5bb34189db73ee9a7b49e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4923
+      value: -5657
       objectReference: {fileID: 0}
     - target: {fileID: 6631784376406172074, guid: 0f05a4ba27c5bb34189db73ee9a7b49e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1914,7 +1903,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6631784376406172074, guid: 0f05a4ba27c5bb34189db73ee9a7b49e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -334
+      value: -542
       objectReference: {fileID: 0}
     - target: {fileID: 6631784376406172074, guid: 0f05a4ba27c5bb34189db73ee9a7b49e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2151,7 +2140,7 @@ PrefabInstance:
     - target: {fileID: 7501596812986962732, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
       propertyPath: winDataText
       value: 
-      objectReference: {fileID: 3145168696831687383}
+      objectReference: {fileID: 0}
     - target: {fileID: 7501596812986962732, guid: b3a0a252219f5544ebac4ca33b1a146b, type: 3}
       propertyPath: startDataText
       value: 

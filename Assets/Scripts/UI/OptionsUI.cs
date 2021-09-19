@@ -10,7 +10,7 @@ public class OptionsUI : MonoBehaviour
     [SerializeField] TextMeshPro button_bobbingText;
     [SerializeField] TextMeshPro button_introText;
     [SerializeField] TextMeshPro panel_warmupText;
-    [SerializeField] TextMeshPro panel_coralText;
+    [SerializeField] TextMeshPro panel_waterVisibilityText;
 
     // Audio
     [SerializeField] GameObject audioHolder;
@@ -52,7 +52,7 @@ public class OptionsUI : MonoBehaviour
     [Tooltip("Toggle the LOD coral being visible")]
     private bool isCoral = true;
 
-    private CoralVisibility coralVisibility;
+    private WaterVisibility waterVisibility;
 
     void OnEnable() => VRButtonEvent.RegisterListener(OnVRButtonEvent);
     void OnDisable() => VRButtonEvent.UnregisterListener(OnVRButtonEvent);
@@ -71,7 +71,7 @@ public class OptionsUI : MonoBehaviour
         isBobbing = GameSettings.Instance.Bobbing;
         warmupTime = GameSettings.Instance.WarmupTime;
         isIntro = GameSettings.Instance.IntroStart;
-        coralVisibility = GameSettings.Instance.CoralMode;
+        waterVisibility = GameSettings.Instance.WaterMode;
 
         // Audio
         gameVolume = GameSettings.Instance.AudioLevel;
@@ -88,7 +88,7 @@ public class OptionsUI : MonoBehaviour
         panel_warmupText.text = warmupTime.ToString() + " Seconds";
         button_introText.text = isIntro ? "On" : "Off";
         panel_AudioText.text = gameVolume.ToString() + " %";
-        panel_coralText.text = coralVisibility.ToString();
+        panel_waterVisibilityText.text = waterVisibility.ToString();
     }
 
     /// <summary>
@@ -145,19 +145,19 @@ public class OptionsUI : MonoBehaviour
     /// <summary>
     /// Update the coral visibility through the water
     /// </summary>
-    /// <param name="coralValue">Int value which corresponds to the coral visibility enum</param>
-    void UpdateCoralLevels(int coralValue)
+    /// <param name="waterValue">Int value which corresponds to the coral visibility enum</param>
+    void UpdateWaterLevels(int waterValue)
     {
-        int coralLevelLength = System.Enum.GetValues(typeof(CoralVisibility)).Length - 1;
+        int waterLevelLength = System.Enum.GetValues(typeof(WaterVisibility)).Length - 1;
 
-        if ((int)coralVisibility == coralLevelLength && coralValue > (int)coralVisibility)
+        if ((int)waterVisibility == waterLevelLength && waterValue > (int)waterVisibility)
             return;
-        else if ((int)coralVisibility == 0 && coralValue < 0)
+        else if ((int)waterVisibility == 0 && waterValue < 0)
             return;
 
-        coralVisibility = (CoralVisibility)coralValue;
-        GameSettings.Instance.CoralMode = coralVisibility;
-        panel_coralText.text = coralVisibility.ToString();
+        waterVisibility = (WaterVisibility)waterValue;
+        GameSettings.Instance.WaterMode = waterVisibility;
+        panel_waterVisibilityText.text = waterVisibility.ToString();
     }
     /// <summary>
     /// Updates the terrain prefab visibility setting
@@ -190,8 +190,8 @@ public class OptionsUI : MonoBehaviour
             case VRButtons.Options_Gameplay_IncreaseWarmup: UpdateWarmup(warmupTime + warmupTimeDelta); break;
             case VRButtons.Options_Gameplay_DecreaseWarmup: UpdateWarmup(warmupTime - warmupTimeDelta); break;
             case VRButtons.Options_Gameplay_IntroStart: UpdateIntro(); break;
-            case VRButtons.Options_Gameplay_IncreaseCoral: UpdateCoralLevels((int)coralVisibility + 1); break;
-            case VRButtons.Options_Gameplay_DecreaseCoral: UpdateCoralLevels((int)coralVisibility - 1); break;
+            case VRButtons.Options_Gameplay_IncreaseWater: UpdateWaterLevels((int)waterVisibility + 1); break;
+            case VRButtons.Options_Gameplay_DecreaseWater: UpdateWaterLevels((int)waterVisibility - 1); break;
 
             case VRButtons.Options_Audio_Min: UpdateAudio(0); break;
             case VRButtons.Options_Audio_Max: UpdateAudio(100); break;

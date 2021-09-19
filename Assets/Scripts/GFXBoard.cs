@@ -68,6 +68,8 @@ public class GFXBoard : MonoBehaviour
 
     void LateUpdate()
     {
+        if (!WaveScore.IsPlaying) isBobbing = false;
+
         if (Board is null)
             return;
 

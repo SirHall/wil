@@ -430,7 +430,7 @@ MonoBehaviour:
   buttonLiftVel: 0.4
   clickDist: 0.08
   label: Left
-  buttonColor: {r: 0, g: 0.62352943, b: 1, a: 1}
+  buttonColor: {r: 0.13725491, g: 0.34509805, b: 0.8627451, a: 1}
   orientTowardsOrigin: 0
   meshRend: {fileID: 586111969}
   text: {fileID: 801384524}
@@ -3830,7 +3830,7 @@ MonoBehaviour:
   buttonLiftVel: 0.4
   clickDist: 0.08
   label: +
-  buttonColor: {r: 0, g: 0.62352943, b: 1, a: 1}
+  buttonColor: {r: 0.13725491, g: 0.34509805, b: 0.8627451, a: 1}
   orientTowardsOrigin: 0
   meshRend: {fileID: 1683176987}
   text: {fileID: 654000017}
@@ -4145,7 +4145,7 @@ MonoBehaviour:
   buttonLiftVel: 0.4
   clickDist: 0.08
   label: _
-  buttonColor: {r: 0.9254902, g: 0.18431373, b: 0.29411766, a: 1}
+  buttonColor: {r: 0.8627451, g: 0.13725491, b: 0.34509805, a: 1}
   orientTowardsOrigin: 0
   meshRend: {fileID: 285277223}
   text: {fileID: 275640456}
@@ -4500,7 +4500,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 1, g: 0.9843137, b: 0.9411765, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -4840,7 +4840,7 @@ MonoBehaviour:
   buttonLiftVel: 0.4
   clickDist: 0.08
   label: _
-  buttonColor: {r: 0.9254902, g: 0.18431373, b: 0.29411766, a: 1}
+  buttonColor: {r: 0.8627451, g: 0.13725491, b: 0.34509805, a: 1}
   orientTowardsOrigin: 0
   meshRend: {fileID: 1028785284}
   text: {fileID: 285136842}
@@ -5961,7 +5961,7 @@ MonoBehaviour:
   buttonLiftVel: 0.4
   clickDist: 0.08
   label: +
-  buttonColor: {r: 0, g: 0.62352943, b: 1, a: 1}
+  buttonColor: {r: 0.13725491, g: 0.34509805, b: 0.8627451, a: 1}
   orientTowardsOrigin: 0
   meshRend: {fileID: 1494988872}
   text: {fileID: 1458277219}
@@ -6531,7 +6531,7 @@ MonoBehaviour:
   buttonLiftVel: 0.4
   clickDist: 0.08
   label: Surf
-  buttonColor: {r: 0.32941177, g: 1, b: 0.2784314, a: 1}
+  buttonColor: {r: 0.34509805, g: 0.8627451, b: 0.13725491, a: 1}
   orientTowardsOrigin: 0
   meshRend: {fileID: 1771708252}
   text: {fileID: 476564989}

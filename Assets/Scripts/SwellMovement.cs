@@ -14,26 +14,43 @@ public class SwellMovement : MonoBehaviour
 
     // Total distance between the markers.
     private float journeyLength;
+
+    private bool isMoving;
+
     // Start is called before the first frame update
     void Start()
     {
-        startTime = Time.time;
-
-        // Calculate the journey length.
-        journeyLength = Vector3.Distance(startPos, endPos);
+        isMoving = false;
+        transform.position = startPos;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Distance moved equals elapsed time times speed..
-        float distCovered = (Time.time - startTime) * speed;
+        if (WaveScore.IsWarmup) return;
 
-        // Fraction of journey completed equals current distance divided by total distance.
-        float fractionOfJourney = distCovered / journeyLength;
+        if (!isMoving && !WaveScore.IsWarmup)
+        {
+            startTime = Time.time;
+            isMoving = true;
 
-        // Set our position as a fraction of the distance between the markers.
-        transform.position = Vector3.Lerp(startPos, endPos, fractionOfJourney);
+            // Calculate the journey length.
+            journeyLength = Vector3.Distance(startPos, endPos);
+        }
+
+        if (isMoving)
+        {
+            // Distance moved equals elapsed time times speed..
+            float distCovered = (Time.time - startTime) * speed;
+
+            // Fraction of journey completed equals current distance divided by total distance.
+            float fractionOfJourney = distCovered / journeyLength;
+
+            // Set our position as a fraction of the distance between the markers.
+            transform.position = Vector3.Lerp(startPos, endPos, fractionOfJourney);
+        }
+
+        
     }
 
 }

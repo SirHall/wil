@@ -44,8 +44,8 @@ public enum VRButtons
     Options_AudioSwitch,
     Options_PerformanceSwitch,
 
-    Options_Gameplay_IncreaseCoral,
-    Options_Gameplay_DecreaseCoral,
+    Options_Gameplay_IncreaseWater,
+    Options_Gameplay_DecreaseWater,
 
     Options_Performance_Terrain,
     Options_Performance_Coral

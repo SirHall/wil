@@ -1003,8 +1003,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dc1ef4460b71e1459dd5b959f582dd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 4.45
-  startPos: {x: 0, y: -4.5, z: -70}
+  speed: 5.23
+  startPos: {x: 0, y: -3.5, z: -48}
   endPos: {x: 0, y: -0.4, z: -5}
 --- !u!1 &5539595748365118750
 GameObject:

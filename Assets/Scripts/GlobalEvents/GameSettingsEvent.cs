@@ -14,7 +14,7 @@ public struct GameplaySettings
     public bool bobbing;
     public float warmupTime;
     public bool introStart;
-    public CoralVisibility coralVisibility;
+    public WaterVisibility waterVisibility;
 }
 
 public struct AudioSettings
