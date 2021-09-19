@@ -379,7 +379,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4809720812803744586}
   m_Layer: 0
-  m_Name: Designer UI Updated
+  m_Name: Designer UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

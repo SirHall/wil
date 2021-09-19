@@ -1733,7 +1733,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5706488379168140908, guid: c3fddf691c0cb5d4785640c5f36eab1d, type: 3}
       propertyPath: m_Name
-      value: MainMenu UI Updated
+      value: MainMenu UI
       objectReference: {fileID: 0}
     - target: {fileID: 5737915540248468828, guid: c3fddf691c0cb5d4785640c5f36eab1d, type: 3}
       propertyPath: m_IsActive
