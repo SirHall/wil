@@ -59,7 +59,7 @@ Material:
     - Vector1_7273530c27a34c9f8ee5723b84f96baa: 0.7
     - Vector1_8fc84b15d8a847e794cad4001579f176: 1.75
     - Vector1_dada42ebfac44076897b6de67441ba32: 0.3
-    - _Displacement: 0.2
+    - _Displacement: 0.7
     m_Colors:
     - Color_36218622185947c6a5ae36366d8e21d8: {r: 0.23673874, g: 0.32177803, b: 0.5283019, a: 0.6666667}
     - Color_93e06cd551a5449091bcde90b46765a0: {r: 0.5790762, g: 0.6688198, b: 0.7264151, a: 0.19607843}
