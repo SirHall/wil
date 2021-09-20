@@ -160,6 +160,7 @@ public class SoundManager : MonoBehaviour{
         { 
             barrelTouchSource.clip = BarrelTouch;
             barrelTouchSource.loop = true;
+            barrelTouchSource.volume = 0.6f;
             barrelTouchSource.Play();
         }
         else if (!e.isTouching && barrelTouchSource.isPlaying)
@@ -202,7 +203,7 @@ public class SoundManager : MonoBehaviour{
     private void GrabSound(GripInteraction e)
     {
         grabSource.clip = Grab;
-        grabSource.volume = 100f;
+        grabSource.volume = 0.9f;
         grabSource.Play();
     }
 

@@ -45,6 +45,8 @@ public class HandManager : MonoBehaviour
     [Tooltip("The player's hand position relative to the starting hand position")]
     private Vector3 handPosRel = Vector3.zero;
 
+    private bool gripSession;
+
     public enum HandType
     {
         left,
@@ -131,6 +133,9 @@ public class HandManager : MonoBehaviour
         InputDevices.GetDevicesWithCharacteristics(deviceCharacteristics, devices);
         if (devices.Count > 0) {
 
+            if (deviceCharacteristics == InputDeviceCharacteristics.Left) handType = HandType.left;
+            else if (deviceCharacteristics == InputDeviceCharacteristics.Right) handType = HandType.right;
+
             visibleHandModel = new GameObject();
             currentDevice = devices[0];
 
@@ -167,26 +172,38 @@ public class HandManager : MonoBehaviour
     /// <param name="rightHand"></param>
     /// <param name="type"></param>
     /// <returns>Bool value depending of if player is gripping while either hand is interacting with type</returns>
-    private bool IsGripping(InputDevice device, Interactables type)
+    private bool IsGrippingType(InputDevice device, Interactables type)
     {
         if (device.TryGetFeatureValue(CommonUsages.grip, out float gripvalue))
         {
             if (gripvalue == 1)
             {
+                if (type == Interactables.None) return true;
+
                 if (leftInteraction == type || rightInteraction == type)
                     return true;
             }
         }
         return false;
     }
-
+    private bool IsGripping(InputDevice device)
+    {
+        if (device.TryGetFeatureValue(CommonUsages.grip, out float gripvalue))
+        {
+            if (gripvalue == 1)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     /// <summary>
     /// Conditions to check if player is gripping while in contact with the surfboard gripping areas. 
     /// </summary>
     private void SurfboardGripping() 
     {
         bool previousInteractionState = isGripInteracting;
-        isGripInteracting = IsGripping(devices[0], Interactables.Surfboard);
+        isGripInteracting = IsGrippingType(devices[0], Interactables.Surfboard);
         Vector3 boardInput;
 
         if (isGripInteracting)
@@ -195,20 +212,33 @@ public class HandManager : MonoBehaviour
             if (previousInteractionState != isGripInteracting)
             {
                 startCoordinate = transform.localPosition;
-
+                gripSession = true;
                 // Trigger GripInteraction event
                 using (var e = GripInteraction.Get()); 
             }
-            CheckHandPosition();
-            boardInput = HandPosToBoardInput(handPosRel);
+            
         }
-        else
+
+        if (IsGripping(devices[0]) && gripSession)
         {
+            CheckHandPosition();
+            boardInput = HandPosToBoardInput(handPosRel); 
+        } else
+        {
+            if(gripSession) gripSession = false;
             boardInput = Vector3.zero;
         }
 
-        using (var e = BoardControlGripEvent.Get())
-            e.gripInput.dir = boardInput;
+        if(handType == HandType.left)
+        {
+            using (var e = LeftBoardControlGripEvent.Get())
+                e.leftGripInput.dir = boardInput;
+        } else
+        {
+            using (var e = RightBoardControlGripEvent.Get())
+                e.rightGripInput.dir = boardInput;
+        }
+        
     }
 
     /// <summary>
@@ -243,9 +273,9 @@ public class HandManager : MonoBehaviour
         {
             // Assign variable values based on the direction the player is leaning / standing
             if (transform.localPosition.y > startCoordinate.y)
-                handPosRel.y = Mathf.InverseLerp(startCoordinate.y, startCoordinate.y + maxUp, transform.localPosition.y); // Positive
+                handPosRel.y = Mathf.Clamp(Mathf.InverseLerp(startCoordinate.y, startCoordinate.y + maxUp, transform.localPosition.y), 0, maxUp); // Positive
             else
-                handPosRel.y = -Mathf.InverseLerp(startCoordinate.y, startCoordinate.y + maxDown, transform.localPosition.y); // Negative
+                handPosRel.y = Mathf.Clamp(-Mathf.InverseLerp(startCoordinate.y, startCoordinate.y + maxDown, transform.localPosition.y), maxDown, 0); // Negative
         }
     }
 }

@@ -29,7 +29,7 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider collision) 
+    void OnTriggerStay(Collider collision) 
     {
         if (collision.GetComponent<InteractionType>() == null || gameObject.GetComponent<HandManager>() == null) return;
 
