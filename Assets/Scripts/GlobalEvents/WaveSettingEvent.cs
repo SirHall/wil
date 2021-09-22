@@ -7,6 +7,9 @@ public class WaveSettingEvent : GlobalEvent<WaveSettingEvent>, System.IDisposabl
     public WaveSettings settings;
 }
 
+/// <summary>
+/// Stores a value for each possible wave setting. 
+/// </summary>
 public struct WaveSettings
 {
     public float radius;

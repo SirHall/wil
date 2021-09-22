@@ -7,8 +7,10 @@ public class VRButtonEvent : GlobalEvent<VRButtonEvent>, System.IDisposable
     public VRButtons button;
 }
 
-// Stores a value for each possible button in the game.
-// A much better alternative to using 'floating strings'.
+/// <summary>
+/// Stores a value for each possible button in the game. 
+/// A much better alternative to using 'floating strings'.
+/// </summary>
 public enum VRButtons
 {
     None, // A simple default value, will print a reminder to the log to set the button's value (TODO)
@@ -35,18 +37,18 @@ public enum VRButtons
     Options_Gameplay_DecreaseWarmup, // Decrease warmup time
     Options_Gameplay_IntroStart, // Toggle if the player will experience the intro
 
-    Options_Audio_Min,
-    Options_Audio_Max,
-    Options_Audio_DecreaseVolume,
-    Options_Audio_IncreaseVolume,
+    Options_Audio_Min, // Set the audio volume to 0
+    Options_Audio_Max, // Set the audio volume to 100
+    Options_Audio_DecreaseVolume, // Decrease audio volume
+    Options_Audio_IncreaseVolume, // Increase audio volume
 
-    Options_GameplaySwitch,
-    Options_AudioSwitch,
-    Options_PerformanceSwitch,
+    Options_GameplaySwitch, // Switch to Gameplay options menu
+    Options_AudioSwitch, // Switch to Audio options menu
+    Options_PerformanceSwitch, // Switch to Performance options menu
 
-    Options_Gameplay_IncreaseWater,
-    Options_Gameplay_DecreaseWater,
+    Options_Gameplay_IncreaseWater, // Increase water transparency
+    Options_Gameplay_DecreaseWater, // Decrease water transparency
 
-    Options_Performance_Terrain,
-    Options_Performance_Coral
+    Options_Performance_Terrain, // Toggle if the terrain is active
+    Options_Performance_Coral // Toggle is the coral is active
 }

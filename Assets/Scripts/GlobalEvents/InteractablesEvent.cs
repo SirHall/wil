@@ -10,11 +10,12 @@ public class RightInteractablesEvent : GlobalEvent<RightInteractablesEvent>, Sys
 {
     public Interactables rightInteractable;
 }
-// Stores a value for each possible button in the game.
-// A much better alternative to using 'floating strings'.
+/// <summary>
+/// Stores a value for each possible interactable in the game.
+/// </summary>
 public enum Interactables
 {
-    None, // A simple default value
-    Surfboard, // Surfboard interactables to control it using the hands
-    Water,
+    None, // Default value
+    Surfboard, // Surfboard interactable
+    Water, // Water interactable
 }
