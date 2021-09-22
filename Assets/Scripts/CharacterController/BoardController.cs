@@ -202,13 +202,13 @@ public class BoardController : MonoBehaviour, ICharacterController
 
     void ICharacterController.UpdateRotation(ref Quaternion currentRotation, float deltaTime)
     {
-        if (!inputAccepted)
+        if (!inputAccepted || !WaveScore.IsPlaying)
             return;
 
         float inputs = input.dir.x + ((-leftGripInput.dir.x + rightGripInput.dir.x) / 2);
 
         // During rotation board gripping will also move motor sideways (Closer and further from the barrel) 
-        motor.BaseVelocity += new Vector3(0, 0, ((leftGripInput.dir.x + -rightGripInput.dir.x) / 3));
+        motor.BaseVelocity += new Vector3(0, 0, ((leftGripInput.dir.x + -rightGripInput.dir.x) / 4));
 
         // Inputs direction X value is multiplied to make greater head movements apply a large value in comparison to smaller values. 
         currentRotation *= Quaternion.AngleAxis((inputs * 2.4f) * rotateAccel * deltaTime, transform.up);
@@ -251,6 +251,7 @@ public class BoardController : MonoBehaviour, ICharacterController
             // Gravity
             currentVelocity += Vector3.up * -9.81f * deltaTime;
         }
+
 
         if (motor.GroundingStatus.FoundAnyGround)
         {
