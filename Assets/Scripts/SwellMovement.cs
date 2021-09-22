@@ -17,6 +17,8 @@ public class SwellMovement : MonoBehaviour
 
     private bool isMoving;
 
+    private Vector3 velocity = Vector3.zero;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,10 +49,9 @@ public class SwellMovement : MonoBehaviour
             float fractionOfJourney = distCovered / journeyLength;
 
             // Set our position as a fraction of the distance between the markers.
-            transform.position = Vector3.Lerp(startPos, endPos, fractionOfJourney);
+            //transform.position = Vector3.Lerp(startPos, endPos, fractionOfJourney);
+            transform.position = Vector3.SmoothDamp(transform.position, endPos, ref velocity, speed * Time.deltaTime);
         }
-
-        
     }
 
 }

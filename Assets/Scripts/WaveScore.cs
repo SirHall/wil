@@ -220,6 +220,7 @@ public class WaveScore : MonoBehaviour
         // We have lost so load scene & teleport player
         loseObject.transform.position = board.transform.position.WithY(n => n + 1.0f);
         loseObject.SetActive(true);
+
         board.StopImmediately();
         board.InputAccepted = false;
 
@@ -241,6 +242,7 @@ public class WaveScore : MonoBehaviour
     // so we have to wait for the player to stop moving before setting up the win menu
     IEnumerator SetupWonMenu(int warningAmt, float warningTime, int maxScore)
     {
+
         yield return new WaitUntil(() => board.Motor.Velocity.magnitude <= 5f);
 
         winObject.transform.position = board.transform.position.WithY(n => n + 1.0f);
