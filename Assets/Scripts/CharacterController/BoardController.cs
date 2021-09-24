@@ -22,6 +22,7 @@ public class BoardController : MonoBehaviour, ICharacterController
     Vector2 cameraRot = Vector2.zero;
 
     private bool isIntroStarted;
+    private bool isRight;
 
     [SerializeField] float rotateAccel = 15.0f;
     [Tooltip("Drag applied to the board")]
@@ -67,13 +68,20 @@ public class BoardController : MonoBehaviour, ICharacterController
 
     void Start()
     {
+        Vector3 position;
         if (introEnabled)
         {
             isIntroStarted = false;
             inputAccepted = false;
-            Vector3 dir = introEndPos.position - introStartPos.position;
-            motor.SetPositionAndRotation(introStartPos.position, Quaternion.LookRotation(dir, Vector3.up));
+            position = introStartPos.position;
         }
+        else
+        {
+            position = introEndPos.position;
+        }
+
+        Vector3 dir = introEndPos.position - introStartPos.position;
+        motor.SetPositionAndRotation(position, Quaternion.LookRotation(dir, Vector3.up));
     }
 
     void OnEnable()
@@ -82,6 +90,7 @@ public class BoardController : MonoBehaviour, ICharacterController
         LeftBoardControlGripEvent.RegisterListener(OnLeftBoardControlGripEvent);
         RightBoardControlGripEvent.RegisterListener(OnRightBoardControlGripEvent);
         GameSettingsEvent.RegisterListener(OnGameplaySettingEvent);
+        WaveSettingEvent.RegisterListener(OnWaveSettingsEvent);
 
         if (Instance != null)
         {
@@ -97,6 +106,7 @@ public class BoardController : MonoBehaviour, ICharacterController
         LeftBoardControlGripEvent.UnregisterListener(OnLeftBoardControlGripEvent);
         RightBoardControlGripEvent.UnregisterListener(OnRightBoardControlGripEvent);
         GameSettingsEvent.UnregisterListener(OnGameplaySettingEvent);
+        WaveSettingEvent.UnregisterListener(OnWaveSettingsEvent);
 
         if (Instance == this)
             Instance = null;
@@ -112,6 +122,15 @@ public class BoardController : MonoBehaviour, ICharacterController
 
         if (WaveScore.IsPlaying && !WaveScore.IsWarmup)
             CheckBoardStability();
+    }
+
+    void OnWaveSettingsEvent(WaveSettingEvent e)
+    {
+        isRight = e.settings.surfDir == RightLeft.Right;
+
+        // Compensate "intro end position" for wave being slightly different angle when surfing left 
+        if (!isRight) 
+            introEndPos.position = new Vector3(introEndPos.position.x - 3, introEndPos.position.y, introEndPos.position.z);
     }
 
     void OnGameplaySettingEvent(GameSettingsEvent e)
@@ -206,9 +225,12 @@ public class BoardController : MonoBehaviour, ICharacterController
             return;
 
         float inputs = input.dir.x + ((-leftGripInput.dir.x + rightGripInput.dir.x) / 2);
+        float boardSideVelocity = inputs;
+
+        if (isRight) boardSideVelocity = -boardSideVelocity;
 
         // During rotation board gripping will also move motor sideways (Closer and further from the barrel) 
-        motor.BaseVelocity += new Vector3(0, 0, ((leftGripInput.dir.x + -rightGripInput.dir.x) / 4));
+        motor.BaseVelocity += new Vector3(0, 0, ((boardSideVelocity) / 4));
 
         // Inputs direction X value is multiplied to make greater head movements apply a large value in comparison to smaller values. 
         currentRotation *= Quaternion.AngleAxis((inputs * 2.4f) * rotateAccel * deltaTime, transform.up);

@@ -7,6 +7,9 @@ public class SoundControlEvent : GlobalEvent<SoundControlEvent>, System.IDisposa
     public HeadInput headInput;
 }
 
+/// <summary>
+/// Stores a value for the heads input coordinates
+/// </summary>
 public struct HeadInput 
 {
     public Vector3 dir;
