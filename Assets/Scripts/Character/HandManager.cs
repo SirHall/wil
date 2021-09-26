@@ -212,9 +212,11 @@ public class HandManager : MonoBehaviour
             if (previousInteractionState != isGripInteracting)
             {
                 startCoordinate = transform.localPosition;
-                gripSession = true;
                 // Trigger GripInteraction event
-                using (var e = GripInteraction.Get()); 
+                if(!gripSession)
+                    using (var e = GripInteraction.Get());
+
+                gripSession = true;
             }
             
         }
