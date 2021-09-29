@@ -24,6 +24,8 @@ public class BoardController : MonoBehaviour, ICharacterController
     private bool isIntroStarted;
     private bool isRight;
 
+    private bool isWaveTouching;
+
     [SerializeField] float rotateAccel = 15.0f;
     [Tooltip("Drag applied to the board")]
     [SerializeField] float drag = 0.1f;
@@ -97,6 +99,7 @@ public class BoardController : MonoBehaviour, ICharacterController
         RightBoardControlGripEvent.RegisterListener(OnRightBoardControlGripEvent);
         GameSettingsEvent.RegisterListener(OnGameplaySettingEvent);
         WaveSettingEvent.RegisterListener(OnWaveSettingsEvent);
+        WaveInteraction.RegisterListener(BarrelTouchEvent);
 
         if (Instance != null)
         {
@@ -113,6 +116,7 @@ public class BoardController : MonoBehaviour, ICharacterController
         RightBoardControlGripEvent.UnregisterListener(OnRightBoardControlGripEvent);
         GameSettingsEvent.UnregisterListener(OnGameplaySettingEvent);
         WaveSettingEvent.UnregisterListener(OnWaveSettingsEvent);
+        WaveInteraction.UnregisterListener(BarrelTouchEvent);
 
         if (Instance == this)
             Instance = null;
@@ -129,7 +133,10 @@ public class BoardController : MonoBehaviour, ICharacterController
         if (WaveScore.IsPlaying && !WaveScore.IsWarmup)
             CheckBoardStability();
     }
-
+    void BarrelTouchEvent(WaveInteraction e)
+    {
+        isWaveTouching = e.isTouching;
+    }
     void OnWaveSettingsEvent(WaveSettingEvent e)
     {
         isRight = e.settings.surfDir == RightLeft.Right;
@@ -273,6 +280,8 @@ public class BoardController : MonoBehaviour, ICharacterController
                        Vector3.up
                    );
             }
+            if (isWaveTouching && WaveScore.IsPlaying) // Drag due to touching wave
+                currentVelocity -= new Vector3(0.08f, 0, 0);
         }
         else // We're in the air
         {
