@@ -311,6 +311,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button_Replay
       objectReference: {fileID: 0}
+    - target: {fileID: 4863066905230532711, guid: f7d68b77041bb9244a6c813af6dd5855, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4863066905747569947, guid: f7d68b77041bb9244a6c813af6dd5855, type: 3}
       propertyPath: label
       value: Replay

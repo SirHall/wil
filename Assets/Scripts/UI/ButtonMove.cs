@@ -15,8 +15,11 @@ public class ButtonMove : MonoBehaviour
         transform.localPosition = startPos;
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        transform.localPosition = Vector3.SmoothDamp(transform.localPosition, endPos, ref velocity, speed * Time.deltaTime);
+        if (Vector3.Distance(transform.localPosition, endPos) >= 0.003)
+            transform.localPosition = Vector3.SmoothDamp(transform.localPosition, endPos, ref velocity, speed * Time.deltaTime);
+        else
+            transform.localPosition = endPos;
     }
 }

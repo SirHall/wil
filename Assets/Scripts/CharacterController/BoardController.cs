@@ -68,6 +68,13 @@ public class BoardController : MonoBehaviour, ICharacterController
 
     void Start()
     {
+        StartCoroutine(SetStartPosition());
+    }
+
+    IEnumerator SetStartPosition()
+    {
+        yield return new WaitForSeconds(0.01f);
+
         Vector3 position;
         if (introEnabled)
         {
@@ -79,7 +86,6 @@ public class BoardController : MonoBehaviour, ICharacterController
         {
             position = introEndPos.position;
         }
-
         Vector3 dir = introEndPos.position - introStartPos.position;
         motor.SetPositionAndRotation(position, Quaternion.LookRotation(dir, Vector3.up));
     }
@@ -129,8 +135,8 @@ public class BoardController : MonoBehaviour, ICharacterController
         isRight = e.settings.surfDir == RightLeft.Right;
 
         // Compensate "intro end position" for wave being slightly different angle when surfing left 
-        if (!isRight) 
-            introEndPos.position = new Vector3(introEndPos.position.x - 3, introEndPos.position.y, introEndPos.position.z);
+        //if (!isRight) 
+        //    introEndPos.position = new Vector3(introEndPos.position.x - 3, introEndPos.position.y, introEndPos.position.z);
     }
 
     void OnGameplaySettingEvent(GameSettingsEvent e)

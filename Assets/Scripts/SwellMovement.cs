@@ -40,7 +40,7 @@ public class SwellMovement : MonoBehaviour
             journeyLength = Vector3.Distance(startPos, endPos);
         }
 
-        if (isMoving)
+        if (isMoving &&  Vector3.Distance(transform.localPosition, endPos) >= 0.2)
         {
             // Distance moved equals elapsed time times speed..
             float distCovered = (Time.time - startTime) * speed;
@@ -51,6 +51,10 @@ public class SwellMovement : MonoBehaviour
             // Set our position as a fraction of the distance between the markers.
             //transform.position = Vector3.Lerp(startPos, endPos, fractionOfJourney);
             transform.position = Vector3.SmoothDamp(transform.position, endPos, ref velocity, speed * Time.deltaTime);
+        }
+        else if (transform.position != endPos)
+        {
+            transform.position = endPos;
         }
     }
 
