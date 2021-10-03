@@ -181,7 +181,7 @@ public class SoundManager : MonoBehaviour{
             leanWarningSource.clip = Woah;
             switch (currentSoundLevelState) 
             {
-                case SoundLevelMode.Quite:
+                case SoundLevelMode.Quiet:
                     leanWarningSource.volume = 0.4f;
                     break;
                 case SoundLevelMode.Warning:
@@ -191,7 +191,7 @@ public class SoundManager : MonoBehaviour{
                     leanWarningSource.volume = 1f;
                     break;
             }
-            if (currentSoundLevelState == SoundLevelMode.Quite || currentSoundLevelState == SoundLevelMode.Warning || currentSoundLevelState == SoundLevelMode.Alarm)
+            if (currentSoundLevelState == SoundLevelMode.Quiet || currentSoundLevelState == SoundLevelMode.Warning || currentSoundLevelState == SoundLevelMode.Alarm)
                 leanWarningSource.Play();
         }
     }
@@ -240,7 +240,7 @@ public class SoundManager : MonoBehaviour{
         else if (headPosDist >= 0.8)
             return SoundLevelMode.Warning;
         else if (headPosDist >= 0.6f) 
-            return SoundLevelMode.Quite;
+            return SoundLevelMode.Quiet;
         else
             return SoundLevelMode.None;
     }
@@ -273,7 +273,7 @@ public class SoundManager : MonoBehaviour{
     public enum SoundLevelMode 
     {
         None,
-        Quite,
+        Quiet,
         Warning,
         Alarm
     }

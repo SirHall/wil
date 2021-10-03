@@ -34,8 +34,8 @@ public class HandManager : MonoBehaviour
     [Tooltip("Get which interactable either the left or right hand is interacting with")]
     Interactables leftInteraction, rightInteraction = new Interactables();
 
-    [Tooltip("The max unit values the player can move in specified direction")]
-    public float maxUp, maxDown;
+    [Tooltip("The max unit values the player can move in specified direction when gripping")]
+    public float maxGripUp, maxGripDown;
 
     [SerializeField]
     [Tooltip("Starting local Cooridnate of the player")]
@@ -275,9 +275,9 @@ public class HandManager : MonoBehaviour
         {
             // Assign variable values based on the direction the player is leaning / standing
             if (transform.localPosition.y > startCoordinate.y)
-                handPosRel.y = Mathf.Clamp(Mathf.InverseLerp(startCoordinate.y, startCoordinate.y + maxUp, transform.localPosition.y), 0, maxUp); // Positive
+                handPosRel.y = Mathf.Clamp(Mathf.InverseLerp(startCoordinate.y, startCoordinate.y + maxGripUp, transform.localPosition.y), 0, maxGripUp); // Positive
             else
-                handPosRel.y = Mathf.Clamp(-Mathf.InverseLerp(startCoordinate.y, startCoordinate.y + maxDown, transform.localPosition.y), maxDown, 0); // Negative
+                handPosRel.y = Mathf.Clamp(-Mathf.InverseLerp(startCoordinate.y, startCoordinate.y + maxGripDown, transform.localPosition.y), maxGripDown, 0); // Negative
         }
     }
 }
